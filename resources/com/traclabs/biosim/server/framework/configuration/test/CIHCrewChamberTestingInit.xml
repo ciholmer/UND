@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<biosim xmlns="http://www.traclabs.com/biosim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
+	<Globals runTillCrewDeath="true" crewsToWatch="CrewGroup BiomassPS CDRS" startPaused="false">
+		<comment>The default initialization for BioSim</comment>
+		<author>Scott Bell</author>
+	</Globals>
+	<SimBioModules>
+		<crew>
+			<CrewGroup moduleName="CrewGroup">
+				<potableWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="PotableWaterStore"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="SimEnvironment"/>
+				<foodConsumer maxFlowRates="100" desiredFlowRates="100" inputs="FoodStore"/>
+				<dirtyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="DirtyWaterStore"/>
+				<greyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="GreyWaterStore"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="SimEnvironment"/>
+				<dryWasteProducer maxFlowRates="100" desiredFlowRates="100" outputs="DryWasteStore"/>
+				<crewPerson name="Bob Roberts" age="43" weight="77" sex="MALE" arrivalDate="200" departureDate="210">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+			</CrewGroup>
+		</crew>
+		<environment>
+			<SimEnvironment moduleName="SimEnvironment" initialVolume="300000"/>
+		</environment> 
+		<air>
+			<MethaneStore capacity="0" moduleName="MethaneStore" level="0"/>
+			<NitrogenStore capacity="0" moduleName="NitrogenStore" level="0"/>
+			<CO2Store capacity="1000" moduleName="CO2_Store" level="0"/>
+			<H2Store capacity="10000" moduleName="H2_Store" level="0"/>
+			<O2Store capacity="10000" moduleName="O2_Store" level="1000"/>
+			<CDRS moduleName="CDRS">
+				<normalStochasticFilter deviation="0.005"/>
+				<powerConsumer inputs="CDRS_Air_Inlet_Power_Store CDRS_Air_Return_Power_Store CDRS_CO2_Isolation_Power_Store CDRS_CO2_Vent_Power_Store CDRS_Primary_Heater_Power_Store CDRS_Secondary_Heater_Power_Store CDRS_Power_Store PowerStore PowerStore" desiredFlowRates="100 100 100 100 100 100 100 100 100" maxFlowRates="100 100 100 100 100 100 100 100 100"/>
+				<greyWaterConsumer inputs="GreyWaterStore" desiredFlowRates="10" maxFlowRates="10"/>
+				<greyWaterProducer outputs="GreyWaterStore" desiredFlowRates="10" maxFlowRates="10"/>
+				<airConsumer inputs="SimEnvironment" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<airProducer outputs="SimEnvironment" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<CO2Producer outputs="CO2_Store" desiredFlowRates="1000" maxFlowRates="1000"/>
+			</CDRS>
+			<OGS moduleName="OGS">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<potableWaterConsumer inputs="PotableWaterStore" desiredFlowRates="10" maxFlowRates="10"/>
+				<O2Producer desiredFlowRates="1000" outputs="O2_Store" maxFlowRates="1000"/>
+				<H2Producer desiredFlowRates="1000" outputs="H2_Store" maxFlowRates="1000"/>
+			</OGS>
+		</air>
+		<food>
+			<BiomassPS moduleName="BiomassPS" autoHarvestAndReplant="true">
+				<shelf cropArea="1200" cropType="WHEAT"/>
+				<powerConsumer maxFlowRates="400" desiredFlowRates="400" inputs="PowerStore"/>
+				<potableWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="PotableWaterStore"/>
+				<greyWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="GreyWaterStore"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="SimEnvironment"/>
+				<dirtyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="DirtyWaterStore"/>
+				<biomassProducer maxFlowRates="100" desiredFlowRates="100" outputs="BiomassStore"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="SimEnvironment"/>
+			</BiomassPS>
+			<BiomassStore moduleName="BiomassStore" capacity="500" level="300"/>
+			<FoodStore moduleName="FoodStore" capacity="100000000000" level="100000000000"/>
+		</food>
+		<power>
+			<PowerStore moduleName="PowerStore" capacity="100000000000" level="100000000000"/>
+			<PowerStore capacity="100" moduleName="CDRS_Air_Inlet_Power_Store" level="100"/>
+			<PowerStore capacity="100" moduleName="CDRS_Air_Return_Power_Store" level="100"/>
+			<PowerStore capacity="100" moduleName="CDRS_CO2_Isolation_Power_Store" level="100"/>
+			<PowerStore capacity="100" moduleName="CDRS_CO2_Vent_Power_Store" level="100"/>
+			<PowerStore capacity="100" moduleName="CDRS_Power_Store" level="100"/>
+			<PowerStore capacity="100" moduleName="CDRS_Primary_Heater_Power_Store" level="100"/>
+			<PowerStore capacity="100" moduleName="CDRS_Secondary_Heater_Power_Store" level="100"/>
+		</power>
+			<RPCM moduleName="Air_Inlet_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_Air_Inlet_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+			<RPCM moduleName="Air_Return_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_Air_Return_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+			<RPCM moduleName="CO2_Isolation_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_CO2_Isolation_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+			<RPCM moduleName="CO2_Vent_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_CO2_Vent_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+			<RPCM moduleName="CDRS_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+			<RPCM moduleName="Primary_Heater_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_Primary_Heater_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+			<RPCM moduleName="Secondary_Heater_RPCM">
+				<powerConsumer inputs="PowerStore" desiredFlowRates="100" maxFlowRates="100"/>
+				<powerProducer outputs="CDRS_Secondary_Heater_Power_Store" desiredFlowRates="100" maxFlowRates="100"/>
+			</RPCM>
+		<water>
+			<PotableWaterStore moduleName="PotableWaterStore" capacity="500000" level="500000"/>
+			<GreyWaterStore moduleName="GreyWaterStore" capacity="500" level="0"/>
+			<DirtyWaterStore moduleName="DirtyWaterStore" capacity="500" level="0"/>
+		</water>
+		<waste>
+			<DryWasteStore moduleName="DryWasteStore" capacity="500" level="0"/>
+		</waste>
+	</SimBioModules>
+	<Sensors>
+		<air>
+			<CO2OutFlowRateSensor input="CDRS" moduleName="CDRS_CO2_Effluent_Sensor" index="0"/>
+		</air>
+		<environment>
+			<AirInFlowRateSensor input="CDRS" moduleName="CDRS_Air_Influent_Sensor" index="0"/>
+			<AirOutFlowRateSensor input="CDRS" moduleName="CDRS_Air_Effluent_Sensor" index="0"/>
+			<GasConcentrationSensor input="SimEnvironment" moduleName="Co2GasConcentrationSensor" gasType="CO2"/>
+			<GasConcentrationSensor input="BiomassPS" moduleName="Co2GasConcentrationSensor" gasType="CO2"/>
+		</environment>
+		<water>
+			<GreyWaterInFlowRateSensor input="CDRS" moduleName="CDRS_Grey_Water_Influent_Sensor" index="0"/>
+			<GreyWaterOutFlowRateSensor input="CDRS" moduleName="CDRS_Grey_Water_Effluent_Sensor" index="0"/>
+		</water>
+	</Sensors>
+	<Actuators>
+	</Actuators>
+</biosim>
