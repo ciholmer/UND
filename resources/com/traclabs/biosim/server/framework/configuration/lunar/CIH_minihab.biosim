@@ -29,6 +29,24 @@
 			<log4jProperty name="log4j.appender.dbAppender.sql"
 			value="INSERT INTO log (Message) VALUES ('%d - %c - %p - %m')" />
 		-->
+			
+			<!-- Log File #moved to log4j.properties-->
+			<log4jProperty
+			name="log4j.logger.com.traclabs.biosim.server"
+			value="DEBUG, envAppender" />
+						
+			<log4jProperty name="log4j.appender.envAppender"
+			value="org.apache.log4j.FileAppender" />
+			<log4jProperty name="log4j.appender.envAppender.File"
+			value="log/envLog.log" />
+			<log4jProperty name="log4j.appender.envAppender.Append"
+			value="true" />
+			<log4jProperty name="log4j.appender.envAppender.layout"
+			value="org.apache.log4j.PatternLayout" />
+			<log4jProperty name="log4j.appender.envAppender.layout.ConversionPattern"
+			value="%d [%t] %5p [%c] - %m%n" />
+			-->
+			<log4jProperty name="log4j.logger.com.traclabs.biosim.server.sensor" value="DEBUG"/>
 	</Globals>
 	<SimBioModules>
 		<environment>
@@ -457,10 +475,10 @@
 			<AirOutFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirOutSensor" index="0" isBionetEnabled="false"></AirOutFlowRateSensor>
 			
 			
-			<TotalMolesSensor input="Crew_Quarters" moduleName="Crew_Quarters_Moles" logLevel="INFO"></TotalMolesSensor>
-			<TotalMolesSensor input="Labs" moduleName="Labs_Moles" logLevel="INFO"></TotalMolesSensor>
-			<TotalMolesSensor input="Galley" moduleName="Galley_Moles" logLevel="INFO"></TotalMolesSensor>
-			<TotalMolesSensor input="Maintenance" moduleName="Maintenance_Moles" logLevel="INFO"></TotalMolesSensor>
+			<TotalMolesSensor input="Crew_Quarters" moduleName="Crew_Quarters_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			<TotalMolesSensor input="Labs" moduleName="Labs_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			<TotalMolesSensor input="Galley" moduleName="Galley_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			<TotalMolesSensor input="Maintenance" moduleName="Maintenance_Moles" logLevel="DEBUG"></TotalMolesSensor>
 			
 			<AirInFlowRateSensor input="Maintenance_to_Crew_Fan" moduleName="Maintenance_to_Crew_Fan-InSensor" index="0" logLevel="INFO"></AirInFlowRateSensor>
 			<AirOutFlowRateSensor input="Maintenance_to_Crew_Fan" moduleName="Maintenance_to_Crew_Fan-OutSensor" index="0" logLevel="INFO"></AirOutFlowRateSensor>
