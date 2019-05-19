@@ -58,6 +58,7 @@ import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensor;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensor;
+import com.traclabs.biosim.idl.sensor.environment.GasMoleSensor;
 import com.traclabs.biosim.idl.sensor.environment.GasPressureSensor;
 import com.traclabs.biosim.idl.sensor.environment.TotalMolesSensor;
 import com.traclabs.biosim.idl.sensor.environment.TotalPressureSensor;
@@ -128,6 +129,7 @@ import com.traclabs.biosim.idl.simulation.water.WaterRS;
  * Holds references to the servers
  * 
  * @author Scott Bell
+ * Modifed CIHolmer May 2019 - Add Gas Mole Sensors
  */
 public class BioHolder {
     public BioDriver theBioDriver;
@@ -258,6 +260,8 @@ public class BioHolder {
     public List<GasPressureSensor> theGasPressureSensors = new Vector<GasPressureSensor>();
 
     public List<GasConcentrationSensor> theGasConcentrationSensors = new Vector<GasConcentrationSensor>();
+    
+    public List<GasMoleSensor> theGasMoleSensors = new Vector<GasMoleSensor>();
 
     public List<TotalMolesSensor> theTotalMolesSensors = new Vector<TotalMolesSensor>();
 
@@ -531,6 +535,7 @@ public class BioHolder {
         theSensors.addAll(theAirOutFlowRateSensors);
         theSensors.addAll(theGasPressureSensors);
         theSensors.addAll(theGasConcentrationSensors);
+        theSensors.addAll(theGasMoleSensors);
         theSensors.addAll(theTotalMolesSensors);
         theSensors.addAll(theTotalPressureSensors);
         //Food
@@ -689,6 +694,7 @@ public class BioHolder {
         theAirOutFlowRateSensors.clear();
         theGasPressureSensors.clear();
         theGasConcentrationSensors.clear();
+        theGasMoleSensors.clear();
         //Food
         theBiomassInFlowRateSensors.clear();
         theBiomassOutFlowRateSensors.clear();

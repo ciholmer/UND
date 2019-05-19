@@ -54,6 +54,9 @@ import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensorPOATie;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensor;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensorPOATie;
+import com.traclabs.biosim.idl.sensor.environment.GasMoleSensor;
+import com.traclabs.biosim.idl.sensor.environment.GasMoleSensorHelper;
+import com.traclabs.biosim.idl.sensor.environment.GasMoleSensorPOATie;
 import com.traclabs.biosim.idl.sensor.environment.GasPressureSensor;
 import com.traclabs.biosim.idl.sensor.environment.GasPressureSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.GasPressureSensorPOATie;
@@ -186,6 +189,7 @@ import com.traclabs.biosim.server.sensor.crew.CrewGroupProductivitySensorImpl;
 import com.traclabs.biosim.server.sensor.environment.AirInFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.AirOutFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.GasConcentrationSensorImpl;
+import com.traclabs.biosim.server.sensor.environment.GasMoleSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.GasPressureSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.TotalMolesSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.TotalPressureSensorImpl;
@@ -213,6 +217,7 @@ import com.traclabs.biosim.util.XMLUtils;
  * Reads BioSim configuration from XML file.
  * 
  * @author Scott Bell
+ * Modifed CIHolmer May 2019 - Add Gas Mole Sensors
  */
 public class SensorInitializer {
 	private int myID = 0;
@@ -767,6 +772,23 @@ public class SensorInitializer {
 			BiosimInitializer.printRemoteWarningMessage(moduleName);
 
 	}
+	
+	private void createGasMoleSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger.debug("Creating GasMoleSensor with moduleName: "
+					+ moduleName);
+			GasMoleSensorImpl myGasMoleSensorImpl = new GasMoleSensorImpl(
+					myID, moduleName);
+			BiosimInitializer
+					.setupBioModule(myGasMoleSensorImpl, node);
+			BiosimServer.registerServer(new GasMoleSensorPOATie(
+					myGasMoleSensorImpl), myGasMoleSensorImpl
+					.getModuleName(), myGasMoleSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+
+	}
 
 	private void configureGasConcentrationSensor(Node node) {
 		GasConcentrationSensor myGasConcentrationSensor = GasConcentrationSensorHelper
@@ -777,6 +799,17 @@ public class SensorInitializer {
 		myGasConcentrationSensor.setInput(inputEnvironment, getGasStore(node,
 				inputEnvironment));
 		mySensors.add(myGasConcentrationSensor);
+	}
+	
+	private void configureGasMoleSensor(Node node) {
+		GasMoleSensor myGasMoleSensor = GasMoleSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		SimEnvironment inputEnvironment = SimEnvironmentHelper
+				.narrow(BiosimInitializer.getModule(myID, getInputName(node)));
+		myGasMoleSensor.setInput(inputEnvironment, getGasStore(node,
+				inputEnvironment));
+		mySensors.add(myGasMoleSensor);
 	}
 
 	private EnvironmentStore getGasStore(Node node,
@@ -898,6 +931,11 @@ public class SensorInitializer {
 						createGasConcentrationSensor(child);
 					else
 						configureGasConcentrationSensor(child);
+				} else if (childName.equals("GasMoleSensor")) {
+					if (firstPass)
+						createGasMoleSensor(child);
+					else
+						configureGasMoleSensor(child);
 				} else if (childName.equals("TotalMolesSensor")) {
 					if (firstPass)
 						createTotalMolesSensor(child);

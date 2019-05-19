@@ -26,6 +26,14 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="GasMoleSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+				<xsd:attribute name="gasType" type="GasType" use="required"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
 	<xsd:complexType name="GasPressureSensorType">
 		<xsd:complexContent>
 			<xsd:extension base="SensorType">
@@ -59,6 +67,8 @@
 					type="GasPressureSensorType"/>
 				<xsd:element name="GasConcentrationSensor"
 					type="GasConcentrationSensorType"/>
+				<xsd:element name="GasMoleSensor"
+					type="GasMoleSensorType"/>
 				<xsd:element name="TotalMolesSensor"
 					type="TotalMolesSensorType"/>
 				<xsd:element name="TotalPressureSensor"

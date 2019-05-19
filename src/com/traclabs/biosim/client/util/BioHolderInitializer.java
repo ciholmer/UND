@@ -60,6 +60,7 @@ import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensorHelper;
+import com.traclabs.biosim.idl.sensor.environment.GasMoleSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.GasPressureSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.TotalMolesSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.TotalPressureSensorHelper;
@@ -126,6 +127,7 @@ import com.traclabs.biosim.util.OrbUtils;
  * Reads BioSim configuration from XML file.
  * 
  * @author Scott Bell
+ * Modifed CIHolmer May 2019 - Add Gas Mole Sensors
  */
 public class BioHolderInitializer {
 
@@ -892,6 +894,11 @@ public class BioHolderInitializer {
 		myBioHolder.theGasConcentrationSensors.add(GasConcentrationSensorHelper
 				.narrow(getModule(getModuleName(child))));
 	}
+	
+	private static void fetchGasMoleSensor(Node child) {
+		myBioHolder.theGasMoleSensors.add(GasMoleSensorHelper
+				.narrow(getModule(getModuleName(child))));
+	}
 
 	private static void fetchTotalMolesSensor(Node child) {
 		myBioHolder.theTotalMolesSensors.add(TotalMolesSensorHelper
@@ -914,6 +921,8 @@ public class BioHolderInitializer {
 					fetchAirOutFlowRateSensor(child);
 				else if (childName.equals("GasConcentrationSensor"))
 					fetchGasConcentrationSensor(child);
+				else if (childName.equals("GasMoleSensor"))
+					fetchGasMoleSensor(child);
 				else if (childName.equals("GasPressureSensor"))
 					fetchGasPressureSensor(child);
 				else if (childName.equals("TotalMolesSensor"))
