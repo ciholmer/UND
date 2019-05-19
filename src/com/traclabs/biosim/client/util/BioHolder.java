@@ -55,6 +55,7 @@ import com.traclabs.biosim.idl.sensor.air.O2OutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupAnyDeadSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupDeathSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensor;
@@ -249,6 +250,8 @@ public class BioHolder {
     public List<CrewGroupDeathSensor> theCrewGroupDeathSensors = new Vector<CrewGroupDeathSensor>();
 
     public List<CrewGroupProductivitySensor> theCrewGroupProductivitySensors = new Vector<CrewGroupProductivitySensor>();
+    
+    public List<CrewGroupO2ConsumedSensor> theCrewGroupO2ConsumedSensors = new Vector<CrewGroupO2ConsumedSensor>();
 
     public List<CrewGroupAnyDeadSensor> theCrewGroupAnyDeadSensors = new Vector<CrewGroupAnyDeadSensor>();
 
@@ -529,6 +532,7 @@ public class BioHolder {
         //Crew
         theSensors.addAll(theCrewGroupDeathSensors);
         theSensors.addAll(theCrewGroupProductivitySensors);
+        theSensors.addAll(theCrewGroupO2ConsumedSensors);
         theSensors.addAll(theCrewGroupAnyDeadSensors);
         //Environment
         theSensors.addAll(theAirInFlowRateSensors);
@@ -687,6 +691,7 @@ public class BioHolder {
         theMethaneOutFlowRateSensors.clear();
         //Crew
         theCrewGroupDeathSensors.clear();
+        theCrewGroupO2ConsumedSensors.clear();
         theCrewGroupProductivitySensors.clear();
         theCrewGroupAnyDeadSensors.clear();
         //Environment

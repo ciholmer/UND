@@ -402,7 +402,8 @@ module com{
                                                         boolean isOnBoard();
                                                         boolean isSuffocating();
                                                         boolean isDead();
-                                                        float getProductivity();
+                                                        float getO2Consumed();
+                                                        float getO2Consumed();
                                                         float getGreyWaterProduced();
                                                         float getDirtyWaterProduced();
                                                         float getPotableWaterConsumed();
@@ -433,7 +434,7 @@ module com{
                                                         float getFoodConsumed();
                                                         float getCO2Produced();
                                                         float getO2Consumed();
-                                                        float getProductivity();
+                                                        float getProductivity();                                                     
                                                         boolean isDead();
                                                         boolean anyDead();
                                                         void detachCrewPerson(in string name);
@@ -964,7 +965,8 @@ module com{
                                                         void setInput(in simulation::crew::CrewGroup source);
                                                         simulation::crew::CrewGroup getInput();
                                                 };
-                                                interface CrewGroupProductivitySensor : CrewGroupSensor{};
+                                                interface CrewGroupO2ConsumedSensor : CrewGroupSensor{};
+                                                interface CrewGroupO2ConsumedSensor : CrewGroupSensor{};
                                                 interface CrewGroupActivitySensor : CrewGroupSensor{};
                                                 interface CrewGroupDeathSensor : CrewGroupSensor{};
                                                 interface CrewGroupAnyDeadSensor : CrewGroupSensor{};

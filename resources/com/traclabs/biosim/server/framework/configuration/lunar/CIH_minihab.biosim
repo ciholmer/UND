@@ -458,6 +458,13 @@
 		</crew>
 	</SimBioModules>
 	<Sensors>
+	    <crew>
+	    	<CrewGroupO2ConsumedSensor input="Crew_Quarters_Group" moduleName="Crew_Quarters_Crew_O2Consumed" index="0" logLevel="DEBUG" />
+	    	<CrewGroupO2ConsumedSensor input="Labs_Group" moduleName="Labs_O2Consumed" index="0" logLevel="DEBUG" />
+	    	<CrewGroupO2ConsumedSensor input="Galley_Group" moduleName="Galley_Crew_O2Consumed" index="0" logLevel="DEBUG" />
+	    	<CrewGroupO2ConsumedSensor input="Maintenance_Group" moduleName="Maintenance_Crew_O2Consumed" index="0" logLevel="DEBUG" />
+	    	<CrewGroupO2ConsumedSensor input="EVA_Crew_Group" moduleName="EVA_Crew_O2Consumed" index="0" logLevel="DEBUG" />
+	    </crew>
 		<power>
 			<PowerInFlowRateSensor input="Main_VCCR"
 				moduleName="MainVccrPowerSensor" index="0" logLevel="INFO"

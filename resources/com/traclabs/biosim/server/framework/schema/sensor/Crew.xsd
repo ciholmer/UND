@@ -25,12 +25,21 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="CrewGroupO2ConsumedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
 	<xsd:complexType name="CrewSensorsType">
 		<xsd:sequence>
 			<xsd:choice minOccurs="0" maxOccurs="unbounded">
 				<xsd:element name="CrewGroupDeathSensor"
 					type="CrewGroupDeathSensorType"/>
 				<xsd:element name="CrewGroupProductivitySensor"
+					type="CrewGroupProductivitySensorType"/>
+				<xsd:element name="CrewGroupO2ConsumedSensor"
 					type="CrewGroupProductivitySensorType"/>
 				<xsd:element name="CrewGroupAnyDeadSensor"
 					type="CrewGroupAnyDeadSensorType"/>

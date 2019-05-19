@@ -45,6 +45,9 @@ import com.traclabs.biosim.idl.sensor.crew.CrewGroupDeathSensorPOATie;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensorPOATie;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensorPOATie;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorPOATie;
@@ -186,6 +189,7 @@ import com.traclabs.biosim.server.sensor.air.O2OutFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.crew.CrewGroupAnyDeadSensorImpl;
 import com.traclabs.biosim.server.sensor.crew.CrewGroupDeathSensorImpl;
 import com.traclabs.biosim.server.sensor.crew.CrewGroupProductivitySensorImpl;
+import com.traclabs.biosim.server.sensor.crew.CrewGroupO2ConsumedSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.AirInFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.AirOutFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.GasConcentrationSensorImpl;
@@ -669,6 +673,24 @@ public class SensorInitializer {
 			BiosimInitializer.printRemoteWarningMessage(moduleName);
 	}
 
+	private void createCrewGroupO2ConsumedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger
+					.debug("Creating CrewGroupO2ConsumedSensor with moduleName: "
+							+ moduleName);
+			CrewGroupO2ConsumedSensorImpl myCrewGroupO2ConsumedSensorImpl = new CrewGroupO2ConsumedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myCrewGroupO2ConsumedSensorImpl,
+					node);
+			BiosimServer.registerServer(new CrewGroupO2ConsumedSensorPOATie(
+					myCrewGroupO2ConsumedSensorImpl),
+					myCrewGroupO2ConsumedSensorImpl.getModuleName(),
+					myCrewGroupO2ConsumedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
 	private void configureCrewGroupProductivitySensor(Node node) {
 		CrewGroupProductivitySensor myCrewGroupProductivitySensor = CrewGroupProductivitySensorHelper
 				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
@@ -677,6 +699,16 @@ public class SensorInitializer {
 				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
 						myID, getInputName(node))));
 		mySensors.add(myCrewGroupProductivitySensor);
+	}
+
+	private void configureCrewGroupO2ConsumedSensor(Node node) {
+		CrewGroupO2ConsumedSensor myCrewGroupO2ConsumedSensor = CrewGroupO2ConsumedSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupO2ConsumedSensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupO2ConsumedSensor);
 	}
 
 	private void crawlCrewSensors(Node node, boolean firstPass) {
@@ -699,7 +731,13 @@ public class SensorInitializer {
 						createCrewGroupProductivitySensor(child);
 					else
 						configureCrewGroupProductivitySensor(child);
+				} else if (childName.equals("CrewGroupO2ConsumedSensor")) {
+					if (firstPass)
+						createCrewGroupO2ConsumedSensor(child);
+					else
+						configureCrewGroupO2ConsumedSensor(child);
 				}
+				
 			}
 			child = child.getNextSibling();
 		}

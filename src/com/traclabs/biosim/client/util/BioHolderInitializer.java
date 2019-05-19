@@ -57,6 +57,7 @@ import com.traclabs.biosim.idl.sensor.air.O2OutFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupAnyDeadSensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupDeathSensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensorHelper;
@@ -857,6 +858,12 @@ public class BioHolderInitializer {
 				.add(CrewGroupProductivitySensorHelper
 						.narrow(getModule(getModuleName(node))));
 	}
+	
+	private static void fetchCrewGroupO2ConsumedSensor(Node node) {
+		myBioHolder.theCrewGroupO2ConsumedSensors
+				.add(CrewGroupO2ConsumedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
 
 	private static void crawlCrewSensors(Node node) {
 		Node child = node.getFirstChild();
@@ -869,6 +876,8 @@ public class BioHolderInitializer {
 					fetchCrewGroupAnyDeadSensor(child);
 				else if (childName.equals("CrewGroupProductivitySensor"))
 					fetchCrewGroupProductivitySensor(child);
+				else if (childName.equals("CrewGroupO2ConsumedSensor"))
+					fetchCrewGroupO2ConsumedSensor(child);
 			}
 			child = child.getNextSibling();
 		}
