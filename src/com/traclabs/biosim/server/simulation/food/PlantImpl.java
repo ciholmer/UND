@@ -253,6 +253,7 @@ public abstract class PlantImpl extends PlantPOA {
     public void tick() {
         myAge++;
         if (!hasDied) {
+        	myLogger.debug("*** Crop "+ getPlantTypeString() +" on "  + getDaysOfGrowth() + " days of growth ***");
             growBiomass();
             if ((myAge > 1) && (myShelfImpl.getBiomassPSImpl().getDeathEnabled())) {
                 afflictPlants();
@@ -261,6 +262,9 @@ public abstract class PlantImpl extends PlantPOA {
             }
             myTotalWaterNeeded += myWaterNeeded;
             myAverageWaterNeeded = myTotalWaterNeeded / myAge;
+            myLogger.debug(getPlantTypeString() + " ticked , total water needed: " + myTotalWaterNeeded);
+        } else {
+        	myLogger.debug("*** Plants have died after " + + getDaysOfGrowth() + " days of growth ***");
         }
     }
 
@@ -269,7 +273,7 @@ public abstract class PlantImpl extends PlantPOA {
     }
 
     public boolean readyForHarvest() {
-        //myLogger.debug("daysOfGrowth: " + getDaysOfGrowth() + "and timeAtCropMaturity: " + getTimeAtCropMaturity());
+        myLogger.debug("daysOfGrowth: " + getDaysOfGrowth() + "and timeAtCropMaturity: " + getTimeAtCropMaturity());
         return (getDaysOfGrowth() >= getTimeAtCropMaturity());
     }
 
@@ -294,7 +298,7 @@ public abstract class PlantImpl extends PlantPOA {
     private void recoverPlants() {
         consumedWaterBuffer.add(WATER_RECOVERY_RATE
                 * consumedWaterBuffer.getCapacity());
-        //myLogger.debug("recovery low CO2 by: "+ (CO2_LOW_RECOVERY_RATE * consumedCO2LowBuffer.getCapacity()));
+        myLogger.debug("recovery low CO2 by: "+ (CO2_LOW_RECOVERY_RATE * consumedCO2LowBuffer.getCapacity()));
         consumedCO2LowBuffer.add(CO2_LOW_RECOVERY_RATE
                 * consumedCO2LowBuffer.getCapacity());
         consumedCO2HighBuffer.add(CO2_HIGH_RECOVERY_RATE
@@ -333,12 +337,13 @@ public abstract class PlantImpl extends PlantPOA {
         consumedLightBuffer.take(getPPFNeeded() - myAveragePPF);
         if (myAveragePPF > DANGEROUS_HEAT_LEVEL)
             consumedHeatBuffer.take(myAveragePPF - DANGEROUS_HEAT_LEVEL);
+        myLogger.debug("myAverageCO2Concentration = "+myAverageCO2Concentration);
         if (myAverageCO2Concentration < CO2_RATIO_LOW){
             consumedCO2LowBuffer
                     .take(CO2_RATIO_LOW - myAverageCO2Concentration);
             //myLogger.debug("myAverageCO2Concentration = "+myAverageCO2Concentration);
-            //myLogger.debug("taken from low CO2 store = " + (CO2_RATIO_LOW - myAverageCO2Concentration));
-            //myLogger.debug("consumedCO2LowBuffer.getLevel() = " + consumedCO2LowBuffer.getLevel());
+            myLogger.debug("taken from low CO2 store = " + (CO2_RATIO_LOW - myAverageCO2Concentration));
+            myLogger.debug("consumedCO2LowBuffer.getLevel() = " + consumedCO2LowBuffer.getLevel());
         }
         if (myAverageCO2Concentration > CO2_RATIO_HIGH)
             consumedCO2HighBuffer.take(myAverageCO2Concentration
@@ -357,38 +362,39 @@ public abstract class PlantImpl extends PlantPOA {
         float waterRiskReturn = MathUtils.calculateSCurve(consumedWaterBuffer.getAmountMissing(), consumedWaterBuffer.getCapacity());
         float heatRiskReturn = MathUtils.calculateSCurve(consumedHeatBuffer.getAmountMissing(), consumedHeatBuffer.getCapacity());
         float lightRiskReturn = MathUtils.calculateSCurve(consumedLightBuffer.getAmountMissing(), consumedLightBuffer.getCapacity());
-        //myLogger.debug("consumedCO2LowBuffer.getAmountMissing() = "+consumedCO2LowBuffer.getAmountMissing());
-        //myLogger.debug("consumedCO2LowBuffer.getCapacity() = "+consumedCO2LowBuffer.getCapacity());
-        //myLogger.debug("CO2RiskLowReturn = "+CO2RiskLowReturn);
+        myLogger.debug("consumedCO2LowBuffer.getAmountMissing() = "+consumedCO2LowBuffer.getAmountMissing());
+        myLogger.debug("consumedCO2LowBuffer.getCapacity() = "+consumedCO2LowBuffer.getCapacity());
+        myLogger.debug("CO2RiskLowReturn = "+CO2RiskLowReturn);
         if (CO2RiskLowReturn > randomNumber) {
         	kill();
             myLogger.info(getPlantTypeString()
-                    + " crops have died from low CO2 at " + getDaysOfGrowth()
-                    + " days (risk was " + (CO2RiskLowReturn * 100) + "%)");
+                    + " *** crops have died from low CO2 at " + getDaysOfGrowth()
+                    + " days (risk was " + (CO2RiskLowReturn * 100) + "%)*** ");
         } else if (CO2RiskHighReturn > randomNumber) {
         	kill();
             myLogger.info(getPlantTypeString()
-                    + " crops have died from high CO2 at " + getDaysOfGrowth()
-                    + " days (risk was " + (CO2RiskHighReturn * 100) + "%)");
+                    + " *** crops have died from high CO2 at " + getDaysOfGrowth()
+                    + " days (risk was " + (CO2RiskHighReturn * 100) + "%)*** ");
         } else if (waterRiskReturn > randomNumber) {
         	kill();
             myLogger.info(getPlantTypeString()
-                    + " crops have died from lack of water at "
+                    + "*** crops have died from lack of water at "
                     + getDaysOfGrowth() + " days (risk was "
-                    + (waterRiskReturn * 100) + "%)");
+                    + (waterRiskReturn * 100) + "%)*** ");
         } else if (heatRiskReturn > randomNumber) {
         	kill();
             myLogger.info(getPlantTypeString()
-                    + " crops have died from lack of heat at "
+                    + "*** crops have died from lack of heat at "
                     + getDaysOfGrowth() + " days (risk was "
-                    + (heatRiskReturn * 100) + "%)");
+                    + (heatRiskReturn * 100) + "%) ***");
         } else if (lightRiskReturn > randomNumber) {
         	kill();
             myLogger.info(getPlantTypeString()
-                    + " crops have died from lack of light at "
+                    + "*** crops have died from lack of light at "
                     + getDaysOfGrowth() + " days (risk was "
-                    + (lightRiskReturn * 100) + "%)");
+                    + (lightRiskReturn * 100) + "%)***");
         }
+        myLogger.debug(getPlantTypeString() + " Health check pass ");
     }
     
     public void kill(){
@@ -497,11 +503,12 @@ public abstract class PlantImpl extends PlantPOA {
         float molesOfCO2Needed = dailyCarbonGain * myShelfImpl.getCropAreaUsed() / 24f;
         float molesOfCO2Available = myShelfImpl.getBiomassPSImpl().getAirConsumerDefinition()
                                     .getEnvironments()[0].getCO2Store().getCurrentLevel();
+        myLogger.debug("molesOfCO2Needed: "+ molesOfCO2Needed + " molesOfCO2Available: "+ molesOfCO2Available);
         float CO2Fraction = 1f;
         if (molesOfCO2Needed > 0)
             CO2Fraction = molesOfCO2Available / molesOfCO2Needed;
         if (CO2Fraction < 1) {
-            //myLogger.debug("CO2Fraction = " + CO2Fraction);
+            myLogger.debug("CO2Fraction = " + CO2Fraction);
             dailyCarbonGain *= CO2Fraction;
         }
         if (myAge % 24 == 0){
@@ -583,10 +590,10 @@ public abstract class PlantImpl extends PlantPOA {
                 .getAirConsumerDefinition().getEnvironments()[0]
                 .getCO2Store().take(molesOfCO2ToInhale);
         totalCO2GramsConsumed += myMolesOfCO2Inhaled * 44f;
-        //myLogger.debug("totalCO2GramsConsumed:" + totalCO2GramsConsumed);
+        myLogger.debug("totalCO2GramsConsumed:" + totalCO2GramsConsumed);
         myShelfImpl.getBiomassPSImpl().addAirInputActualFlowRates(0,
         		myMolesOfCO2Inhaled);
-        //myLogger.debug("molesOfCO2ToInhale:" + molesOfCO2ToInhale);
+        myLogger.debug("CO2MolesConsumed:" + myMolesOfCO2Inhaled);
 
         //Exhale Air
         float dailyO2MolesProduced = 0f;
@@ -603,12 +610,13 @@ public abstract class PlantImpl extends PlantPOA {
         //myLogger.debug("totalO2GramsProduced:" + totalO2GramsProduced);
         float O2Produced = dailyO2MolesProduced / 24f; //in mol of oxygen per
         // hour
+        myLogger.debug("O2MolesProduced:" + O2Produced);
         float O2Exhaled = myShelfImpl.getBiomassPSImpl()
                 .getAirProducerDefinition().getEnvironments()[0]
                 .getO2Store().add(O2Produced);
         myShelfImpl.getBiomassPSImpl()
                 .addAirOutputActualFlowRates(0, O2Exhaled);
-        //myLogger.debug("O2Produced: " + O2Produced);
+        myLogger.debug("O2Produced: " + O2Produced);
 
         //Water Vapor Produced
         if (waterFraction < 1f)
@@ -628,10 +636,10 @@ public abstract class PlantImpl extends PlantPOA {
                 .getVaporStore().add(molesOfWaterProduced);
         myShelfImpl.getBiomassPSImpl().addAirOutputActualFlowRates(0,
                 molesOfWaterAdded);
-        //myLogger.debug("litersOfWaterProduced:" + litersOfWaterProduced);
-        //myLogger.debug("molesOfWaterProduced:" + molesOfWaterProduced);
-        //myLogger.debug("molesOfWaterAdded:" + molesOfWaterAdded);
-        //myLogger.debug("consumedWaterBuffer level:" + consumedWaterBuffer.getLevel());
+        myLogger.debug("litersOfWaterProduced:" + litersOfWaterProduced);
+        myLogger.debug("molesOfWaterProduced:" + molesOfWaterProduced);
+        myLogger.debug("molesOfWaterAdded:" + molesOfWaterAdded);
+        myLogger.debug("consumedWaterBuffer level:" + consumedWaterBuffer.getLevel());
 
     }
 
@@ -777,8 +785,9 @@ public abstract class PlantImpl extends PlantPOA {
                 + canopyClosureConstants[3] * oneOverPPf * theCO2squared
                 + canopyClosureConstants[4] * oneOverPPf * theCO2cubed
                 + canopyClosureConstants[5] * oneOverCO2
-                + canopyClosureConstants[6] + canopyClosureConstants[7]
-                * theCO2 + canopyClosureConstants[8] * theCO2squared
+                + canopyClosureConstants[6] 
+                + canopyClosureConstants[7] * theCO2 
+                + canopyClosureConstants[8] * theCO2squared
                 + canopyClosureConstants[9] * theCO2cubed
                 + canopyClosureConstants[10] * thePPF * oneOverCO2
                 + canopyClosureConstants[11] * thePPF
@@ -835,8 +844,8 @@ public abstract class PlantImpl extends PlantPOA {
         float oneOverPPf = 1f / thePPF;
         float thePPFsquared = MathUtils.pow(thePPF, 2f);
         float thePPFcubed = MathUtils.pow(thePPF, 3f);
-        //myLogger.debug("thePPF: " + thePPF);
-        //myLogger.debug("oneOverPPf: " + oneOverPPf);
+        myLogger.debug("thePPF: " + thePPF);
+        myLogger.debug("oneOverPPf: " + oneOverPPf);
         //myLogger.debug("thePPFsquared: " + thePPFsquared);
         //myLogger.debug("thePPFcubed: " + thePPFcubed);
 
@@ -844,36 +853,44 @@ public abstract class PlantImpl extends PlantPOA {
         float oneOverCO2 = 1f / theCO2;
         float theCO2squared = MathUtils.pow(theCO2, 2f);
         float theCO2cubed = MathUtils.pow(theCO2, 3f);
-        //myLogger.debug("theCO2: " + theCO2);
-        //myLogger.debug("oneOverCO2: " + oneOverCO2);
+        myLogger.debug("theCO2: " + theCO2);
+        myLogger.debug("oneOverCO2: " + oneOverCO2);
         //myLogger.debug("theCO2squared: " + theCO2squared);
         //myLogger.debug("theCO2cubed: " + theCO2cubed);
 
         float theCQYMax = canopyQYConstants[0] * oneOverPPf * oneOverCO2
-                + canopyQYConstants[1] * oneOverPPf + canopyQYConstants[2]
-                * oneOverPPf * theCO2 + canopyQYConstants[3] * oneOverPPf
-                * theCO2squared + canopyQYConstants[4] * oneOverPPf
-                * theCO2cubed + canopyQYConstants[5] * oneOverCO2
-                + canopyQYConstants[6] + canopyQYConstants[7] * theCO2
-                + canopyQYConstants[8] * theCO2squared + canopyQYConstants[9]
-                * theCO2cubed + canopyQYConstants[10] * thePPF * oneOverCO2
-                + canopyQYConstants[11] * thePPF + canopyQYConstants[12]
-                * thePPF * theCO2 + canopyQYConstants[13] * thePPF
-                * theCO2squared + canopyQYConstants[14] * thePPF * theCO2cubed
+                + canopyQYConstants[1] * oneOverPPf 
+                + canopyQYConstants[2] * oneOverPPf * theCO2 
+                + canopyQYConstants[3] * oneOverPPf * theCO2squared
+                + canopyQYConstants[4] * oneOverPPf * theCO2cubed
+                + canopyQYConstants[5] * oneOverCO2
+                + canopyQYConstants[6] 
+                + canopyQYConstants[7] * theCO2
+                + canopyQYConstants[8] * theCO2squared 
+                + canopyQYConstants[9] * theCO2cubed 
+                + canopyQYConstants[10] * thePPF * oneOverCO2
+                + canopyQYConstants[11] * thePPF 
+                + canopyQYConstants[12] * thePPF * theCO2
+                + canopyQYConstants[13] * thePPF * theCO2squared
+                + canopyQYConstants[14] * thePPF * theCO2cubed
                 + canopyQYConstants[15] * thePPFsquared * oneOverCO2
-                + canopyQYConstants[16] * thePPFsquared + canopyQYConstants[17]
-                * thePPFsquared * theCO2 + canopyQYConstants[18]
-                * thePPFsquared * theCO2squared + canopyQYConstants[19]
-                * thePPFsquared * theCO2cubed + canopyQYConstants[20]
-                * thePPFcubed * oneOverCO2 + canopyQYConstants[21]
-                * thePPFcubed + canopyQYConstants[22] * thePPFcubed * theCO2
+                + canopyQYConstants[16] * thePPFsquared 
+                + canopyQYConstants[17] * thePPFsquared * theCO2
+                + canopyQYConstants[18] * thePPFsquared * theCO2squared
+                + canopyQYConstants[19] * thePPFsquared * theCO2cubed
+                + canopyQYConstants[20] * thePPFcubed * oneOverCO2
+                + canopyQYConstants[21] * thePPFcubed 
+                + canopyQYConstants[22] * thePPFcubed * theCO2
                 + canopyQYConstants[23] * thePPFcubed * theCO2squared
                 + canopyQYConstants[24] * thePPFcubed * theCO2cubed;
         if ((theCQYMax < 0) || (Float.isNaN(theCQYMax))) {
-            theCQYMax = 0;
-            //myLogger.debug("CQYMax is negative or NaN!");
+        	myLogger.debug("CQYMax "+ theCQYMax +" is negative or NaN!");
+            // theCQYMax = 0;  CIH 0619 - if we do this the plants will just show 0s for most values and 'disappear' without being marked dead
+        	// This happens when crop is set to 'Wheat' and CO2 is injected into the environment
+        	// CIH 0619, setting CQYMax to CQYMin for the plant
+        	theCQYMax = getCQYMin();
         }
-        //myLogger.debug("theCQYMax: " + theCQYMax);
+        myLogger.debug("theCQYMax: " + theCQYMax);
         return theCQYMax;
     }
 
