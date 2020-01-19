@@ -109,7 +109,10 @@ public class VCCRLinearImpl extends SimBioModuleImpl implements VCCROperations,
     }
     
     public void log() {
-        myLogger.debug("power_consumed=" + currentPowerConsumed);
+        myLogger.debug("power_consumed= " + currentPowerConsumed);
+        //CIH 190601 Add additional CO2 Logging
+        myLogger.debug("CO2 Gathered= " + gatheredCO2);  
+        myLogger.debug("CO2 to be pushed to store= "+ currentCO2Produced);
     }
 
     private void pushCO2() {
