@@ -32,6 +32,7 @@ import com.traclabs.biosim.util.OrbUtils;
 public class BiosimMain {
 
 	private Logger myLogger;
+	private String xmlFile;        
 
 	public BiosimMain() {
 		OrbUtils.initializeLog();
@@ -44,6 +45,9 @@ public class BiosimMain {
 	 * @param args
 	 *            can start TestDriver with -gui or -nogui (optional id=X where
 	 *            X is an integer)
+	 *            -xml XML configuration file for setting up simulation configuration
+	 *            
+	 * Modified by Curt Holmer for HandController methods and supporting XML Configuration file
 	 */
 	public static void main(String args[]) {
 		BiosimMain myMain = new BiosimMain();
@@ -53,10 +57,10 @@ public class BiosimMain {
 	private void checkArgs(String[] myArgs) {
 		myLogger.debug("arg length = " + myArgs.length);
 		int myID = 0;
-		String xmlFile = null;
+		xmlFile = null;
 		boolean wantsToRunCommandLine = false;
 		boolean wantsToRunGUI = false;
-		boolean wantsToRunController = false;
+		boolean wantsToRunHandController = false;
 		boolean wantsToRunUnreal = false;
 		boolean wantsToPhotosynthesis = false;
 		boolean wantsToRunSensorViewer = false;
@@ -77,7 +81,7 @@ public class BiosimMain {
 			} else if (myArgs[i].equals("console")) {
 				wantsToRunCommandLine = true;
 			} else if (myArgs[i].equals("controller")) {
-				wantsToRunController = true;
+				wantsToRunHandController = true;
 			} else if (myArgs[i].equals("simple-controller")) {
 				wantsToRunSimpleController = true;
 			} else if (myArgs[i].equals("unreal")) {
@@ -168,8 +172,8 @@ public class BiosimMain {
 			runGUI();
 		else if (wantsToPhotosynthesis)
 			runPhotosynthesis();
-		else if (wantsToRunController)
-			runHandController();
+		else if (wantsToRunHandController)
+			runHandController(xmlFile);
 		else if (wantsToRunSimpleController)
 			runSimpleController();
 		else if (wantsToRunMurderController)
@@ -267,8 +271,8 @@ public class BiosimMain {
 		newCommandLine.runCommandLine();
 	}
 
-	private void runHandController() {
-		HandController myController = new HandController();
+	private void runHandController(String xmlFile) {
+		HandController myController = new HandController(xmlFile);
 		myController.runSim();
 	}
 
