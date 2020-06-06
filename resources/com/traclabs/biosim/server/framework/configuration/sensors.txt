@@ -1,0 +1,54 @@
+ 	<-- use for check of Mole sensor implementation -->	
+			<TotalMolesSensor input="Crew_Quarters" moduleName="Crew_Quarters_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			<TotalMolesSensor input="Labs" moduleName="Labs_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			<TotalMolesSensor input="Galley" moduleName="Galley_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			<TotalMolesSensor input="Maintenance" moduleName="Maintenance_Moles" logLevel="DEBUG"></TotalMolesSensor>
+			
+			<-- Currently only using O2 Moles
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_CO2_Concentration" gasType="CO2" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Labs" moduleName="Labs_CO2_Concentration" gasType="CO2" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Galley" moduleName="Galley_CO2_Concentration" gasType="CO2" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Maintenance" moduleName="Maintenance_CO2_Concentration" gasType="CO2" logLevel="DEBUG"/>
+						
+ 			<GasPressureSensor input="Crew_Quarters" moduleName="Crew_Quarters_CO2_Pressure" gasType="CO2" logLevel="DEBUG" />
+			<GasPressureSensor input="Labs" moduleName="Labs_CO2_Pressure" gasType="CO2" logLevel="DEBUG" />
+			<GasPressureSensor input="Galley" moduleName="Galley_CO2_Pressure" gasType="CO2" logLevel="DEBUG" />
+			<GasPressureSensor input="Maintenance" moduleName="Maintenance_CO2_Pressure" gasType="CO2" logLevel="DEBUG" />
+			-->
+				
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Labs" moduleName="Labs_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Galley" moduleName="Galley_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Maintenance" moduleName="Maintenance_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
+			
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Labs" moduleName="Labs_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Galley" moduleName="Galley_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Maintenance" moduleName="Maintenance_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			
+			<-- Currently only using O2 Moles
+			<GasPressureSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Pressure" gasType="O2" logLevel="DEBUG" />
+			<GasPressureSensor input="Labs" moduleName="Labss_O2_Pressure" gasType="O2" logLevel="DEBUG" />
+			<GasPressureSensor input="Galley" moduleName="Galley_O2_Pressure" gasType="O2" logLevel="DEBUG" />
+			<GasPressureSensor input="Maintenance" moduleName="Maintenance_O2_Pressure" gasType="O2" logLevel="DEBUG" />
+				
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_N_Concentration" gasType="NITROGEN" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Labs" moduleName="Labs_N_Concentration" gasType="NITROGEN" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Galley" moduleName="Galley_N_Concentration" gasType="NITROGEN" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Maintenance" moduleName="Maintenance_N_Concentration" gasType="NITROGEN" logLevel="DEBUG"/>
+					
+ 			<GasPressureSensor input="Crew_Quarters" moduleName="Crew_Quarters_N_Pressure" gasType="NITROGEN" logLevel="DEBUG" />
+			<GasPressureSensor input="Labs" moduleName="Labs_N_Pressure" gasType="NITROGEN" logLevel="DEBUG" />
+			<GasPressureSensor input="Galley" moduleName="Galley_N_Pressure" gasType="NITROGEN" logLevel="DEBUG" />
+			<GasPressureSensor input="Maintenance" moduleName="Maintenance_N_Pressure" gasType="NITROGEN" logLevel="DEBUG" />
+		
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_Other_Concentration" gasType="OTHER" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Labs" moduleName="Labs_Other_Concentration" gasType="OTHER" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Galley" moduleName="Galley_Other_Concentration" gasType="OTHER" logLevel="DEBUG"/>
+			<GasConcentrationSensor input="Maintenance" moduleName="Maintenance_Other_Concentration" gasType="OTHER" logLevel="DEBUG"/>
+					
+ 			<GasPressureSensor input="Crew_Quarters" moduleName="Crew_Quarters_Other_Pressure" gasType="OTHER" logLevel="DEBUG" />
+			<GasPressureSensor input="Labs" moduleName="Labs_Quarters_Other_Pressure" gasType="OTHER" logLevel="DEBUG" />
+			<GasPressureSensor input="Galley" moduleName="Galley_Other_Pressure" gasType="OTHER" logLevel="DEBUG" />
+			<GasPressureSensor input="Maintenance" moduleName="Maintenance_Other_Pressure" gasType="OTHER" logLevel="DEBUG" />
+		    -->

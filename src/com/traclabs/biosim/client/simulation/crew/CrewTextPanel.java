@@ -16,6 +16,8 @@ import com.traclabs.biosim.client.framework.TimedPanel;
 import com.traclabs.biosim.client.simulation.framework.SimDesktopFrame;
 import com.traclabs.biosim.client.util.BioHolderInitializer;
 import com.traclabs.biosim.idl.simulation.crew.CrewGroup;
+import com.traclabs.biosim.idl.simulation.crew.CrewGroupOperations; //CIH 190601 Added for tracking overall crew O2 consumption
+import com.traclabs.biosim.server.simulation.crew.CrewPersonImpl; //CIH 190601 Modified for tracking overall crew O2 consumption, replaces CrewPerson for some functions
 import com.traclabs.biosim.idl.simulation.crew.CrewPerson;
 import com.traclabs.biosim.idl.simulation.crew.Sex;
 
@@ -144,7 +146,7 @@ public class CrewTextPanel extends TimedPanel {
 								.getActivityIntensity());
 				newPersonPanel.add(newPersonGUI.activityIntensityLabel);
 				newPersonGUI.productivityLabel = new JLabel("productivity: "
-						+ numFormat.format(person
+						+ numFormat.format(((CrewPersonImpl) person)
 								.getProductivity()));
 				newPersonPanel.add(newPersonGUI.productivityLabel);
 				newPersonGUI.locationLabel = new JLabel("location: "+person.getCurrentCrewGroup().getAirConsumerDefinition().getEnvironments()[0].getModuleName());
@@ -226,7 +228,7 @@ public class CrewTextPanel extends TimedPanel {
 			newPersonGUI.activityNameLabel.setText("current activity: "
 					+ crewPerson.getCurrentActivity().getName());
 			newPersonGUI.productivityLabel.setText("productivity: "
-					+ numFormat.format(crewPerson.getProductivity()));
+					+ numFormat.format(((CrewPersonImpl) crewPerson).getProductivity()));
 			newPersonGUI.locationLabel.setText("location: "+crewPerson.getCurrentCrewGroup().getAirConsumerDefinition().getEnvironments()[0].getModuleName());
 			String sexString;
 			if (crewPerson.getSex() == Sex.male)

@@ -42,6 +42,8 @@ import com.traclabs.biosim.util.OrbUtils;
  * processor to create food for the crew. The plants can also (along with the
  * AirRS) take CO2 out of the air and add O2.
  * 
+ * CIH 052319 - It appears that crop area is meters squared.
+ * 
  * @author Scott Bell
  */
 

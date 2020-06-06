@@ -1,12 +1,9 @@
 package com.traclabs.biosim.idl.sensor.environment;
 
 /**
- *	GasMoleSensorPOA
- *  Based on  *	Generated from IDL interface "GasConcentrationSensor"
+ *	Generated from IDL interface "GasMoleSensor"
  *	@author JacORB IDL compiler V 2.2.3, 10-Dec-2005
- *  Modified by CHolmer 19-May-2019
  */
-
 
 
 public abstract class GasMoleSensorPOA

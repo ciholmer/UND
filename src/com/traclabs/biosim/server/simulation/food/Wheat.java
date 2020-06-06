@@ -67,12 +67,12 @@ public class Wheat extends Erectophile {
     }
 
     protected float getPhotoperiod() {
-        return 20f;
+        return 24f;
         //return 22f;
     }
 
     protected float getNominalPhotoperiod() {
-        return 20f;
+        return 24f;
     }
 
     protected float getTimeAtOrganFormation() {

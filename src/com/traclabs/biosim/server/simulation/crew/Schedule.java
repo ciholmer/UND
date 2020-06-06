@@ -34,6 +34,8 @@ public class Schedule {
 
     private Activity myAbsentActivity;
     
+    private Activity myOnboardActivity;
+    
     private CrewGroup myCrewGroup;
 
     /**
@@ -44,12 +46,17 @@ public class Schedule {
         createDefaultActivites();
     }
 
+    
+    /** 
+     * CIH 052019 add 'onboard' activity to aid in scheduling arrivals and departures
+     */
     private void createDefaultActivites() {
         allActivities = new Hashtable<String, Activity>();
         orderedSchedule = new Vector<Activity>();
         ActivityImpl bornActivityImpl = new ActivityImpl("born", 0, 0);
         ActivityImpl deadActivityImpl = new ActivityImpl("dead", 0, 0);
         ActivityImpl absentActivityImpl = new ActivityImpl("absent", 0, 0);
+        ActivityImpl onboardActivityImpl = new ActivityImpl("onboard", 0, 0);
         ActivityImpl sickActivityImpl = new ActivityImpl("sick", (int)(Math.ceil(12 / myCrewGroup.getTickLength())), 1);
         myBornActivity = ActivityHelper.narrow(OrbUtils
                 .poaToCorbaObj(bornActivityImpl));
@@ -59,11 +66,14 @@ public class Schedule {
                 .poaToCorbaObj(sickActivityImpl));
         myAbsentActivity = ActivityHelper.narrow(OrbUtils
                 .poaToCorbaObj(absentActivityImpl));
+        myOnboardActivity = ActivityHelper.narrow(OrbUtils
+                .poaToCorbaObj(onboardActivityImpl));
         allActivities.put("born", myBornActivity);
         orderedSchedule.add(0, myBornActivity);
         allActivities.put("dead", myDeadActivity);
         allActivities.put("sick", mySickActivity);
         allActivities.put("absent", myAbsentActivity);
+        allActivities.put("onboard", myOnboardActivity);
     }
 
     /**

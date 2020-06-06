@@ -246,7 +246,7 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Returns the CO2 produced (in moles) by this crew member during the
+	 * Returns the produced (in moles) by this crew member during the
 	 * current tick
 	 * 
 	 * @return the CO2 produced (in moles) by this crew member during the
@@ -316,6 +316,10 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 		String activityName = getCurrentActivity().getName();
 		if (activityName.equals("mission")) {
 			addProductivity();
+		} else if (activityName.equals("absent")){
+			// 200205 CIH added absent check to reset consumables on departure.
+			myLogger.debug("Crew member is absent - restet buffers");
+			reset();
 		} else if (activityName.startsWith("sleep")
 				|| activityName.startsWith("sick")) {
 			sleepBuffer.add(SLEEP_RECOVERY_RATE
@@ -394,7 +398,7 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Calculate the current CO2 produced by the crew memeber given the O2
+	 * Calculate the current produced by the crew memeber given the O2
 	 * consumed for the current tick. Algorithm derived from "Top Level Modeling
 	 * of Crew Component of ALSS" by Goudrazi and Ting
 	 * 
@@ -836,9 +840,23 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 			myAirOutputs[0].getVaporStore().add(vaporProduced);
 		}
 	}
+	
+	/**
+	 * CIH 200209 Add to zero crew member values when they depart before the end of the sim
+	 */
+	
+	public void crewDepart(){
+		myLogger.info(getName() + " is not in the simulation");
+		reset();
+		setCurrentActivity(getActivityByName("absent"));
+	}
 
+	/*
+	 * CIH 051519 Added activity logging for crew member by name as Info to help with Sim execution debugging
+	 */
 	public void log() {
 		super.log();
+		myLogger.info(getName() + " is " + getCurrentActivityName());
 		myLogger.debug("O2_consumed=" + O2Consumed);
 		myLogger.debug("CO2_produced=" + CO2Produced);
 		myLogger.debug("calories_consumed=" + caloriesConsumed);

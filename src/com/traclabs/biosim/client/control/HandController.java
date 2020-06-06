@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
+import com.traclabs.biosim.client.framework.BiosimMain;
 import com.traclabs.biosim.client.util.BioHolder;
 import com.traclabs.biosim.client.util.BioHolderInitializer;
 import com.traclabs.biosim.idl.actuator.framework.GenericActuator;
@@ -20,9 +21,18 @@ import com.traclabs.biosim.idl.simulation.water.PotableWaterStore;
 /**
  * @author Theresa Klein
  * @author Scott Bell (modified original code)
+ * @author Curt Holmer - modified code from Theresa and Scott for UND Thesis
+ * Code from https://github.com/scottbell/biosim/blob/develop/src/com/traclabs/biosim/client/control/HandController.java
+ * 
+ * Modified code for integration into thesis simulations
+ * BioPlex Phase 1 and II, Thesis early warning indicators test
+ * 
  */
 
 public class HandController implements BiosimController{
+	//For standalone implmentation
+	private String myXmlFilename;
+	
     //feedback loop sttuff
     private float levelToKeepO2At = 0.20f;
 
@@ -96,11 +106,12 @@ public class HandController implements BiosimController{
 
     private float myCO2AirStoreInInjectorMax;
 
-    public HandController() {
+    public HandController(String xmlFileName) {
+    	this.myXmlFilename = xmlFileName;
         myLogger = Logger.getLogger(this.getClass());
         setThresholds();
         continuousState = new StateMap();
-        myActionMap = new ActionMap();
+        myActionMap = new ActionMap(xmlFileName);
 
         myO2AirStoreInInjectorMax = myO2InInjectorAcutator.getMax();
 
@@ -111,7 +122,15 @@ public class HandController implements BiosimController{
     }
 
     public static void main(String[] args) {
-        HandController myController = new HandController();
+    	//add filename implmentation
+    	String filename = "default.biosim";
+		if (args.length > 0) {
+			filename = BiosimMain.getArgumentValue(args[0]);
+		}
+    	System.out.println("Class path is: " + System.getProperty("java.class.path"));
+    	System.out.println("Using  file: " + filename);
+    	
+        HandController myController = new HandController(filename);
         myController.collectReferences();
         myController.runSim();
     }
@@ -299,4 +318,3 @@ public class HandController implements BiosimController{
     }
 
 }
-

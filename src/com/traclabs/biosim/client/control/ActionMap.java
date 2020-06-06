@@ -31,31 +31,39 @@ public class ActionMap {
 
     private GenericActuator myWaterRSPowerInFlowRateActuator;
 
-    public ActionMap() {
-        collectReferences();
+    public ActionMap(String XMLConfigFile) {
+        collectReferences(XMLConfigFile);
         myLogger = Logger.getLogger(this.getClass());
     }
 
-    private void collectReferences() {
+    private void collectReferences(String XMLConfigFile) {
+    		
+		if(XMLConfigFile != null && !XMLConfigFile.isEmpty()) {
+			BioHolderInitializer.setFile(XMLConfigFile);
+		}
+		
         myBioHolder = BioHolderInitializer.getBioHolder();
 
-        WaterRS myWaterRS = myBioHolder.theWaterRSModules.get(0);
-        OGS myOGS = myBioHolder.theOGSModules.get(0);
-
-        myOGSPotableWaterInFlowRateActuator = myBioHolder
-                .getActuatorAttachedTo(
-                        myBioHolder.thePotableWaterInFlowRateActuators, myOGS);
-        myOGSPowerInFlowRateActuator = myBioHolder.getActuatorAttachedTo(
+        //Check to see if there is a WaterRS System  && and OGS
+        if (!myBioHolder.theWaterRSModules.isEmpty() && !myBioHolder.theOGSModules.isEmpty()){
+            //RS and OGS System, use it	
+        	WaterRS myWaterRS = myBioHolder.theWaterRSModules.get(0);
+        
+        	OGS myOGS = myBioHolder.theOGSModules.get(0);
+        	myOGSPotableWaterInFlowRateActuator = myBioHolder
+                .getActuatorAttachedTo( myBioHolder.thePotableWaterInFlowRateActuators, myOGS);
+        	myOGSPowerInFlowRateActuator = myBioHolder.getActuatorAttachedTo(
                 myBioHolder.thePowerInFlowRateActuators, myOGS);
 
-        myWaterRSDirtyWaterInFlowRateActuator = myBioHolder
-                .getActuatorAttachedTo(
-                        myBioHolder.theDirtyWaterInFlowRateActuators, myWaterRS);
-        myWaterRSGreyWaterInFlowRateActuator = myBioHolder
-                .getActuatorAttachedTo(
-                        myBioHolder.theGreyWaterInFlowRateActuators, myWaterRS);
-        myWaterRSPowerInFlowRateActuator = myBioHolder.getActuatorAttachedTo(
+        	myWaterRSDirtyWaterInFlowRateActuator = myBioHolder
+                .getActuatorAttachedTo( myBioHolder.theDirtyWaterInFlowRateActuators, myWaterRS);
+        	myWaterRSGreyWaterInFlowRateActuator = myBioHolder
+                .getActuatorAttachedTo( myBioHolder.theGreyWaterInFlowRateActuators, myWaterRS);
+        	myWaterRSPowerInFlowRateActuator = myBioHolder.getActuatorAttachedTo(
                 myBioHolder.thePowerInFlowRateActuators, myWaterRS);
+        } else {
+           //no OGS Use Env stores
+        	}
     }
 
     /**

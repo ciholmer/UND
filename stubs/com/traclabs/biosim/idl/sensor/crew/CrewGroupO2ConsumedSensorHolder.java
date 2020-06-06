@@ -1,11 +1,10 @@
 package com.traclabs.biosim.idl.sensor.crew;
 
 /**
- *  CrewGroupO2ConsumedSensorHolder
- *  Based on  *	Generated from IDL interface "CrewGroupProductivitySensor"
+ *	Generated from IDL interface "CrewGroupO2ConsumedSensor"
  *	@author JacORB IDL compiler V 2.2.3, 10-Dec-2005
- *  Modified by CHolmer 19-May-2019
  */
+
 public final class CrewGroupO2ConsumedSensorHolder	implements org.omg.CORBA.portable.Streamable{
 	 public CrewGroupO2ConsumedSensor value;
 	public CrewGroupO2ConsumedSensorHolder()

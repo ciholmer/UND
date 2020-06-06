@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../style/table.xsl"?>
+<biosim xmlns="http://www.traclabs.com/biosim"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
+	<Globals 
+		runTillCrewDeath="true"
+	    runTillPlantDeath="true" 
+		crewsToWatch="Crew_Quarters_Group Galley_Group Maintenance_Group"
+		plantsToWatch="Biomass"
+		runTillN="500"
+		startPaused="true">
+	</Globals>
+
+	<SimBioModules>
+		<environment>
+			<SimEnvironment moduleName="Crew_Quarters" initialVolume="900000">
+				<percentageInitialization waterPercentage="0.01"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="55" co2Percentage="0.0033" />
+			</SimEnvironment>
+			<SimEnvironment moduleName="Galley" initialVolume="200000" airlockVolume="36500">
+				<percentageInitialization waterPercentage="0.01"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="55" co2Percentage="0.0033" />
+			</SimEnvironment>
+			<SimEnvironment moduleName="Maintenance" initialVolume="450000" airlockVolume="36500">
+				<percentageInitialization waterPercentage="0.01"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="55" co2Percentage="0.0033" />
+			</SimEnvironment>
+			<SimEnvironment moduleName="Greenhouse" initialVolume="600000">
+				<percentageInitialization waterPercentage="0.01"
+									nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="55" co2Percentage="0.01" />
+			</SimEnvironment>
+			<SimEnvironment moduleName="EVA_Environment" initialVolume="36500">
+				<percentageInitialization waterPercentage="0"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="55" co2Percentage="0.0033" />
+			</SimEnvironment>
+			<Dehumidifier moduleName="Main_Dehumidifier">
+				<airConsumer inputs="Maintenance" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<dirtyWaterProducer desiredFlowRates="1000"	outputs="Dirty_Water_Store" maxFlowRates="1000" />
+			</Dehumidifier>
+			<Dehumidifier moduleName="Backup_Dehumidifier">
+				<airConsumer inputs="Galley" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<dirtyWaterProducer desiredFlowRates="1000"	outputs="Dirty_Water_Store" maxFlowRates="1000" />
+			</Dehumidifier>
+			<Fan moduleName="Maintenance_to_Crew_Fan">
+				<airConsumer inputs="Maintenance" desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="Fan_Battery" desiredFlowRates="50" maxFlowRates="50"/>
+				<airProducer desiredFlowRates="1000" outputs="Crew_Quarters" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Crew_to_Maintenance_Fan">
+				<airConsumer inputs="Crew_Quarters"	desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store" desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Maintenance" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Crew_to_Galley_Fan">
+				<airConsumer inputs="Crew_Quarters"	desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Galley" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Galley_to_Crew_Fan">
+				<airConsumer inputs="Galley" desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Crew_Quarters" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Galley_to_Greenhouse_Fan">
+				<airConsumer inputs="Galley" desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Greenhouse" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Greenhouse_to_Galley_Fan">
+				<airConsumer inputs="Greenhouse" desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Galley" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Galley_to_Maintenance_Fan">
+				<airConsumer inputs="Galley" desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Maintenance" maxFlowRates="1000" />
+			</Fan>
+			<Fan moduleName="Maintenance_to_Galley_Fan">
+				<airConsumer inputs="Maintenance" desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="50" maxFlowRates="50" />
+				<airProducer desiredFlowRates="1000" outputs="Galley" maxFlowRates="1000" />
+			</Fan>
+		</environment>
+		<air>
+			<NitrogenStore capacity="1000"	moduleName="Crew_Quarter_Nitrogen_Store" level="1000"/>
+			<NitrogenStore capacity="1000" moduleName="Galley_Nitrogen_Store" level="1000"/>
+			<NitrogenStore capacity="1000" moduleName="Greenhouse_Nitrogen_Store" level="1000"/>
+			<NitrogenStore capacity="1000"	moduleName="Maintenance_Nitrogen_Store" level="1000"/>
+			<O2Store capacity="10000" moduleName="O2_Store"	level="1000"/>
+			<H2Store capacity="10000" moduleName="H2_Store" level="1000"/>
+			<CO2Store capacity="10000" moduleName="CO2_Store" level="1000"/>
+			<MethaneStore capacity="1000" moduleName="Methane_Store" level="1000"/>
+			<VCCR moduleName="Main_VCCR" >
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="2000" maxFlowRates="2000" />
+				<airConsumer inputs="Maintenance" desiredFlowRates="10000" maxFlowRates="10000"/>
+				<airProducer desiredFlowRates="10000" outputs="Maintenance" maxFlowRates="10000" />
+				<CO2Producer desiredFlowRates="10000" outputs="CO2_Store" maxFlowRates="10000"/>
+			</VCCR>
+			<VCCR moduleName="Backup_VCCR">
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="2000" maxFlowRates="2000" />
+				<airConsumer inputs="Galley" desiredFlowRates="10000" maxFlowRates="10000"/>
+				<airProducer desiredFlowRates="10000" outputs="Galley" maxFlowRates="10000"/>
+				<CO2Producer desiredFlowRates="10000" outputs="CO2_Store" maxFlowRates="10000"/>
+			</VCCR>
+			<OGS moduleName="OGS">
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="1000" maxFlowRates="1000" />
+				<potableWaterConsumer inputs="Potable_Water_Store"	desiredFlowRates="10" maxFlowRates="10" />
+				<O2Producer desiredFlowRates="1000" outputs="O2_Store" maxFlowRates="1000"/>
+				<H2Producer desiredFlowRates="1000" outputs="H2_Store"	maxFlowRates="1000" />
+			</OGS>
+			<CRS moduleName="CRS">
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="100" maxFlowRates="100" />
+				<CO2Consumer inputs="CO2_Store" desiredFlowRates="100" maxFlowRates="100" />
+				<H2Consumer inputs="H2_Store" desiredFlowRates="100" maxFlowRates="100" />
+				<potableWaterProducer desiredFlowRates="100" outputs="Potable_Water_Store" maxFlowRates="100" />
+				<methaneProducer desiredFlowRates="100" outputs="Methane_Store" maxFlowRates="100"/>
+			</CRS>
+			
+			<Pyrolizer moduleName="Pyrolizer">
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="100" maxFlowRates="100" />
+				<methaneConsumer inputs="Methane_Store"	desiredFlowRates="100" maxFlowRates="100" />
+				<H2Producer desiredFlowRates="100" outputs="H2_Store" maxFlowRates="100" />
+				<dryWasteProducer desiredFlowRates="100" outputs="Dry_Waste_Store" maxFlowRates="100" />
+			</Pyrolizer>
+		</air>
+		<framework>
+			<Injector moduleName="Crew_Quarters_Nitrogen_Injector">
+				<nitrogenConsumer inputs="Crew_Quarter_Nitrogen_Store" desiredFlowRates="0" maxFlowRates="100" />
+				<nitrogenProducer desiredFlowRates="0" outputs="Crew_Quarters" maxFlowRates="100" />
+			</Injector>
+			<Injector moduleName="Galley_Nitrogen_Injector">
+				<nitrogenConsumer inputs="Galley_Nitrogen_Store" desiredFlowRates="0" maxFlowRates="100" />
+				<nitrogenProducer desiredFlowRates="0" outputs="Galley"	maxFlowRates="100" />
+			</Injector>
+			<Injector moduleName="Greenhouse_Nitrogen_Injector">
+				<nitrogenConsumer inputs="Greenhouse_Nitrogen_Store" desiredFlowRates="0" maxFlowRates="100" />
+				<nitrogenProducer desiredFlowRates="0" outputs="Greenhouse" maxFlowRates="100" />
+			</Injector>
+			<Injector moduleName="Maintenance_Nitrogen_Injector">
+				<nitrogenConsumer inputs="Maintenance_Nitrogen_Store" desiredFlowRates="0" maxFlowRates="100" />
+				<nitrogenProducer desiredFlowRates="0" outputs="Maintenance" maxFlowRates="100" />
+			</Injector>
+			<Injector moduleName="Maintenance_Oxygen_Injector">
+				<O2Consumer inputs="O2_Store" desiredFlowRates="3.3" maxFlowRates="3.3" />
+				<O2Producer desiredFlowRates="3.5" outputs="Maintenance" maxFlowRates="3.5" />
+			</Injector>
+			<Injector moduleName="Greenhouse_CO2_Injector">
+				<CO2Consumer inputs="CO2_Store" desiredFlowRates="5" maxFlowRates="100" />
+				<CO2Producer desiredFlowRates="5" outputs="Greenhouse" maxFlowRates="100" />
+			</Injector>
+		</framework>
+		<water>
+			<WaterRS moduleName="Water_Distiller" implementation="LINEAR">
+				<powerConsumer inputs="General_Power_Store"	desiredFlowRates="1000" maxFlowRates="1000" />
+				<dirtyWaterConsumer inputs="Dirty_Water_Store" desiredFlowRates="10" maxFlowRates="10" />
+				<greyWaterConsumer inputs="Grey_Water_Store" desiredFlowRates="10" maxFlowRates="10" />
+				<potableWaterProducer desiredFlowRates="1000" outputs="Potable_Water_Store" maxFlowRates="1000" />
+			</WaterRS>
+			<DirtyWaterStore capacity="10000" moduleName="Dirty_Water_Store" level="0"/>
+			<GreyWaterStore capacity="10000"	moduleName="Grey_Water_Store" level="0"/>
+			<PotableWaterStore capacity="500000" moduleName="Potable_Water_Store" level="500000"/>
+		</water>
+		<power>
+			<PowerStore capacity="100000" moduleName="General_Power_Store" level="100000"/>
+			<PowerStore capacity="100000" moduleName="Fan_Battery"	level="100000"/>
+			<PowerStore capacity="400000" moduleName="CO2_Removal_Battery"	level="400000"/>
+			<PowerPS moduleName="Fan_Battery_Source" generationType="NUCLEAR">
+				<powerProducer desiredFlowRates="1000"	outputs="Fan_Battery" maxFlowRates="1000" />
+			</PowerPS>
+			<PowerPS moduleName="General_Power_Producer" generationType="NUCLEAR" upperPowerGeneration="500000">
+				<powerProducer desiredFlowRates="1000000" outputs="General_Power_Store" maxFlowRates="1000000" />
+			</PowerPS>
+		</power>
+		<food>
+			<BiomassPS moduleName="Biomass" autoHarvestAndReplant="true">
+				<shelf cropArea="400" cropType="WHEAT"/>
+				<shelf cropArea="200" cropType="DRY_BEAN"/>
+				<shelf cropArea="200" cropType="LETTUCE"/>
+				<shelf cropArea="200" cropType="PEANUT"/>
+				<shelf cropArea="200" cropType="RICE"/>
+				<shelf cropArea="200" cropType="SOYBEAN"/>
+				<shelf cropArea="200" cropType="SWEET_POTATO"/>
+				<shelf cropArea="200" cropType="TOMATO"/>
+				<shelf cropArea="200" cropType="WHITE_POTATO"/>
+				<powerConsumer maxFlowRates="20000" desiredFlowRates="18000" inputs="General_Power_Store"/>
+				<potableWaterConsumer maxFlowRates="2500" desiredFlowRates="1000" inputs="Potable_Water_Store"/>
+				<greyWaterConsumer maxFlowRates="2500" desiredFlowRates="1000" inputs="Grey_Water_Store"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="Greenhouse"/>
+				<dirtyWaterProducer maxFlowRates="10000" desiredFlowRates="500" outputs="Dirty_Water_Store"/>
+				<biomassProducer maxFlowRates="10000" desiredFlowRates="500" outputs="BiomassStore"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="Greenhouse"/>
+			</BiomassPS>
+			<BiomassStore moduleName="BiomassStore" capacity="50000" level="30000"/>
+			<FoodStore capacity="100000" level="10000" moduleName="Food_Store" />
+		</food>
+		<waste>
+			<DryWasteStore capacity="1000000" moduleName="Dry_Waste_Store" level="0"/>
+		</waste>
+		<crew>
+			<CrewGroup moduleName="Crew_Quarters_Group">
+				<potableWaterConsumer inputs="Potable_Water_Store"	desiredFlowRates="3" maxFlowRates="100"/>
+				<airConsumer inputs="Crew_Quarters" desiredFlowRates="0" maxFlowRates="0" />
+				<foodConsumer inputs="Food_Store" desiredFlowRates="5"	maxFlowRates="5"/>
+				<dirtyWaterProducer desiredFlowRates="100"	outputs="Dirty_Water_Store" maxFlowRates="100"/>
+				<greyWaterProducer desiredFlowRates="100" outputs="Grey_Water_Store" maxFlowRates="100" />
+				<airProducer desiredFlowRates="0" outputs="Crew_Quarters" maxFlowRates="0" />
+				<dryWasteProducer desiredFlowRates="10"	outputs="Dry_Waste_Store" maxFlowRates="10"/>
+				<crewPerson age="35" name="Buck Rogers" sex="MALE"	weight="75">
+					<schedule>
+						<activity intensity="1" name="Sleep" length="8" />
+						<activity intensity="5" name="Excercise" length="1" />
+						<activity intensity="2" name="Hygiene" length="1" />
+						<activity intensity="2" name="Eating" length="1"/>
+						<activity intensity="6" name="EVA" length="1" xsi:type="EVAActivityType" evaCrewGroup="EVA_Crew_Group" />
+						<activity intensity="3" name="Mission" length="8"/>
+						<activity intensity="2" name="Maintenance" length="1"/>
+						<activity intensity="2" name="Leasure" length="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson age="35" name="Tim O'Connor" sex="MALE"	weight="72">
+					<schedule>
+						<activity intensity="1" name="Sleep" length="8" />
+						<activity intensity="5" name="Excercise" length="1" />
+						<activity intensity="2" name="Hygiene" length="1" />
+						<activity intensity="2" name="Eating" length="1"/>
+						<activity intensity="3" name="Mission" length="9"/>
+						<activity intensity="2" name="Maintenance" length="1"/>
+						<activity intensity="2" name="Leasure" length="2"/>
+					</schedule>
+				</crewPerson>
+			</CrewGroup>
+			<CrewGroup moduleName="Galley_Group">
+				<potableWaterConsumer inputs="Potable_Water_Store" desiredFlowRates="3" maxFlowRates="100" />
+				<airConsumer inputs="Galley" desiredFlowRates="0" maxFlowRates="0" />
+				<foodConsumer inputs="Food_Store" desiredFlowRates="5" maxFlowRates="5"/>
+				<dirtyWaterProducer desiredFlowRates="100" outputs="Dirty_Water_Store" maxFlowRates="100"/>
+				<greyWaterProducer desiredFlowRates="100" outputs="Grey_Water_Store" maxFlowRates="100" />
+				<airProducer desiredFlowRates="0" outputs="Galley" maxFlowRates="0" />
+				<dryWasteProducer desiredFlowRates="10"	outputs="Dry_Waste_Store" maxFlowRates="10" />
+				<crewPerson age="35" name="Wilma Deering" sex="FEMALE"	weight="55">
+					<schedule>
+						<activity intensity="1" name="Sleep" length="8" />
+						<activity intensity="2" name="Hygiene" length="1" />
+						<activity intensity="5" name="Excercise" length="1" />
+						<activity intensity="2" name="Eating" length="1"/>
+						<activity intensity="6" name="EVA" length="1" xsi:type="EVAActivityType" evaCrewGroup="EVA_Crew_Group" />
+						<activity intensity="3" name="Mission" length="8"/>
+						<activity intensity="2" name="Maintenance" length="1"/>
+						<activity intensity="2" name="Leasure" length="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson age="30" name="Freeman Lowell" sex="MALE"	weight="70">
+					<schedule>
+						<activity intensity="1" name="Sleep" length="8" />
+						<activity intensity="2" name="Hygiene" length="1" />
+						<activity intensity="5" name="Excercise" length="1" />
+						<activity intensity="2" name="Eating" length="1"/>
+						<activity intensity="3" name="Mission" length="8"/>
+						<activity intensity="6" name="EVA" length="1" xsi:type="EVAActivityType" evaCrewGroup="EVA_Crew_Group" />
+						<activity intensity="2" name="Maintenance" length="1"/>
+						<activity intensity="2" name="Leasure" length="2"/>
+					</schedule>
+				</crewPerson>
+			</CrewGroup>
+			
+			<CrewGroup moduleName="Maintenance_Group">
+				<potableWaterConsumer inputs="Potable_Water_Store" desiredFlowRates="3" maxFlowRates="100"/>
+				<airConsumer inputs="Maintenance" desiredFlowRates="0" maxFlowRates="0" />
+				<foodConsumer inputs="Food_Store" desiredFlowRates="5" maxFlowRates="5"/>
+				<dirtyWaterProducer desiredFlowRates="100" outputs="Dirty_Water_Store" maxFlowRates="100"/>
+				<greyWaterProducer desiredFlowRates="100" outputs="Grey_Water_Store" maxFlowRates="100" />
+				<airProducer desiredFlowRates="0" outputs="Maintenance" maxFlowRates="0" />
+				<dryWasteProducer desiredFlowRates="10"	outputs="Dry_Waste_Store" maxFlowRates="10"/>
+				<crewPerson age="32" name="Lana Kane" sex="FEMALE"	weight="65">
+					<schedule>
+						<activity intensity="1" name="Sleep" length="8" />
+						<activity intensity="2" name="Hygiene" length="1" />
+						<activity intensity="2" name="Eating" length="1"/>
+						<activity intensity="5" name="Excercise" length="1" />
+						<activity intensity="3" name="Mission" length="8"/>
+						<activity intensity="6" name="EVA" length="1" xsi:type="EVAActivityType" evaCrewGroup="EVA_Crew_Group" />
+						<activity intensity="2" name="Maintenance" length="1"/>
+						<activity intensity="2" name="Leasure" length="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson age="35" name="Pops Racer" sex="MALE"	weight="75">
+					<schedule>
+						<activity intensity="1" name="Sleep" length="8" />
+						<activity intensity="2" name="Hygiene" length="1" />
+						<activity intensity="2" name="Eating" length="1"/>
+						<activity intensity="5" name="Excercise" length="1" />
+						<activity intensity="3" name="Mission" length="9"/>
+						<activity intensity="2" name="Maintenance" length="1"/>
+						<activity intensity="2" name="Leasure" length="2"/>
+					</schedule>
+				</crewPerson>
+			</CrewGroup>
+			<CrewGroup moduleName="EVA_Crew_Group">
+				<potableWaterConsumer inputs="Potable_Water_Store" desiredFlowRates="3" maxFlowRates="10"/>
+				<airConsumer inputs="EVA_Environment" desiredFlowRates="0" maxFlowRates="0" />
+				<foodConsumer inputs="Food_Store" desiredFlowRates="5" maxFlowRates="5"/>
+				<dirtyWaterProducer desiredFlowRates="100" outputs="Dirty_Water_Store" maxFlowRates="100"/>
+				<greyWaterProducer desiredFlowRates="100" outputs="Grey_Water_Store" maxFlowRates="100" />
+				<airProducer desiredFlowRates="0" outputs="EVA_Environment" maxFlowRates="0" />
+				<dryWasteProducer desiredFlowRates="10" outputs="Dry_Waste_Store" maxFlowRates="10"/>
+			</CrewGroup>
+		</crew>
+	</SimBioModules>
+	<Sensors>
+		 <crew>
+	    	<CrewGroupO2ConsumedSensor input="Crew_Quarters_Group" moduleName="CrewQuarters_O2Consumed" logLevel="DEBUG" />
+	    	<CrewGroupO2ConsumedSensor input="Galley_Group" moduleName="Galley_O2Consumed" logLevel="DEBUG" />
+	    	<CrewGroupO2ConsumedSensor input="Maintenance_Group" moduleName="Maint_O2Consumed" logLevel="DEBUG" />
+	    	
+	    </crew>
+		<power>
+			<PowerInFlowRateSensor input="Main_VCCR" moduleName="MainVccrPowerSensor" index="0" logLevel="INFO" isBionetEnabled="false"/>
+			<PowerInFlowRateSensor input="Backup_VCCR" moduleName="BackupVccrPowerSensor" index="0" logLevel="INFO"	isBionetEnabled="false"/>
+		</power>
+		<air>
+			<CO2OutFlowRateSensor input="Main_VCCR" moduleName="MainVccrCo2OutSensor" index="0" isBionetEnabled="false" logLevel="DEBUG"/>
+			<CO2OutFlowRateSensor input="Backup_VCCR" moduleName="BackupVccrCo2OutSensor" index="0" isBionetEnabled="false" logLevel="DEBUG"/>
+		</air>
+		<environment>
+			<AirInFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirInSensor" index="0" isBionetEnabled="false"/>
+			<AirOutFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirOutSensor" index="0" isBionetEnabled="false"/>
+			
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Moles" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_CO2_Moles" gasType="CO2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Greenhouse" moduleName="Greenhouse_O2_Moles" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Greenhouse" moduleName="Greenhouse_CO2_Moles" gasType="CO2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Galley" moduleName="Galley_O2_Moles" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Galley" moduleName="Galley_CO2_Moles" gasType="CO2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Maintenance" moduleName="Maintenance_O2_Moles" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Maintenance" moduleName="Maintenance_CO2_Moles" gasType="CO2" logLevel="DEBUG"/>
+
+			
+			<AirInFlowRateSensor input="Maintenance_to_Crew_Fan" moduleName="Maintenance_to_Crew_Fan-InSensor" index="0" logLevel="INFO"/>
+			<AirOutFlowRateSensor input="Maintenance_to_Crew_Fan" moduleName="Maintenance_to_Crew_Fan-OutSensor" index="0" logLevel="INFO"/>
+			<AirInFlowRateSensor input="Crew_to_Maintenance_Fan" moduleName="Crew_to_Maintenance_Fan-InSensor" index="0" logLevel="INFO"/>
+			<AirOutFlowRateSensor input="Crew_to_Maintenance_Fan" moduleName="Crew_to_Maintenance_Fan-OutSensor" index="0" logLevel="INFO"/>
+			
+			<AirInFlowRateSensor input="Crew_to_Galley_Fan" moduleName="Crew_to_Galley_Fan-InSensor" index="0" logLevel="INFO"/>
+			<AirOutFlowRateSensor input="Crew_to_Galley_Fan" moduleName="Crew_to_Galley_Fan-OutSensor" index="0" logLevel="INFO"/>
+			<AirInFlowRateSensor input="Galley_to_Crew_Fan" moduleName="Galley_to_Crew_Fan-InSensor" index="0" logLevel="INFO"/>
+			<AirOutFlowRateSensor input="Galley_to_Crew_Fan" moduleName="Galley_to_Crew_Fan-OutSensor" index="0" logLevel="INFO"/>
+			
+			<AirInFlowRateSensor input="Galley_to_Greenhouse_Fan" moduleName="Galley_to_Greenhouse_Fan-InSensor" index="0" logLevel="INFO"/>
+			<AirOutFlowRateSensor input="Galley_to_Greenhouse_Fan" moduleName="Galley_to_Greenhouse_Fan-OutSensor" index="0" logLevel="INFO"/>
+			<AirInFlowRateSensor input="Greenhouse_to_Galley_Fan" moduleName="Greenhouse_to_Galley_Fan-InSensor" index="0" logLevel="INFO"/>
+			<AirOutFlowRateSensor input="Greenhouse_to_Galley_Fan" moduleName="Greenhouse_to_Galley_Fan-OutSensor" index="0" logLevel="INFO"/>
+			
+		</environment>
+		<framework>
+			<StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="CO2_Store" moduleName="CO2_Store_Level" logLevel="DEBUG"/>
+		</framework>
+	</Sensors>
+	<Actuators>
+		<power>
+			<PowerInFlowRateActuator output="Main_VCCR"	moduleName="MainVccrPower" index="0" logLevel="INFO" isBionetEnabled="false"/>
+			<PowerInFlowRateActuator output="Backup_VCCR" moduleName="BackupVccrPower" index="0" logLevel="INFO" isBionetEnabled="false"/>
+		</power>
+	</Actuators>
+</biosim>

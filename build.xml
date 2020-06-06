@@ -107,7 +107,8 @@
 		</javac>
 	</target>
 	
-	<target name="build-util" depends="" description="compile the util">
+	<target name="build-util" depends="" 
+		description="compile the util">
 		<echo message="Compling the util" />
 		<javac target="1.8" source="1.8" srcdir="${src}/com/traclabs/biosim/util" destdir="${buildDir}"
 			nowarn="yes" failonerror="yes" debug="on" includeantruntime="false">

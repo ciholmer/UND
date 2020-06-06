@@ -649,15 +649,18 @@ public abstract class PlantImpl extends PlantPOA {
 
     //in g/meters^2*day
     private float calculateDailyCarbonGain() {
-        float photoperiod = getPhotoperiod();
+        float dailyCarbonGain;
+    	float photoperiod = getPhotoperiod();
         float PPF = getAveragePPF();
-        //myLogger.debug("photoperiod: " + photoperiod);
-        //myLogger.debug("carbonUseEfficiency24:" + carbonUseEfficiency24);
+        myLogger.debug("photoperiod: " + photoperiod);
+        myLogger.debug("carbonUseEfficiency24:" + carbonUseEfficiency24);
         //myLogger.debug("myPPFFractionAbsorbed:" + myPPFFractionAbsorbed);
         //myLogger.debug("CQY: " + CQY);
         //myLogger.debug("PPF: " + PPF);
-        return (0.0036f * photoperiod * carbonUseEfficiency24
+        dailyCarbonGain = (0.0036f * photoperiod * carbonUseEfficiency24
                 * myPPFFractionAbsorbed * CQY * PPF);
+        myLogger.debug("dailyCarbonGain g/meters^2*day: "+ dailyCarbonGain);
+        return dailyCarbonGain;
     }
 
     //in liters/day

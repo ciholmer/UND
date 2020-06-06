@@ -121,6 +121,7 @@ public class OGSImpl extends SimBioModuleImpl implements OGSOperations,
                 * myProductionRate;
         float O2ToDistrubute = currentO2Produced;
         float H2ToDistrubute = currentH2Produced;
+        myLogger.debug("OGS Water used: "+ molesOfWater +" O2 to Store: " + currentO2Produced + " H2 to Store: " + currentH2Produced); //CIH 200119 Added additional logging
         myO2ProducerDefinitionImpl
                 .pushResourceToStores(O2ToDistrubute);
         myH2ProducerDefinitionImpl

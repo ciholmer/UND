@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../style/table.xsl"?>
+<biosim xmlns="http://www.traclabs.com/biosim"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
+	<Globals 
+	runTillPlantDeath="true"
+	runTillN="1680" 
+	plantsToWatch="VPGC"
+	startPaused="true">
+
+	</Globals>
+	<SimBioModules>
+		<environment>
+			<SimEnvironment moduleName="SimEnvironment" initialVolume="36500" >
+				<percentageInitialization waterPercentage="0.01"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="101.325" co2Percentage="0.0033"/>
+		    </SimEnvironment>
+		     <Dehumidifier moduleName="Main_Dehumidifier">
+				<airConsumer inputs="SimEnvironment"
+					desiredFlowRates="1000" maxFlowRates="1000" />
+				<dirtyWaterProducer desiredFlowRates="1000"
+					outputs="DirtyWaterStore" maxFlowRates="1000" />
+			</Dehumidifier>
+		</environment> 
+		<food>
+		   <BiomassPS moduleName="VPGC" autoHarvestAndReplant="false" logLevel="INFO">
+				<shelf cropArea="11.2" cropType="WHEAT"/>
+				<powerConsumer maxFlowRates="20000" desiredFlowRates="18000" inputs="PowerStore"/>
+				<potableWaterConsumer maxFlowRates="250" desiredFlowRates="150" inputs="PotableWaterStore"/>
+				<greyWaterConsumer maxFlowRates="250" desiredFlowRates="150" inputs="GreyWaterStore"/>
+				<airConsumer maxFlowRates="1000" desiredFlowRates="500" inputs="SimEnvironment"/>
+				<dirtyWaterProducer maxFlowRates="1000" desiredFlowRates="150" outputs="DirtyWaterStore"/>
+				<biomassProducer maxFlowRates="1000" desiredFlowRates="100" outputs="BiomassStore"/>
+				<airProducer maxFlowRates="1000" desiredFlowRates="500" outputs="SimEnvironment"/>
+			</BiomassPS>
+			<BiomassStore moduleName="BiomassStore" capacity="500" level="300"/>
+			<FoodStore moduleName="FoodStore" capacity="100000" level="100000"/>
+		</food>
+		<power>
+			<PowerStore moduleName="PowerStore" capacity="100000000000" level="100000000000"/>
+		</power>
+		<water>
+			<PotableWaterStore moduleName="PotableWaterStore" capacity="500000" level="500000"/>
+			<GreyWaterStore moduleName="GreyWaterStore" capacity="500" level="0"/>
+			<DirtyWaterStore moduleName="DirtyWaterStore" capacity="500" level="0"/>
+		</water>
+		<air>
+			<MethaneStore capacity="0" moduleName="MethaneStore" level="0"/>
+			<NitrogenStore capacity="0" moduleName="NitrogenStore" level="0"/>
+			<CO2Store capacity="10000" moduleName="CO2_Store" level="10000"/>
+			<H2Store capacity="10000" moduleName="H2_Store" level="0"/>
+			<O2Store capacity="10000" moduleName="O2_Store" level="1000"/>
+		</air>
+		<waste>
+			<DryWasteStore moduleName="DryWasteStore" capacity="500" level="0"/>
+		</waste>
+		<framework>
+		    <Injector moduleName="SimEnv_CO2_Injector">
+				<CO2Consumer inputs="CO2_Store" desiredFlowRates=".112" maxFlowRates="200" ></CO2Consumer>
+				<CO2Producer desiredFlowRates=".112" outputs="SimEnvironment" maxFlowRates="200" ></CO2Producer>
+			</Injector>
+			<Injector moduleName="SimEnv_O2_Concentrator">
+				<O2Consumer inputs="SimEnvironment" desiredFlowRates=".88" maxFlowRates="200" ></O2Consumer>
+				<O2Producer desiredFlowRates=".88" outputs="O2_Store" maxFlowRates="200" ></O2Producer>
+			</Injector>
+		</framework>
+	</SimBioModules>
+	<Sensors>
+	    <framework>
+	        <StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="CO2_Store" moduleName="CO2_Store_Level" logLevel="DEBUG"/>
+	    </framework>
+		<environment>
+			<GasMoleSensor input="SimEnvironment" moduleName="SimEnvironment_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="SimEnvironment" moduleName="SimEnvironment_CO2_Mole" gasType="CO2" logLevel="DEBUG"/>
+		</environment>
+
+	</Sensors>
+	<Actuators>
+	</Actuators>
+</biosim>

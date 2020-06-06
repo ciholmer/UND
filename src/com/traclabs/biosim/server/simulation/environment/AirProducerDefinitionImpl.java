@@ -39,7 +39,7 @@ public class AirProducerDefinitionImpl extends
 			return;
 		float actualFlowrateToEnvironment = 0f;
 				SimEnvironment environment = getEnvironments()[indexOfEnvironment];
-	    myLogger.debug("Pushing from Stores to "+ environment.getModuleName() +" -> O2: "+ airToPush.o2Moles + " CO2: "+ airToPush.co2Moles 
+	    myLogger.debug("Pushing to "+ environment.getModuleName() +" -> O2: "+ airToPush.o2Moles + " CO2: "+ airToPush.co2Moles 
 			+ " N: "+ airToPush.nitrogenMoles +" Other: " + airToPush.otherMoles + " Water Vapor:" + airToPush.vaporMoles);  //CIH 190601 - Added for addtional logging.
 		actualFlowrateToEnvironment += environment.getO2Store().add(randomFilter(airToPush.o2Moles));
 		actualFlowrateToEnvironment += environment.getCO2Store().add(randomFilter(airToPush.co2Moles));

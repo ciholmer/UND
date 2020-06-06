@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <biosim xmlns="http://www.traclabs.com/biosim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
-	<Globals runTillCrewDeath="false" runTillPlantDeath="true" plantsToWatch="BiomassPS" runTillN="2064" startPaused="false">
+	<Globals runTillCrewDeath="false" runTillPlantDeath="true" plantsToWatch="BiomassPS" runTillN="2064" startPaused="true">
 		<comment>The default initialization for BioSim</comment>
 		<author>Scott Bell</author>
 	</Globals>
@@ -9,8 +9,8 @@
 			<SimEnvironment moduleName="PlantEnvironment" initialVolume="100000000000000"/>
 		</environment>
 		<food>
-			<BiomassPS moduleName="BiomassPS" autoHarvestAndReplant="false">
-				<shelf cropArea="1" cropType="SOYBEAN"/>
+			<BiomassPS moduleName="BiomassPS" autoHarvestAndReplant="true">
+				<shelf cropArea="1" cropType="WHEAT"/>
 				<powerConsumer maxFlowRates="400" desiredFlowRates="400" inputs="PowerStore"/>
 				<potableWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="PotableWaterStore"/>
 				<greyWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="GreyWaterStore"/>

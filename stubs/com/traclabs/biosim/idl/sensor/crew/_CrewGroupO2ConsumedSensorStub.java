@@ -1,13 +1,11 @@
 package com.traclabs.biosim.idl.sensor.crew;
 
 
-
 /**
- * _CrewGroupO2ConsumedSensorStub
- *  Based on  *	Generated from IDL interface "CrewGroupProductivitySensor"
+ *	Generated from IDL interface "CrewGroupO2ConsumedSensor"
  *	@author JacORB IDL compiler V 2.2.3, 10-Dec-2005
- *  Modified by CHolmer 19-May-2019
  */
+
 public class _CrewGroupO2ConsumedSensorStub
 	extends org.omg.CORBA.portable.ObjectImpl
 	implements com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensor

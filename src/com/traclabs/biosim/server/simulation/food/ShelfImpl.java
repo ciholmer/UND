@@ -55,6 +55,8 @@ public class ShelfImpl extends ShelfPOA {
         myBiomassPSImpl = pBiomassImpl;
         replant(pType, cropAreaTotal);
         waterNeeded = cropAreaUsed * waterNeededPerMeterSquared;
+        myLogger.debug("ShelfImpl: power needed: " + powerLevel);
+        myLogger.debug("ShelfImpl: WaterNeeded: " + waterNeeded);
     }
 
     public Plant getPlant() {
@@ -118,13 +120,18 @@ public class ShelfImpl extends ShelfPOA {
                         extraWaterNeeded - gatheredGreyWater,
                         1f / myBiomassPSImpl.getNumberOfShelves());
         waterLevel += gatheredGreyWater + gatheredPotableWater;
+        myLogger.debug("ShelfImpl: PotableWaterUsed: " + gatheredPotableWater);
+        myLogger.debug("ShelfImpl: GrayWaterUsed: " + gatheredGreyWater);
+        
     }
 
     private void gatherPower() {
         float powerNeeded = POWER_PER_SQUARE_METER * getCropAreaUsed();
+        myLogger.debug("ShelfImpl: power needed: " + powerLevel);
         powerLevel = myBiomassPSImpl.getPowerConsumerDefinitionImpl()
                 .getFractionalResourceFromStores(powerNeeded,
                         1f / myBiomassPSImpl.getNumberOfShelves());
+        myLogger.debug("ShelfImpl: power pulled from stores: " + powerLevel);
     }
 
     public float takeWater(float pLiters) {
@@ -138,17 +145,18 @@ public class ShelfImpl extends ShelfPOA {
     }
 
     private void lightPlants() {
-        //myLogger.debug("ShelfImpl: powerLevel: " + powerLevel);
-        //myLogger.debug("ShelfImpl: getLampEfficiency:" + getLampEfficiency());
-        //myLogger.debug("ShelfImpl: getPSEfficiency: " + getPSEfficiency());
+        myLogger.debug("ShelfImpl: powerLevel: " + powerLevel);
+        myLogger.debug("ShelfImpl: getLampEfficiency:" + getLampEfficiency());
+        myLogger.debug("ShelfImpl: getPSEfficiency: " + getPSEfficiency());
         float powerToDeliver = Math
                 .min(powerLevel, myCrop.getPPFNeeded() * getCropAreaUsed()
                         / (getLampEfficiency() * getPSEfficiency()));
+        myLogger.debug("ShelfImpl: pwerToDeliver: " + powerToDeliver);
         if (powerToDeliver <= 0)
             powerToDeliver = Float.MIN_VALUE;
         float thePPF = powerToDeliver * getLampEfficiency() * getPSEfficiency()
                 / getCropAreaUsed();
-        //myLogger.debug("ShelfImpl: thePPF: " + thePPF);
+        myLogger.debug("ShelfImpl: thePPF: " + thePPF);
         myCrop.shine(thePPF);
     }
 

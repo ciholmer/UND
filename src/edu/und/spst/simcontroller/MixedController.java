@@ -101,7 +101,7 @@ public class MixedController extends AController {
 		collectReferences();
 		setThresholds();
 		continuousState = new StateMap();
-		myActionMap = new ActionMap();
+		myActionMap = new ActionMap("test/SimpleControllerInit.xml"); //CIH 200105 Added XML config file location
 
 		myO2AirStoreInInjectorMax = myO2AirStoreInInjectorAcutator.getMax();
 
@@ -116,7 +116,8 @@ public class MixedController extends AController {
 		collectReferences();
 		setThresholds();
 		continuousState = new StateMap();
-		myActionMap = new ActionMap();
+		myActionMap = new ActionMap("test/SimpleControllerInit.xml"); //CIH 200105 Added XML config file location
+
 
 		myO2AirStoreInInjectorMax = myO2AirStoreInInjectorAcutator.getMax();
 

@@ -403,13 +403,11 @@ module com{
                                                         boolean isSuffocating();
                                                         boolean isDead();
                                                         float getO2Consumed();
-                                                        float getO2Consumed();
                                                         float getGreyWaterProduced();
                                                         float getDirtyWaterProduced();
                                                         float getPotableWaterConsumed();
                                                         float getFoodConsumed();
                                                         float getCO2Produced();
-                                                        float getO2Consumed();
                                                         Activity getActivityByName(in string name);
                                                         Activity getScheduledActivityByOrder(in long order);
                                                         void setArrivalTick(in long arrivalTick);

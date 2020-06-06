@@ -49,24 +49,9 @@ public class CrewPersonPOATie
 			return super._default_POA();
 		}
 	}
-	public float getProductivity()
+	public int getTimeActivityPerformed()
 	{
-		return _delegate.getProductivity();
-	}
-
-	public void insertActivityInSchedule(com.traclabs.biosim.idl.simulation.crew.Activity newActivity, int order)
-	{
-_delegate.insertActivityInSchedule(newActivity,order);
-	}
-
-	public com.traclabs.biosim.idl.simulation.crew.Activity getScheduledActivityByOrder(int order)
-	{
-		return _delegate.getScheduledActivityByOrder(order);
-	}
-
-	public void setCurrentActivity(com.traclabs.biosim.idl.simulation.crew.Activity newActivity)
-	{
-_delegate.setCurrentActivity(newActivity);
+		return _delegate.getTimeActivityPerformed();
 	}
 
 	public void setLogLevel(com.traclabs.biosim.idl.framework.LogLevel pLogLevel)
@@ -74,44 +59,9 @@ _delegate.setCurrentActivity(newActivity);
 _delegate.setLogLevel(pLogLevel);
 	}
 
-	public float getPotableWaterConsumed()
+	public boolean isSick()
 	{
-		return _delegate.getPotableWaterConsumed();
-	}
-
-	public com.traclabs.biosim.idl.simulation.crew.Activity getActivityByName(java.lang.String name)
-	{
-		return _delegate.getActivityByName(name);
-	}
-
-	public float getDirtyWaterProduced()
-	{
-		return _delegate.getDirtyWaterProduced();
-	}
-
-	public boolean isSuffocating()
-	{
-		return _delegate.isSuffocating();
-	}
-
-	public float getWeight()
-	{
-		return _delegate.getWeight();
-	}
-
-	public void setDepartureTick(int departureTick)
-	{
-_delegate.setDepartureTick(departureTick);
-	}
-
-	public boolean isStarving()
-	{
-		return _delegate.isStarving();
-	}
-
-	public void sicken()
-	{
-_delegate.sicken();
+		return _delegate.isSick();
 	}
 
 	public java.lang.String getName()
@@ -119,19 +69,9 @@ _delegate.sicken();
 		return _delegate.getName();
 	}
 
-	public boolean isSick()
+	public int getDepartureTick()
 	{
-		return _delegate.isSick();
-	}
-
-	public boolean isThirsty()
-	{
-		return _delegate.isThirsty();
-	}
-
-	public float getGreyWaterProduced()
-	{
-		return _delegate.getGreyWaterProduced();
+		return _delegate.getDepartureTick();
 	}
 
 	public float getO2Consumed()
@@ -139,14 +79,14 @@ _delegate.sicken();
 		return _delegate.getO2Consumed();
 	}
 
-	public int getArrivalTick()
+	public float getWeight()
 	{
-		return _delegate.getArrivalTick();
+		return _delegate.getWeight();
 	}
 
-	public void reset()
+	public boolean isSuffocating()
 	{
-_delegate.reset();
+		return _delegate.isSuffocating();
 	}
 
 	public float getAge()
@@ -154,29 +94,24 @@ _delegate.reset();
 		return _delegate.getAge();
 	}
 
-	public int getDepartureTick()
+	public void insertActivityInSchedule(com.traclabs.biosim.idl.simulation.crew.Activity newActivity, int order)
 	{
-		return _delegate.getDepartureTick();
+_delegate.insertActivityInSchedule(newActivity,order);
 	}
 
-	public int getTimeActivityPerformed()
+	public boolean isStarving()
 	{
-		return _delegate.getTimeActivityPerformed();
+		return _delegate.isStarving();
 	}
 
-	public void insertActivityInScheduleNow(com.traclabs.biosim.idl.simulation.crew.Activity newActivity)
+	public com.traclabs.biosim.idl.simulation.crew.Activity getActivityByName(java.lang.String name)
 	{
-_delegate.insertActivityInScheduleNow(newActivity);
+		return _delegate.getActivityByName(name);
 	}
 
-	public float getCO2Produced()
+	public float getGreyWaterProduced()
 	{
-		return _delegate.getCO2Produced();
-	}
-
-	public com.traclabs.biosim.idl.simulation.crew.Sex getSex()
-	{
-		return _delegate.getSex();
+		return _delegate.getGreyWaterProduced();
 	}
 
 	public float getFoodConsumed()
@@ -184,24 +119,29 @@ _delegate.insertActivityInScheduleNow(newActivity);
 		return _delegate.getFoodConsumed();
 	}
 
+	public int getArrivalTick()
+	{
+		return _delegate.getArrivalTick();
+	}
+
+	public com.traclabs.biosim.idl.simulation.crew.Activity getScheduledActivityByOrder(int order)
+	{
+		return _delegate.getScheduledActivityByOrder(order);
+	}
+
+	public void sicken()
+	{
+_delegate.sicken();
+	}
+
+	public void reset()
+	{
+_delegate.reset();
+	}
+
 	public boolean isOnBoard()
 	{
 		return _delegate.isOnBoard();
-	}
-
-	public boolean isDead()
-	{
-		return _delegate.isDead();
-	}
-
-	public boolean isPoisoned()
-	{
-		return _delegate.isPoisoned();
-	}
-
-	public com.traclabs.biosim.idl.simulation.crew.Activity getCurrentActivity()
-	{
-		return _delegate.getCurrentActivity();
 	}
 
 	public void kill()
@@ -209,9 +149,34 @@ _delegate.insertActivityInScheduleNow(newActivity);
 _delegate.kill();
 	}
 
+	public boolean isDead()
+	{
+		return _delegate.isDead();
+	}
+
+	public float getPotableWaterConsumed()
+	{
+		return _delegate.getPotableWaterConsumed();
+	}
+
+	public com.traclabs.biosim.idl.simulation.crew.CrewGroup getCurrentCrewGroup()
+	{
+		return _delegate.getCurrentCrewGroup();
+	}
+
+	public com.traclabs.biosim.idl.simulation.crew.Sex getSex()
+	{
+		return _delegate.getSex();
+	}
+
 	public int getOrderOfScheduledActivity(java.lang.String name)
 	{
 		return _delegate.getOrderOfScheduledActivity(name);
+	}
+
+	public boolean isThirsty()
+	{
+		return _delegate.isThirsty();
 	}
 
 	public void tick()
@@ -219,14 +184,44 @@ _delegate.kill();
 _delegate.tick();
 	}
 
+	public float getDirtyWaterProduced()
+	{
+		return _delegate.getDirtyWaterProduced();
+	}
+
+	public void insertActivityInScheduleNow(com.traclabs.biosim.idl.simulation.crew.Activity newActivity)
+	{
+_delegate.insertActivityInScheduleNow(newActivity);
+	}
+
+	public boolean isPoisoned()
+	{
+		return _delegate.isPoisoned();
+	}
+
 	public void setArrivalTick(int arrivalTick)
 	{
 _delegate.setArrivalTick(arrivalTick);
 	}
 
-	public com.traclabs.biosim.idl.simulation.crew.CrewGroup getCurrentCrewGroup()
+	public void setDepartureTick(int departureTick)
 	{
-		return _delegate.getCurrentCrewGroup();
+_delegate.setDepartureTick(departureTick);
+	}
+
+	public void setCurrentActivity(com.traclabs.biosim.idl.simulation.crew.Activity newActivity)
+	{
+_delegate.setCurrentActivity(newActivity);
+	}
+
+	public com.traclabs.biosim.idl.simulation.crew.Activity getCurrentActivity()
+	{
+		return _delegate.getCurrentActivity();
+	}
+
+	public float getCO2Produced()
+	{
+		return _delegate.getCO2Produced();
 	}
 
 }

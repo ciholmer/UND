@@ -52,6 +52,7 @@ import com.traclabs.biosim.idl.sensor.air.NitrogenInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.air.NitrogenOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.air.O2InFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.air.O2OutFlowRateSensor;
+
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupAnyDeadSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupDeathSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensor;
@@ -388,6 +389,8 @@ public class BioHolder {
     public List<DirtyWaterInFlowRateActuator> theDirtyWaterInFlowRateActuators = new Vector<DirtyWaterInFlowRateActuator>();
 
     public List<DirtyWaterOutFlowRateActuator> theDirtyWaterOutFlowRateActuators = new Vector<DirtyWaterOutFlowRateActuator>();
+
+	//public List<O2AirStoreInFlowRateActuator> theO2AirStoreInFlowRateActuators = new Vector<O2AirStoreInFlowRateActuator>();
 
     protected BioHolder() {
     }

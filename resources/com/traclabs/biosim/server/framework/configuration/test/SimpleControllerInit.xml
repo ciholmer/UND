@@ -53,15 +53,15 @@
 			</CrewGroup>
         </crew>
         <environment>
-            <SimEnvironment moduleName="SimEnvironment" initialVolume="2000000000"/>
+            <SimEnvironment moduleName="SimEnvironment" initialVolume="36500"/>
         </environment>
         <food>
             <FoodStore capacity="1000000.0" level="1000000.0" moduleName="FoodStore"/>
         </food>
         <framework>
             <Injector moduleName="Injector">
-                <O2Consumer desiredFlowRates="100.0" inputs="O2Store" maxFlowRates="100.0"/>
-                <O2Producer desiredFlowRates="1000.0" maxFlowRates="1000.0" outputs="SimEnvironment"/>
+                <O2Consumer desiredFlowRates="0" inputs="O2Store" maxFlowRates="1000.0"/>
+                <O2Producer desiredFlowRates="0" maxFlowRates="1000.0" outputs="SimEnvironment"/>
             </Injector>
         </framework>
 		<power>
@@ -86,6 +86,9 @@
     	<environment>
     		<GasConcentrationSensor input="SimEnvironment" moduleName="O2ConcentrationSensor"
     			gasType="O2">
+    		</GasConcentrationSensor>
+    		<GasConcentrationSensor input="SimEnvironment" moduleName="CO2ConcentrationSensor"
+    			gasType="CO2">
     		</GasConcentrationSensor>
     	</environment>
     </Sensors>

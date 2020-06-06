@@ -196,12 +196,21 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
 	}
 
 	/**
-	 * Returns the crew member's current activity
+	 * Returns the crew member's current activity as an activity object
 	 * 
-	 * @return the crew member's current activity
+	 * @return the crew member's current activity as an activity object
 	 */
 	public Activity getCurrentActivity() {
 		return myCurrentActivity;
+	}
+	
+	/** CIH 05/2019
+	 * Returns the crew member's current activity name as a string
+	 * 
+	 * @return the crew member's current activity name as a string
+	 */
+	public String getCurrentActivityName() {
+		return myCurrentActivity.getName();
 	}
 
 	/**
@@ -329,13 +338,26 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
 		myCurrentCrewGroup.getAirConsumerDefinition().getEnvironments()[0]
 				.removeAirlockPercentage(0.05f);
 	}
-
+	 /** 
+     * CIH 052019 changed && to ^, && was not evaluating correctly to determine if someone was 'on board'
+     * Added else statement to change from "absent" to "onboard" if it was set
+     */
 	private void arriveOrDepart() {
 		if ((myCurrentCrewGroup.getMyTicks() < myArrivalTick)
-				&& (myCurrentCrewGroup.getMyTicks() >= myDepartureTick)) {
+				^ (myCurrentCrewGroup.getMyTicks() >= myDepartureTick)) {
 			myCurrentActivity = mySchedule.getActivityByName("absent");
+		} else {
+			if (myCurrentActivity ==  mySchedule.getActivityByName("absent")){
+				//CIH 052019 change from absent to something else, otherwise leave it alone
+				myCurrentActivity = mySchedule.getActivityByName("onboard");
+			}
+			
 		}
 	}
+	
+	/**
+	 * CIH 052019 added to easily check to see if the crew member is present
+	 */
 
 	public boolean isOnBoard() {
 		return (!myCurrentActivity.getName().equals("absent"));
@@ -372,7 +394,8 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
 	/**
 	 * When the CrewGroup ticks the crew member, the member: 1) increases the
 	 * time the activity has been performed by 1. on the condition that the crew
-	 * memeber isn't dead he/she then:. 2) attempts to collect references to
+	 * memeber isn't dead he/she then: (a) check to see if they are scheduled to arrive or depart. 
+	 * (b) check to see if they are onboard. Then: 2) attempts to collect references to
 	 * various server (if not already done). 3) possibly advances to the next
 	 * activity. 4) consumes air/food/water, exhales and excretes. 5) takes
 	 * afflictions from lack of any resources. 6) checks whether afflictions (if
@@ -381,14 +404,19 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
 	public void tick() {
 		myTimeActivityPerformed++;
 		if (!isDead()) {
-			arriveOrDepart();
-			if (isOnBoard()) {
+			arriveOrDepart();      //CIH 052019 - Add departure check
+			if (isOnBoard()) {	   //CIH 052019 - Check to see if the member is present
+				myLogger.debug("Crew member onboard, do activities, produce and consume resources");
 				advanceActivity();
 				consumeAndProduceResources();
 				if (getCurrentCrewGroup().getDeathEnabled())
 					afflictAndRecover();
+			} else {               //CIH 200209 - Crew member is not on onboard, reset crew member values
+				myLogger.debug("Crew member not onboard");
+				crewDepart();
 			}
 		}
+		myLogger.info(getName() + " is " + getCurrentActivityName());
 		if (myLogger.isDebugEnabled())
 			log();
 	}
@@ -396,6 +424,8 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
 	protected abstract void consumeAndProduceResources();
 
 	protected abstract void afflictAndRecover();
+	
+	protected abstract void crewDepart();
 
 	public void insertActivityInSchedule(Activity pActivity, int pOrder) {
 		mySchedule.insertActivityInSchedule(pActivity, pOrder);

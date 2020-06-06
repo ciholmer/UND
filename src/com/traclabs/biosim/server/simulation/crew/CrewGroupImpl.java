@@ -341,7 +341,7 @@ public class CrewGroupImpl extends SimBioModuleImpl implements
     public float getProductivity() {
         float productivity = 0f;
     	for (CrewPerson currentPerson : crewPeople.values())
-    		productivity += currentPerson.getProductivity();
+    		productivity += ((CrewPersonImpl) currentPerson).getProductivity();
         return productivity;
     }
 

@@ -85,7 +85,9 @@ public class Lettuce extends Planophile {
     }
 
     protected float getCQYMin() {
-        return 0f;
+    	//CIH 6/19 Lettuce not growing properly when CQY max ends up a negative.
+    	//Everything else has a min set
+        return 0.01f;
     }
 
     protected float getTimeAtCanopySenescence() {

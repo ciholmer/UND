@@ -28,13 +28,12 @@ public interface CrewPersonOperations
 	boolean isOnBoard();
 	boolean isSuffocating();
 	boolean isDead();
-	float getProductivity();
+	float getO2Consumed();
 	float getGreyWaterProduced();
 	float getDirtyWaterProduced();
 	float getPotableWaterConsumed();
 	float getFoodConsumed();
 	float getCO2Produced();
-	float getO2Consumed();
 	com.traclabs.biosim.idl.simulation.crew.Activity getActivityByName(java.lang.String name);
 	com.traclabs.biosim.idl.simulation.crew.Activity getScheduledActivityByOrder(int order);
 	void setArrivalTick(int arrivalTick);
