@@ -101,9 +101,9 @@ public class BioDriverImpl extends BioDriverPOA {
 	 * Starts the simulation
 	 */
 	public void startSimulation() {
-		myLogger.debug("BioDriverImpl" + myID + ": Sim start up, resetting simulation ...");
+		myLogger.info("BioDriverImpl" + myID + ": Sim start up, resetting simulation ...");
 		reset();
-		myLogger.debug("BioDriverImpl" + myID + ": Reset complete, starting Tick ...");
+		myLogger.info("BioDriverImpl" + myID + ": Reset complete, starting Tick ...");
 		myTickThread = new Thread(new Ticker(), "Biosim Tick Thread");
 		myTickThread.start();
 	}
@@ -325,7 +325,7 @@ public class BioDriverImpl extends BioDriverPOA {
 	 */
 	public synchronized void setDriverStutterLength(int pDriverStutterLength) {
 		if (pDriverStutterLength > 0)
-			myLogger.debug("BioDriverImpl" + myID + ": driver pause of "
+			myLogger.info("BioDriverImpl" + myID + ": driver pause of "
 					+ pDriverStutterLength + " milliseconds");
 		myDriverStutterLength = pDriverStutterLength;
 	}
@@ -482,7 +482,7 @@ public class BioDriverImpl extends BioDriverPOA {
 	private void runSimulation() {
 		Thread theCurrentThread = Thread.currentThread();
 		if (!simulationStarted)
-			myLogger.debug("BioDriverImpl " + myID + ": Sim is not started, resetting simulation ...");
+			myLogger.info("BioDriverImpl " + myID + ": Sim is not started, resetting simulation ...");
 			reset();
 		while (myTickThread == theCurrentThread) {
 			try {
@@ -495,10 +495,10 @@ public class BioDriverImpl extends BioDriverPOA {
 				}
 			} catch (InterruptedException e) {
 			}
-			myLogger.debug("BioDriverImpl" + myID + ": ticking simulation");
+			myLogger.info("BioDriverImpl" + myID + ": ticking simulation");
 			tick();
 			if (isDone()) {
-				myLogger.debug("BioDriverImpl" + myID + ": Simulation is done, ending simulation ...");
+				myLogger.info("BioDriverImpl" + myID + ": Simulation is done, ending simulation ...");
 				endSimulation();
 				if (looping)
 					myLogger.debug("BioDriverImpl" + myID + ": Simulation is not done and is looping, starting simulation ...");
@@ -515,7 +515,7 @@ public class BioDriverImpl extends BioDriverPOA {
 	 * this has happened.
 	 */
 	private void tick() {
-		myLogger.debug("BioDriveImpl: begin tick " + ticksGoneBy);
+		myLogger.info("BioDriveImpl: begin tick " + ticksGoneBy);
 		// Iterate through the actuators and tick them
 		for (BioModule currentBioModule : actuators)
 			currentBioModule.tick();

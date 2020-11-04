@@ -32,6 +32,7 @@ public interface CrewPersonOperations
 	float getGreyWaterProduced();
 	float getDirtyWaterProduced();
 	float getPotableWaterConsumed();
+	float getDryWasteProduced();
 	float getFoodConsumed();
 	float getCO2Produced();
 	com.traclabs.biosim.idl.simulation.crew.Activity getActivityByName(java.lang.String name);

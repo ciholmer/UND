@@ -1,5 +1,7 @@
 package com.traclabs.biosim.idl.simulation.food;
 
+import com.traclabs.biosim.idl.simulation.crew.CrewGroupOperations;
+
 
 /**
  *	Generated from IDL interface "BiomassPS"
@@ -1212,7 +1214,191 @@ public class _BiomassPSStub
 		}
 
 	}
+	
+	public float getTotalCO2Consumed()
+	{
+	while(true)
+	{
+	if(! this._is_local())
+	{
+		org.omg.CORBA.portable.InputStream _is = null;
+		try
+		{
+			org.omg.CORBA.portable.OutputStream _os = _request( "getCO2Consumed", true);
+			_is = _invoke(_os);
+			float _result = _is.read_float();
+			return _result;
+		}
+		catch( org.omg.CORBA.portable.RemarshalException _rx ){}
+		catch( org.omg.CORBA.portable.ApplicationException _ax )
+		{
+			String _id = _ax.getId();
+			throw new RuntimeException("Unexpected exception " + _id );
+		}
+		finally
+		{
+			this._releaseReply(_is);
+		}
+	}
+	else
+	{
+		org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke( "getCO2Consumed", _opsClass );
+		if( _so == null )
+			throw new org.omg.CORBA.UNKNOWN("local invocations not supported!");
+		BiomassPSOperations _localServant = (BiomassPSOperations)_so.servant;
+		float _result;			try
+		{
+		_result = _localServant.getTotalCO2Consumed();
+		}
+		finally
+		{
+			_servant_postinvoke(_so);
+		}
+		return _result;
+	}
 
+	}
+
+	}
+	
+	public float getTotalO2Produced()
+	{
+	while(true)
+	{
+	if(! this._is_local())
+	{
+		org.omg.CORBA.portable.InputStream _is = null;
+		try
+		{
+			org.omg.CORBA.portable.OutputStream _os = _request( "getO2Produced", true);
+			_is = _invoke(_os);
+			float _result = _is.read_float();
+			return _result;
+		}
+		catch( org.omg.CORBA.portable.RemarshalException _rx ){}
+		catch( org.omg.CORBA.portable.ApplicationException _ax )
+		{
+			String _id = _ax.getId();
+			throw new RuntimeException("Unexpected exception " + _id );
+		}
+		finally
+		{
+			this._releaseReply(_is);
+		}
+	}
+	else
+	{
+		org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke( "getO2Produced", _opsClass );
+		if( _so == null )
+			throw new org.omg.CORBA.UNKNOWN("local invocations not supported!");
+		BiomassPSOperations _localServant = (BiomassPSOperations)_so.servant;
+		float _result;			try
+		{
+		_result = _localServant.getTotalO2Produced();
+		}
+		finally
+		{
+			_servant_postinvoke(_so);
+		}
+		return _result;
+	}
+
+	}
+
+	}
+	
+	public float getTotalWaterConsumed()
+	{
+	while(true)
+	{
+	if(! this._is_local())
+	{
+		org.omg.CORBA.portable.InputStream _is = null;
+		try
+		{
+			org.omg.CORBA.portable.OutputStream _os = _request( "getWaterConsumed", true);
+			_is = _invoke(_os);
+			float _result = _is.read_float();
+			return _result;
+		}
+		catch( org.omg.CORBA.portable.RemarshalException _rx ){}
+		catch( org.omg.CORBA.portable.ApplicationException _ax )
+		{
+			String _id = _ax.getId();
+			throw new RuntimeException("Unexpected exception " + _id );
+		}
+		finally
+		{
+			this._releaseReply(_is);
+		}
+	}
+	else
+	{
+		org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke( "getWaterConsumed", _opsClass );
+		if( _so == null )
+			throw new org.omg.CORBA.UNKNOWN("local invocations not supported!");
+		BiomassPSOperations _localServant = (BiomassPSOperations)_so.servant;
+		float _result;			try
+		{
+		_result = _localServant.getTotalWaterConsumed();
+		}
+		finally
+		{
+			_servant_postinvoke(_so);
+		}
+		return _result;
+	}
+
+	}
+
+	}
+
+	public float getTotalWaterProduced()
+	{
+	while(true)
+	{
+	if(! this._is_local())
+	{
+		org.omg.CORBA.portable.InputStream _is = null;
+		try
+		{
+			org.omg.CORBA.portable.OutputStream _os = _request( "getWaterProduced", true);
+			_is = _invoke(_os);
+			float _result = _is.read_float();
+			return _result;
+		}
+		catch( org.omg.CORBA.portable.RemarshalException _rx ){}
+		catch( org.omg.CORBA.portable.ApplicationException _ax )
+		{
+			String _id = _ax.getId();
+			throw new RuntimeException("Unexpected exception " + _id );
+		}
+		finally
+		{
+			this._releaseReply(_is);
+		}
+	}
+	else
+	{
+		org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke( "getWaterProduced", _opsClass );
+		if( _so == null )
+			throw new org.omg.CORBA.UNKNOWN("local invocations not supported!");
+		BiomassPSOperations _localServant = (BiomassPSOperations)_so.servant;
+		float _result;			try
+		{
+		_result = _localServant.getTotalWaterProduced();
+		}
+		finally
+		{
+			_servant_postinvoke(_so);
+		}
+		return _result;
+	}
+
+	}
+
+	}
+	
 	public boolean isAnyPlantDead()
 	{
 		while(true)

@@ -49,11 +49,12 @@ public class Schedule {
     
     /** 
      * CIH 052019 add 'onboard' activity to aid in scheduling arrivals and departures
+     * CIH 070420 changed 'born' to 'entering' 
      */
     private void createDefaultActivites() {
         allActivities = new Hashtable<String, Activity>();
         orderedSchedule = new Vector<Activity>();
-        ActivityImpl bornActivityImpl = new ActivityImpl("born", 0, 0);
+        ActivityImpl bornActivityImpl = new ActivityImpl("entering", 0, 0);
         ActivityImpl deadActivityImpl = new ActivityImpl("dead", 0, 0);
         ActivityImpl absentActivityImpl = new ActivityImpl("absent", 0, 0);
         ActivityImpl onboardActivityImpl = new ActivityImpl("onboard", 0, 0);
@@ -68,7 +69,7 @@ public class Schedule {
                 .poaToCorbaObj(absentActivityImpl));
         myOnboardActivity = ActivityHelper.narrow(OrbUtils
                 .poaToCorbaObj(onboardActivityImpl));
-        allActivities.put("born", myBornActivity);
+        allActivities.put("entering", myBornActivity);
         orderedSchedule.add(0, myBornActivity);
         allActivities.put("dead", myDeadActivity);
         allActivities.put("sick", mySickActivity);

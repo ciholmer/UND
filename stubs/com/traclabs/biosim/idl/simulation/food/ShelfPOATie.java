@@ -118,5 +118,25 @@ _delegate.kill();
 	{
 		return _delegate.getCropAreaTotal();
 	}
+	
+	public float getCropO2Produced()
+	{
+		return _delegate.getCropO2Produced();
+	}
+	
+	public float getCropCO2Consumed()
+	{
+		return _delegate.getCropCO2Consumed();
+	}
+	
+	public float getCropWaterConsumed()
+	{
+		return _delegate.getCropWaterConsumed();
+	}
+	
+	public float getCropWaterProduced()
+	{
+		return _delegate.getCropWaterProduced();
+	}
 
 }

@@ -588,7 +588,7 @@ module com{
                                                 };
                                                 
                                                 interface Plant{
-                                                		float getMolesOfCO2Inhaled();
+                                                		float getMolesOfCO2Consumed();
                                                 };
                                                 
                                                 interface BiomassConsumer : framework::Consumer{
@@ -964,7 +964,11 @@ module com{
                                                         simulation::crew::CrewGroup getInput();
                                                 };
                                                 interface CrewGroupO2ConsumedSensor : CrewGroupSensor{};
-                                                interface CrewGroupO2ConsumedSensor : CrewGroupSensor{};
+                                                interface CrewGroupCO2ProducedSensor : CrewGroupSensor{};
+                                                interface CrewGroupWaterProducedSensor : CrewGroupSensor{};
+                                                interface CrewGroupWaterConsumedSensor : CrewGroupSensor{};
+                                                interface CrewGroupWasteProducedSensor : CrewGroupSensor{};
+                                                interface CrewGroupFoodConsumedensor : CrewGroupSensor{};
                                                 interface CrewGroupActivitySensor : CrewGroupSensor{};
                                                 interface CrewGroupDeathSensor : CrewGroupSensor{};
                                                 interface CrewGroupAnyDeadSensor : CrewGroupSensor{};
@@ -1015,6 +1019,30 @@ module com{
                                                         long getIndex();
                                                 };
                                                 interface BiomassOutFlowRateSensor : framework::GenericSensor{
+                                                        void setInput(in simulation::food::BiomassProducer pProducer, in long pIndex);
+                                                        simulation::food::BiomassProducer getInput();
+                                                        long getIndex();
+                                                };
+                                                
+                                                interface BiomassTotalO2ProducedSensor : framework::GenericSensor{
+                                                        void setInput(in simulation::food::BiomassProducer pProducer, in long pIndex);
+                                                        simulation::food::BiomassProducer getInput();
+                                                        long getIndex();
+                                                };
+                                                
+                                                interface BiomassTotalCO2ConsumedSensor : framework::GenericSensor{
+                                                        void setInput(in simulation::food::BiomassProducer pProducer, in long pIndex);
+                                                        simulation::food::BiomassProducer getInput();
+                                                        long getIndex();
+                                                };
+                                                
+                                                interface BiomassTotalWaterConsumedSensor : framework::GenericSensor{
+                                                        void setInput(in simulation::food::BiomassProducer pProducer, in long pIndex);
+                                                        simulation::food::BiomassProducer getInput();
+                                                        long getIndex();
+                                                };
+                                                
+                                                interface BiomassTotalWaterProducedSensor : framework::GenericSensor{
                                                         void setInput(in simulation::food::BiomassProducer pProducer, in long pIndex);
                                                         simulation::food::BiomassProducer getInput();
                                                         long getIndex();

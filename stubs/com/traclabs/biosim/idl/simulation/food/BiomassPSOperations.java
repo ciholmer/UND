@@ -17,6 +17,10 @@ public interface BiomassPSOperations
 	void clearShelves();
 	void setAutoHarvestAndReplantEnabled(boolean pHarvestEnabled);
 	boolean autoHarvestAndReplantEnabled();
+    float getTotalCO2Consumed();
+    float getTotalO2Produced();
+    float getTotalWaterConsumed();
+    float getTotalWaterProduced();
 	boolean isAnyPlantDead();
 	void killPlants();
 	void setDeathEnabled(boolean deathEnabled);

@@ -48,6 +48,21 @@ import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensorPOATie;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupCO2ProducedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupCO2ProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupCO2ProducedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterConsumedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterConsumedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterProducedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterProducedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWasteProducedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWasteProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWasteProducedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupFoodConsumedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupFoodConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupFoodConsumedSensorPOATie;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorPOATie;
@@ -78,6 +93,21 @@ import com.traclabs.biosim.idl.sensor.food.BiomassOutFlowRateSensorPOATie;
 import com.traclabs.biosim.idl.sensor.food.BiomassStoreWaterContentSensor;
 import com.traclabs.biosim.idl.sensor.food.BiomassStoreWaterContentSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.BiomassStoreWaterContentSensorPOATie;
+//import com.traclabs.biosim.idl.sensor.food.BiomassShelfCO2ConsumedSensor;
+//import com.traclabs.biosim.idl.sensor.food.BiomassShelfCO2ConsumedSensorHelper;
+//import com.traclabs.biosim.idl.sensor.food.BiomassShelfCO2ConsumedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalCO2ConsumedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalCO2ConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalCO2ConsumedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalO2ProducedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalO2ProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalO2ProducedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterConsumedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterConsumedSensorPOATie;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterProducedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterProducedSensorPOATie;
 import com.traclabs.biosim.idl.sensor.food.FoodInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.food.FoodInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.FoodInFlowRateSensorPOATie;
@@ -190,6 +220,11 @@ import com.traclabs.biosim.server.sensor.crew.CrewGroupAnyDeadSensorImpl;
 import com.traclabs.biosim.server.sensor.crew.CrewGroupDeathSensorImpl;
 import com.traclabs.biosim.server.sensor.crew.CrewGroupProductivitySensorImpl;
 import com.traclabs.biosim.server.sensor.crew.CrewGroupO2ConsumedSensorImpl;
+import com.traclabs.biosim.server.sensor.crew.CrewGroupCO2ProducedSensorImpl;
+import com.traclabs.biosim.server.sensor.crew.CrewGroupWaterConsumedSensorImpl;
+import com.traclabs.biosim.server.sensor.crew.CrewGroupFoodConsumedSensorImpl;
+import com.traclabs.biosim.server.sensor.crew.CrewGroupWasteProducedSensorImpl;
+import com.traclabs.biosim.server.sensor.crew.CrewGroupWaterProducedSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.AirInFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.AirOutFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.GasConcentrationSensorImpl;
@@ -199,6 +234,11 @@ import com.traclabs.biosim.server.sensor.environment.TotalMolesSensorImpl;
 import com.traclabs.biosim.server.sensor.environment.TotalPressureSensorImpl;
 import com.traclabs.biosim.server.sensor.food.BiomassInFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.food.BiomassOutFlowRateSensorImpl;
+//import com.traclabs.biosim.server.sensor.food.BiomassShelfCO2ConsumedSensorImpl;
+import com.traclabs.biosim.server.sensor.food.BiomassTotalCO2ConsumedSensorImpl;
+import com.traclabs.biosim.server.sensor.food.BiomassTotalO2ProducedSensorImpl;
+import com.traclabs.biosim.server.sensor.food.BiomassTotalWaterConsumedSensorImpl;
+import com.traclabs.biosim.server.sensor.food.BiomassTotalWaterProducedSensorImpl;
 import com.traclabs.biosim.server.sensor.food.BiomassStoreWaterContentSensorImpl;
 import com.traclabs.biosim.server.sensor.food.FoodInFlowRateSensorImpl;
 import com.traclabs.biosim.server.sensor.food.FoodOutFlowRateSensorImpl;
@@ -672,7 +712,157 @@ public class SensorInitializer {
 		} else
 			BiosimInitializer.printRemoteWarningMessage(moduleName);
 	}
+	
+	private void configureCrewGroupProductivitySensor(Node node) {
+		CrewGroupProductivitySensor myCrewGroupProductivitySensor = CrewGroupProductivitySensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupProductivitySensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupProductivitySensor);
+	}
 
+	private void createCrewGroupCO2ProducedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger
+					.debug("Creating CrewGroupCO2ProducedSensor with moduleName: "
+							+ moduleName);
+			CrewGroupCO2ProducedSensorImpl myCrewGroupCO2ProducedSensorImpl = new CrewGroupCO2ProducedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myCrewGroupCO2ProducedSensorImpl,
+					node);
+			BiosimServer.registerServer(new CrewGroupCO2ProducedSensorPOATie(
+					myCrewGroupCO2ProducedSensorImpl),
+					myCrewGroupCO2ProducedSensorImpl.getModuleName(),
+					myCrewGroupCO2ProducedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureCrewGroupCO2ProducedSensor(Node node) {
+		CrewGroupCO2ProducedSensor myCrewGroupCrewGroupCO2ProducedSensor = CrewGroupCO2ProducedSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupCrewGroupCO2ProducedSensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupCrewGroupCO2ProducedSensor);
+	}
+	
+	private void createCrewGroupWaterProducedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger
+					.debug("Creating CrewGroupWaterProducedSensor with moduleName: "
+							+ moduleName);
+			CrewGroupWaterProducedSensorImpl myCrewGroupWaterProducedSensorImpl = new CrewGroupWaterProducedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myCrewGroupWaterProducedSensorImpl,
+					node);
+			BiosimServer.registerServer(new CrewGroupWaterProducedSensorPOATie(
+					myCrewGroupWaterProducedSensorImpl),
+					myCrewGroupWaterProducedSensorImpl.getModuleName(),
+					myCrewGroupWaterProducedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureCrewGroupWaterProducedSensor(Node node) {
+		CrewGroupWaterProducedSensor myCrewGroupCrewGroupWaterProducedSensor = CrewGroupWaterProducedSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupCrewGroupWaterProducedSensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupCrewGroupWaterProducedSensor);
+	}
+	
+	private void createCrewGroupFoodConsumedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger
+					.debug("Creating CrewGroupFoodConsumedSensor with moduleName: "
+							+ moduleName);
+			CrewGroupFoodConsumedSensorImpl myCrewGroupFoodConsumedSensorImpl = new CrewGroupFoodConsumedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myCrewGroupFoodConsumedSensorImpl,
+					node);
+			BiosimServer.registerServer(new CrewGroupFoodConsumedSensorPOATie(
+					myCrewGroupFoodConsumedSensorImpl),
+					myCrewGroupFoodConsumedSensorImpl.getModuleName(),
+					myCrewGroupFoodConsumedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureCrewGroupFoodConsumedSensor(Node node) {
+		CrewGroupFoodConsumedSensor myCrewGroupFoodConsumedSensor = CrewGroupFoodConsumedSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupFoodConsumedSensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupFoodConsumedSensor);
+	}
+	
+	private void createCrewGroupWaterConsumedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger
+					.debug("Creating CrewGroupWaterConsumedSensor with moduleName: "
+							+ moduleName);
+			CrewGroupWaterConsumedSensorImpl myCrewGroupWaterConsumedSensorImpl = new CrewGroupWaterConsumedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myCrewGroupWaterConsumedSensorImpl,
+					node);
+			BiosimServer.registerServer(new CrewGroupWaterConsumedSensorPOATie(
+					myCrewGroupWaterConsumedSensorImpl),
+					myCrewGroupWaterConsumedSensorImpl.getModuleName(),
+					myCrewGroupWaterConsumedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureCrewGroupWaterConsumedSensor(Node node) {
+		CrewGroupWaterConsumedSensor myCrewGroupWaterConsumedSensor = CrewGroupWaterConsumedSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupWaterConsumedSensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupWaterConsumedSensor);
+	}
+	
+	private void createCrewGroupWasteProducedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger
+					.debug("Creating CrewGroupWasteProducedSensor with moduleName: "
+							+ moduleName);
+			CrewGroupWasteProducedSensorImpl myCrewGroupWasteProducedSensorImpl = new CrewGroupWasteProducedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myCrewGroupWasteProducedSensorImpl,
+					node);
+			BiosimServer.registerServer(new CrewGroupWasteProducedSensorPOATie(
+					myCrewGroupWasteProducedSensorImpl),
+					myCrewGroupWasteProducedSensorImpl.getModuleName(),
+					myCrewGroupWasteProducedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+		
+	private void configureCrewGroupWasteProducedSensor(Node node) {
+		CrewGroupWasteProducedSensor myCrewGroupCrewGroupWasteProducedSensor = CrewGroupWasteProducedSensorHelper
+				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
+						.getModuleName(node)));
+		myCrewGroupCrewGroupWasteProducedSensor
+				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
+						myID, getInputName(node))));
+		mySensors.add(myCrewGroupCrewGroupWasteProducedSensor);
+	}
+	
 	private void createCrewGroupO2ConsumedSensor(Node node) {
 		String moduleName = BiosimInitializer.getModuleName(node);
 		if (BiosimInitializer.isCreatedLocally(node)) {
@@ -691,16 +881,6 @@ public class SensorInitializer {
 			BiosimInitializer.printRemoteWarningMessage(moduleName);
 	}
 	
-	private void configureCrewGroupProductivitySensor(Node node) {
-		CrewGroupProductivitySensor myCrewGroupProductivitySensor = CrewGroupProductivitySensorHelper
-				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
-						.getModuleName(node)));
-		myCrewGroupProductivitySensor
-				.setInput(CrewGroupHelper.narrow(BiosimInitializer.getModule(
-						myID, getInputName(node))));
-		mySensors.add(myCrewGroupProductivitySensor);
-	}
-
 	private void configureCrewGroupO2ConsumedSensor(Node node) {
 		CrewGroupO2ConsumedSensor myCrewGroupO2ConsumedSensor = CrewGroupO2ConsumedSensorHelper
 				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
@@ -710,6 +890,9 @@ public class SensorInitializer {
 						myID, getInputName(node))));
 		mySensors.add(myCrewGroupO2ConsumedSensor);
 	}
+	
+
+	
 
 	private void crawlCrewSensors(Node node, boolean firstPass) {
 		Node child = node.getFirstChild();
@@ -736,6 +919,33 @@ public class SensorInitializer {
 						createCrewGroupO2ConsumedSensor(child);
 					else
 						configureCrewGroupO2ConsumedSensor(child);
+				} else if (childName.equals("CrewGroupCO2ProducedSensor")) {
+					if (firstPass)
+						createCrewGroupCO2ProducedSensor(child);
+					else
+						configureCrewGroupCO2ProducedSensor(child);
+				} else if (childName.equals("CrewGroupWaterConsumedSensor")) {
+					if (firstPass)
+						createCrewGroupWaterConsumedSensor(child);
+					else
+						configureCrewGroupWaterConsumedSensor(child);
+				} else if (childName.equals("CrewGroupFoodConsumedSensor")) {
+					if (firstPass)
+						createCrewGroupFoodConsumedSensor(child);
+					else
+						configureCrewGroupFoodConsumedSensor(child);
+				} else if (childName.equals("CrewGroupWaterProducedSensor")) {
+					if (firstPass)
+						createCrewGroupWaterProducedSensor(child);
+					else
+						configureCrewGroupWaterProducedSensor(child);
+				} else if (childName.equals("CrewGroupWasteProducedSensor")) {
+					if (firstPass)
+						createCrewGroupWasteProducedSensor(child);
+					else
+						configureCrewGroupWasteProducedSensor(child);
+				} else {
+						myLogger.warn("WARNING: No setup code found for " + childName.toString());
 				}
 				
 			}
@@ -1035,7 +1245,8 @@ public class SensorInitializer {
 		} else
 			BiosimInitializer.printRemoteWarningMessage(moduleName);
 	}
-
+	
+	
 	private void configureBiomassOutFlowRateSensor(Node node) {
 		BiomassOutFlowRateSensor myBiomassOutFlowRateSensor = BiomassOutFlowRateSensorHelper
 				.narrow(BiosimInitializer.getModule(myID, BiosimInitializer
@@ -1044,6 +1255,159 @@ public class SensorInitializer {
 				BiomassProducerHelper.narrow(BiosimInitializer.getModule(myID,
 						getInputName(node))), getFlowRateIndex(node));
 		mySensors.add(myBiomassOutFlowRateSensor);
+	}
+	
+	/* private void createBiomassShelfCO2ConsumedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger.debug("Creating BiomassShelfCO2ConsumedSensor with moduleName: "
+					+ moduleName);
+			BiomassShelfCO2ConsumedSensorImpl myBiomassShelfCO2ConsumedSensorImpl = new BiomassShelfCO2ConsumedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myBiomassShelfCO2ConsumedSensorImpl, node);
+			BiosimServer.registerServer(new BiomassShelfCO2ConsumedSensorPOATie(
+					myBiomassShelfCO2ConsumedSensorImpl), myBiomassShelfCO2ConsumedSensorImpl
+					.getModuleName(), myBiomassShelfCO2ConsumedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureBiomassShelfCO2ConsumedSensor(Node node) {
+		try {
+			int index = XMLUtils.getIntAttribute(node, "shelfIndex");
+			BiomassShelfCO2ConsumedSensor myBiomassShelfCO2ConsumedSensor = BiomassShelfCO2ConsumedSensorHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							BiosimInitializer.getModuleName(node)));
+			myBiomassShelfCO2ConsumedSensor.setInput(BiomassPSHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							getInputName(node))), index);
+			mySensors.add(myBiomassShelfCO2ConsumedSensor);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+	*/
+	
+	private void createBiomassTotalCO2ConsumedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger.debug("Creating BiomassTotalCO2ConsumedSensor with moduleName: "
+					+ moduleName);
+			BiomassTotalCO2ConsumedSensorImpl myBiomassTotalCO2ConsumedSensorImpl = new BiomassTotalCO2ConsumedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myBiomassTotalCO2ConsumedSensorImpl, node);
+			BiosimServer.registerServer(new BiomassTotalCO2ConsumedSensorPOATie(
+					myBiomassTotalCO2ConsumedSensorImpl), myBiomassTotalCO2ConsumedSensorImpl
+					.getModuleName(), myBiomassTotalCO2ConsumedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureBiomassTotalCO2ConsumedSensor(Node node) {
+		try {
+
+			BiomassTotalCO2ConsumedSensor myBiomassTotalCO2ConsumedSensor = BiomassTotalCO2ConsumedSensorHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							BiosimInitializer.getModuleName(node)));
+			myBiomassTotalCO2ConsumedSensor.setInput(BiomassPSHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							getInputName(node))), myID);
+			mySensors.add(myBiomassTotalCO2ConsumedSensor);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void createBiomassTotalO2ProducedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger.debug("Creating BiomassTotalO2ProducedSensor with moduleName: "
+					+ moduleName);
+			BiomassTotalO2ProducedSensorImpl myBiomassTotalO2ProducedSensorImpl = new BiomassTotalO2ProducedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myBiomassTotalO2ProducedSensorImpl, node);
+			BiosimServer.registerServer(new BiomassTotalO2ProducedSensorPOATie(
+					myBiomassTotalO2ProducedSensorImpl), myBiomassTotalO2ProducedSensorImpl
+					.getModuleName(), myBiomassTotalO2ProducedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureBiomassTotalO2ProducedSensor(Node node) {
+		try {
+
+			BiomassTotalO2ProducedSensor myBiomassTotalO2ProducedSensor = BiomassTotalO2ProducedSensorHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							BiosimInitializer.getModuleName(node)));
+			myBiomassTotalO2ProducedSensor.setInput(BiomassPSHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							getInputName(node))), myID);
+			mySensors.add(myBiomassTotalO2ProducedSensor);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	
+	private void createBiomassTotalWaterProducedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger.debug("Creating BiomassTotalWaterProducedSensor with moduleName: "
+					+ moduleName);
+			BiomassTotalWaterProducedSensorImpl myBiomassTotalWaterProducedSensorImpl = new BiomassTotalWaterProducedSensorImpl(myID, moduleName);
+			BiosimInitializer.setupBioModule(myBiomassTotalWaterProducedSensorImpl, node);
+			BiosimServer.registerServer(new BiomassTotalWaterProducedSensorPOATie(
+					myBiomassTotalWaterProducedSensorImpl), myBiomassTotalWaterProducedSensorImpl
+					.getModuleName(), myBiomassTotalWaterProducedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	
+	private void configureBiomassTotalWaterProducedSensor(Node node) {
+		try {
+
+			BiomassTotalWaterProducedSensor myBiomassTotalWaterProducedSensor = BiomassTotalWaterProducedSensorHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							BiosimInitializer.getModuleName(node)));
+			myBiomassTotalWaterProducedSensor.setInput(BiomassPSHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							getInputName(node))), myID);
+			mySensors.add(myBiomassTotalWaterProducedSensor);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void createBiomassTotalWaterConsumedSensor(Node node) {
+		String moduleName = BiosimInitializer.getModuleName(node);
+		if (BiosimInitializer.isCreatedLocally(node)) {
+			myLogger.debug("Creating BiomassTotalWaterConsumedSensor with moduleName: "
+					+ moduleName);
+			BiomassTotalWaterConsumedSensorImpl myBiomassTotalWaterConsumedSensorImpl = new BiomassTotalWaterConsumedSensorImpl(
+					myID, moduleName);
+			BiosimInitializer.setupBioModule(myBiomassTotalWaterConsumedSensorImpl, node);
+			BiosimServer.registerServer(new BiomassTotalWaterConsumedSensorPOATie(
+					myBiomassTotalWaterConsumedSensorImpl), myBiomassTotalWaterConsumedSensorImpl
+					.getModuleName(), myBiomassTotalWaterConsumedSensorImpl.getID());
+		} else
+			BiosimInitializer.printRemoteWarningMessage(moduleName);
+	}
+	
+	private void configureBiomassTotalWaterConsumedSensor(Node node) {
+		try {
+
+			BiomassTotalWaterConsumedSensor myBiomassTotalWaterConsumedSensor = BiomassTotalWaterConsumedSensorHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							BiosimInitializer.getModuleName(node)));
+			myBiomassTotalWaterConsumedSensor.setInput(BiomassPSHelper
+					.narrow(BiosimInitializer.getModule(myID,
+							getInputName(node))), myID);
+			mySensors.add(myBiomassTotalWaterConsumedSensor);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void createFoodInFlowRateSensor(Node node) {
@@ -1232,11 +1596,33 @@ public class SensorInitializer {
 						createBiomassOutFlowRateSensor(child);
 					else
 						configureBiomassOutFlowRateSensor(child);
+				} else if (childName.equals("BiomassTotalCO2ConsumedSensor")) {
+					if (firstPass)
+						createBiomassTotalCO2ConsumedSensor(child);
+					else
+						configureBiomassTotalCO2ConsumedSensor(child);
+			
+				} else if (childName.equals("BiomassTotalO2ProducedSensor")) {
+					if (firstPass)
+						createBiomassTotalO2ProducedSensor(child);
+					else
+						configureBiomassTotalO2ProducedSensor(child);
+				} else if (childName.equals("BiomassTotalWaterConsumedSensor")) {
+					if (firstPass)
+						createBiomassTotalWaterConsumedSensor(child);
+					else
+						configureBiomassTotalWaterConsumedSensor(child);
+				} else if (childName.equals("BiomassTotalWaterProducedSensor")) {
+					if (firstPass)
+						createBiomassTotalWaterProducedSensor(child);
+					else
+						configureBiomassTotalWaterProducedSensor(child);
 				} else if (childName.equals("BiomassStoreWaterContentSensor")) {
 					if (firstPass)
 						createBiomassStoreWaterContentSensor(child);
 					else
 						configureBiomassStoreWaterContentSensor(child);
+			
 				} else if (childName.equals("FoodInFlowRateSensor")) {
 					if (firstPass)
 						createFoodInFlowRateSensor(child);

@@ -58,6 +58,11 @@ import com.traclabs.biosim.idl.sensor.crew.CrewGroupAnyDeadSensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupDeathSensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensorHelper;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupCO2ProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupFoodConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWasteProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterProducedSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensorHelper;
@@ -67,6 +72,10 @@ import com.traclabs.biosim.idl.sensor.environment.TotalMolesSensorHelper;
 import com.traclabs.biosim.idl.sensor.environment.TotalPressureSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.BiomassInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.BiomassOutFlowRateSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalCO2ConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalO2ProducedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterConsumedSensorHelper;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterProducedSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.BiomassStoreWaterContentSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.FoodInFlowRateSensorHelper;
 import com.traclabs.biosim.idl.sensor.food.FoodOutFlowRateSensorHelper;
@@ -129,6 +138,7 @@ import com.traclabs.biosim.util.OrbUtils;
  * 
  * @author Scott Bell
  * Modifed CIHolmer May 2019 - Add Gas Mole Sensors
+ * Modifed CIHolmer July 2020 - Add Biomass Gas and Water Sensors
  */
 public class BioHolderInitializer {
 
@@ -859,12 +869,43 @@ public class BioHolderInitializer {
 						.narrow(getModule(getModuleName(node))));
 	}
 	
+	private static void fetchCrewGroupCO2ProducedSensor(Node node) {
+		myBioHolder.theCrewGroupCO2ProducedSensors
+				.add(CrewGroupCO2ProducedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+
+	private static void fetchCrewGroupWaterConsumedSensor(Node node) {
+		myBioHolder.theCrewGroupWaterConsumedSensors
+				.add(CrewGroupWaterConsumedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+
+	private static void fetchCrewGroupFoodConsumedSensor(Node node) {
+		myBioHolder.theCrewGroupFoodConsumedSensors
+				.add(CrewGroupFoodConsumedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+
+	private static void fetchCrewGroupWaterProducedSensor(Node node) {
+		myBioHolder.theCrewGroupWaterProducedSensors
+				.add(CrewGroupWaterProducedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+
+	private static void fetchCrewGroupWasteProducedSensor(Node node) {
+		myBioHolder.theCrewGroupWasteProducedSensors
+				.add(CrewGroupWasteProducedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+
 	private static void fetchCrewGroupO2ConsumedSensor(Node node) {
 		myBioHolder.theCrewGroupO2ConsumedSensors
 				.add(CrewGroupO2ConsumedSensorHelper
 						.narrow(getModule(getModuleName(node))));
 	}
 
+	
 	private static void crawlCrewSensors(Node node) {
 		Node child = node.getFirstChild();
 		while (child != null) {
@@ -878,6 +919,16 @@ public class BioHolderInitializer {
 					fetchCrewGroupProductivitySensor(child);
 				else if (childName.equals("CrewGroupO2ConsumedSensor"))
 					fetchCrewGroupO2ConsumedSensor(child);
+				else if (childName.equals("CrewGroupCO2ProducedSensor"))
+					fetchCrewGroupCO2ProducedSensor(child);
+				else if (childName.equals("CrewGroupWaterConsumedSensor"))
+					fetchCrewGroupWaterConsumedSensor(child);
+				else if (childName.equals("CrewGroupFoodConsumedSensor"))
+					fetchCrewGroupFoodConsumedSensor(child);
+				else if (childName.equals("CrewGroupWaterProducedSensor"))
+					fetchCrewGroupWaterProducedSensor(child);
+				else if (childName.equals("CrewGroupWasteProducedSensor"))
+					fetchCrewGroupWasteProducedSensor(child);
 			}
 			child = child.getNextSibling();
 		}
@@ -955,6 +1006,30 @@ public class BioHolderInitializer {
 				.add(BiomassOutFlowRateSensorHelper
 						.narrow(getModule(getModuleName(node))));
 	}
+	
+	private static void fetchBiomassTotalCO2ConsumedSensor(Node node) {
+		myBioHolder.theBiomassTotalCO2ConsumedSensors
+				.add(BiomassTotalCO2ConsumedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+	
+	private static void fetchBiomassTotalO2ProducedSensor(Node node) {
+		myBioHolder.theBiomassTotalO2ProducedSensors
+				.add(BiomassTotalO2ProducedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+	
+	private static void fetchBiomassTotalWaterProducedSensor(Node node) {
+		myBioHolder.theBiomassTotalWaterProducedSensors
+				.add(BiomassTotalWaterProducedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
+	
+	private static void fetchBiomassTotalWaterConsumedSensor(Node node) {
+		myBioHolder.theBiomassTotalWaterConsumedSensors
+				.add(BiomassTotalWaterConsumedSensorHelper
+						.narrow(getModule(getModuleName(node))));
+	}
 
 	private static void fetchBiomassStoreWaterContentSensor(Node node) {
 		myBioHolder.theBiomassStoreWaterContentSensors
@@ -997,6 +1072,14 @@ public class BioHolderInitializer {
 					fetchBiomassInFlowRateSensor(child);
 				if (childName.equals("BiomassOutFlowRateSensor"))
 					fetchBiomassOutFlowRateSensor(child);
+				else if (childName.equals("BiomassTotalCO2ConsumedSensor"))
+					fetchBiomassTotalCO2ConsumedSensor(child);
+				else if (childName.equals("BiomassTotalO2ProducedSensor"))
+					fetchBiomassTotalO2ProducedSensor(child);
+				else if (childName.equals("BiomassTotalWaterProducedSensor"))
+					fetchBiomassTotalWaterProducedSensor(child);
+				else if (childName.equals("BiomassTotalWaterConsumedSensor"))
+					fetchBiomassTotalWaterConsumedSensor(child);
 				else if (childName.equals("BiomassStoreWaterContentSensor"))
 					fetchBiomassStoreWaterContentSensor(child);
 				else if (childName.equals("FoodInFlowRateSensor"))

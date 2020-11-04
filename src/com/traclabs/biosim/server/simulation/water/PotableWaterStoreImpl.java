@@ -6,6 +6,8 @@ import com.traclabs.biosim.idl.simulation.water.PotableWaterStoreOperations;
  * The Potable Water Store Implementation. Filled with clean potable water from
  * the WaterRS and used by the crew memebers to drink.
  * 
+ * CIH 200101 - IN WHAT UNITS???
+ * 
  * @author Scott Bell
  */
 

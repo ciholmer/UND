@@ -49,9 +49,9 @@ public class PlantPOATie
 			return super._default_POA();
 		}
 	}
-	public float getMolesOfCO2Inhaled()
+	public float getMolesOfCO2Consumed()
 	{
-		return _delegate.getMolesOfCO2Inhaled();
+		return _delegate.getMolesOfCO2Consumed();
 	}
 
 }

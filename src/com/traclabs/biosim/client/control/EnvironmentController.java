@@ -230,7 +230,7 @@ public class EnvironmentController extends MurderController implements
 																	// Vapor
 		myOutput.print(myCrewPerson.getCurrentActivity().getName() + "       ");
 		myOutput.print(myBioHolder.theBiomassPSModules.get(0).getShelf(0)
-				.getPlant().getMolesOfCO2Inhaled());
+				.getPlant().getMolesOfCO2Consumed());
 		myOutput.println();
 		myOutput.flush();
 	}

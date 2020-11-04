@@ -255,10 +255,14 @@
 	<Sensors>
 	    <crew>
 	    	<CrewGroupO2ConsumedSensor input="Crew_Group" moduleName="Crew_O2Consumed" logLevel="DEBUG" />
+	    	<CrewGroupCO2ProducedSensor input="Crew_Group" moduleName="Crew_CO2Produced" logLevel="DEBUG" />
+	    	<CrewGroupWaterProducedSensor input="Crew_Group" moduleName="Crew_WaterProduced" logLevel="DEBUG" />
+	    	<CrewGroupWaterConsumedSensor input="Crew_Group" moduleName="Crew_WaterConsumed" logLevel="DEBUG" />
 	    </crew>
+
 	    <framework>
-	        <StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" logLevel="DEBUG"/>
-	        <StoreLevelSensor input="CO2_Store" moduleName="CO2_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" logLevel="WARN"/>
+	        <StoreLevelSensor input="CO2_Store" moduleName="CO2_Store_Level" logLevel="WARN"/>
 	    </framework>
 		<air>
 		    <!-- CDRS not used in LMLSTP

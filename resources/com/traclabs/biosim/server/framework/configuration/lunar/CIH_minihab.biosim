@@ -337,7 +337,8 @@
 							length="12" />
 						<activity intensity="0" name="sleep" length="8" />
 						<activity intensity="5" name="excercise"
-							length="2" /><activity intensity="4" name="EVA"
+							length="2" />
+						<activity intensity="4" name="EVA"
 							length="2" xsi:type="EVAActivityType" evaCrewGroup="EVA_Crew_Group" />
 					</schedule>
 				</crewPerson>
@@ -465,6 +466,9 @@
 	    	<CrewGroupO2ConsumedSensor input="Maintenance_Group" moduleName="Maintenance_Crew_O2Consumed" index="0" logLevel="DEBUG" />
 	    	<CrewGroupO2ConsumedSensor input="EVA_Crew_Group" moduleName="EVA_Crew_O2Consumed" index="0" logLevel="DEBUG" />
 	    </crew>
+	    <framework>
+	    <StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" index="0" logLevel="DEBUG"/>
+	    </framework>
 		<power>
 			<PowerInFlowRateSensor input="Main_VCCR"
 				moduleName="MainVccrPowerSensor" index="0" logLevel="INFO"
@@ -479,20 +483,11 @@
 			<CO2OutFlowRateSensor input="Main_VCCR" moduleName="Main_Vccr_Co2_Out_Sensor" index="0" isBionetEnabled="false"/>
 			<O2OutFlowRateSensor input="Maintenance_Oxygen_Injector" moduleName="Maintenance_Oxygen_Sensor" index="0" logLevel="DEBUG" />
 			<O2OutFlowRateSensor input="OGS" moduleName="Main_OGS_O2_Out_Sensor" index="0" logLevel="DEBUG" isBionetEnabled="false" />
+			
 		</air>
 		<environment>
 			<AirInFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirInSensor" index="0" isBionetEnabled="false"></AirInFlowRateSensor>
 			<AirOutFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirOutSensor" index="0" isBionetEnabled="false"></AirOutFlowRateSensor>
-				
-			<TotalMolesSensor input="Crew_Quarters" moduleName="Crew_Quarters_Moles" logLevel="DEBUG"></TotalMolesSensor>
-			<TotalMolesSensor input="Labs" moduleName="Labs_Moles" logLevel="DEBUG"></TotalMolesSensor>
-			<TotalMolesSensor input="Galley" moduleName="Galley_Moles" logLevel="DEBUG"></TotalMolesSensor>
-			<TotalMolesSensor input="Maintenance" moduleName="Maintenance_Moles" logLevel="DEBUG"></TotalMolesSensor>
-							
-			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
-			<GasConcentrationSensor input="Labs" moduleName="Labs_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
-			<GasConcentrationSensor input="Galley" moduleName="Galley_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
-			<GasConcentrationSensor input="Maintenance" moduleName="Maintenance_O2_Concentration" gasType="O2" logLevel="DEBUG"/>
 			
 			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Mole" gasType="O2" logLevel="DEBUG"/>
 			<GasMoleSensor input="Labs" moduleName="Labs_O2_Mole" gasType="O2" logLevel="DEBUG"/>

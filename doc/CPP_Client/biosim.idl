@@ -161,6 +161,9 @@ module biosim{
                                 StringList getPlantTypes();
                                 float getTotalO2Produced();
                                 float getTotalCO2Consumed();
+                                float getTotalWaterProduced();
+                                float getTotalWaterConsumed();
+                                float getTotalDirtyWaterProduced();
                         };
                         interface BiomassStore : framework::Store{
                         };
@@ -181,6 +184,7 @@ module biosim{
                                 float getO2Produced();
                                 float getCO2Consumed();
                                 float getBiomassProduced();
+                                float getDirtyWaterProduced();
                                 boolean hasWater();
                                 boolean hasLight();
                                 boolean isDead();

@@ -16,6 +16,7 @@ public interface CrewGroupOperations
 	com.traclabs.biosim.idl.simulation.crew.CrewPerson[] getCrewPeople();
 	void scheduleRepair(java.lang.String moduleName, long malfunctionID, int timeLength);
 	int getCrewSize();
+	float getDryWasteProduced();
 	float getGreyWaterProduced();
 	float getDirtyWaterProduced();
 	float getPotableWaterConsumed();

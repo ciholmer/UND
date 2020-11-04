@@ -88,6 +88,11 @@ _delegate.setLogLevel(pLogLevel);
 	{
 		return _delegate.getDirtyWaterProduced();
 	}
+	
+	public float getDryWasteProduced()
+	{
+		return _delegate.getDryWasteProduced();
+	}
 
 	public com.traclabs.biosim.idl.framework.Malfunction startMalfunction(com.traclabs.biosim.idl.framework.MalfunctionIntensity pIntensity, com.traclabs.biosim.idl.framework.MalfunctionLength pLength)
 	{

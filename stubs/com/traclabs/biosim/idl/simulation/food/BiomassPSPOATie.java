@@ -178,6 +178,26 @@ _delegate.maintain();
 	{
 _delegate.setDeathEnabled(deathEnabled);
 	}
+	
+	public float getTotalCO2Consumed()
+	{
+		return _delegate.getTotalCO2Consumed();
+	}
+	
+	public float getTotalO2Produced()
+	{
+		return _delegate.getTotalO2Produced();
+	}
+	
+	public float getTotalWaterConsumed()
+	{
+		return _delegate.getTotalWaterConsumed();
+	}
+	
+	public float getTotalWaterProduced()
+	{
+		return _delegate.getTotalWaterProduced();
+	}
 
 	public boolean isAnyPlantDead()
 	{

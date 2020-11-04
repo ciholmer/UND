@@ -3,8 +3,9 @@ package com.traclabs.biosim.idl.simulation.food;
 /**
  *	Generated from IDL interface "Shelf"
  *	@author JacORB IDL compiler V 2.2.3, 10-Dec-2005
+ *
+ *  CIH 071220 added getCrop routines for variable aggregate
  */
-
 
 public abstract class ShelfPOA
 	extends org.omg.PortableServer.Servant
@@ -27,6 +28,10 @@ public abstract class ShelfPOA
 		m_opsHash.put ( "getCropAreaUsed", new java.lang.Integer(11));
 		m_opsHash.put ( "getTimeTillCanopyClosure", new java.lang.Integer(12));
 		m_opsHash.put ( "getCropAreaTotal", new java.lang.Integer(13));
+		m_opsHash.put ( "getCropO2Produced", new java.lang.Integer(14));
+		m_opsHash.put ( "getCropCO2Consumed", new java.lang.Integer(15));
+		m_opsHash.put ( "getCropWaterConsumed", new java.lang.Integer(16));
+		m_opsHash.put ( "getCropWaterProduced", new java.lang.Integer(17));
 	}
 	private String[] ids = {"IDL:com/traclabs/biosim/idl/simulation/food/Shelf:1.0"};
 	public com.traclabs.biosim.idl.simulation.food.Shelf _this()
@@ -133,6 +138,30 @@ public abstract class ShelfPOA
 			{
 				_out = handler.createReply();
 				_out.write_float(getCropAreaTotal());
+				break;
+			}
+			case 14: // getCropO2Produced
+			{
+				_out = handler.createReply();
+				_out.write_float(getCropO2Produced());
+				break;
+			}
+			case 15: // getCropCO2Consumed
+			{
+				_out = handler.createReply();
+				_out.write_float(getCropCO2Consumed());
+				break;
+			}
+			case 16: // getCropWaterConsumed
+			{
+				_out = handler.createReply();
+				_out.write_float(getCropWaterConsumed());
+				break;
+			}
+			case 17: // getCropWaterProduced
+			{
+				_out = handler.createReply();
+				_out.write_float(getCropWaterProduced());
 				break;
 			}
 		}

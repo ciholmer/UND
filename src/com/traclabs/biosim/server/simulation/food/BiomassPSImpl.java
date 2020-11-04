@@ -55,6 +55,11 @@ public class BiomassPSImpl extends SimBioModuleImpl implements
     private List<ShelfImpl> myShelves;
 
     private boolean autoHarvestAndReplant = true;
+    
+    float totalO2Produced;
+    float totalCO2Consumed;
+    float totalWaterConsumed;
+    float totalWaterProduced;
 
     //Consumers, Producers
     private PowerConsumerDefinitionImpl myPowerConsumerDefinitionImpl;
@@ -300,4 +305,45 @@ public class BiomassPSImpl extends SimBioModuleImpl implements
 	public void setDeathEnabled(boolean deathEnabled) {
 		this.myDeathEnabled = deathEnabled;
 	}
+	
+	/** CIH 200711
+	 * @return Returns the total O2 Produced by all of the plant shelves
+	 */
+	public float getTotalO2Produced() {
+		totalO2Produced = 0f;
+    	for (Shelf currentShelf : getShelves())
+    		totalO2Produced = totalO2Produced + currentShelf.getCropO2Produced();
+    	return totalO2Produced;
+	}
+	
+	/** CIH 200712
+	 * @return Returns the total CO2 Consumed by all of the plant shelves
+	 */
+	public float getTotalCO2Consumed() {
+		totalCO2Consumed = 0f;
+    	for (Shelf currentShelf : getShelves())
+    		totalCO2Consumed = totalCO2Consumed + currentShelf.getCropCO2Consumed();
+    	return totalCO2Consumed;
+	}
+	
+	/** CIH 200712
+	 * @return Returns the total Water (Gray and Potable) Consumed by all of the plant shelves
+	 */
+	public float getTotalWaterConsumed() {
+		totalWaterConsumed = 0f;
+    	for (Shelf currentShelf : getShelves())
+    		totalWaterConsumed = totalWaterConsumed + currentShelf.getCropWaterConsumed();
+       return totalWaterConsumed;
+	}
+	
+	/** CIH 200712
+	 * @return Returns the total Water Produced by all of the plant shelves (Transpired)
+	 */
+	public float getTotalWaterProduced() {
+		totalWaterProduced = 0f;
+    	for (Shelf currentShelf : getShelves())
+    		totalWaterProduced = totalWaterProduced + currentShelf.getCropWaterProduced();
+    	return totalWaterProduced;
+	}
+	 
 }

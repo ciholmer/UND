@@ -28,4 +28,15 @@ public class CrewPersonMatlab extends BaseCrewPersonImpl {
 		// TODO
 	}
 	
+	/**
+	 * CIH 200718 Copied from CrewPersonImpl to resolve impmentation error
+	 * CIH 200209 Add to zero crew member values when they depart before the end of the sim
+	 */
+	
+	public void crewDepart(){
+		myLogger.info(getName() + " is not in the simulation");
+		reset();
+		setCurrentActivity(getActivityByName("absent"));
+	}
+	
 }

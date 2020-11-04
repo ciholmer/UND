@@ -52,11 +52,15 @@ import com.traclabs.biosim.idl.sensor.air.NitrogenInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.air.NitrogenOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.air.O2InFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.air.O2OutFlowRateSensor;
-
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupAnyDeadSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupDeathSensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupProductivitySensor;
 import com.traclabs.biosim.idl.sensor.crew.CrewGroupO2ConsumedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupCO2ProducedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterConsumedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupFoodConsumedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWasteProducedSensor;
+import com.traclabs.biosim.idl.sensor.crew.CrewGroupWaterProducedSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.AirOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.environment.GasConcentrationSensor;
@@ -67,6 +71,10 @@ import com.traclabs.biosim.idl.sensor.environment.TotalPressureSensor;
 import com.traclabs.biosim.idl.sensor.food.BiomassInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.food.BiomassOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.food.BiomassStoreWaterContentSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalCO2ConsumedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalO2ProducedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterConsumedSensor;
+import com.traclabs.biosim.idl.sensor.food.BiomassTotalWaterProducedSensor;
 import com.traclabs.biosim.idl.sensor.food.FoodInFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.food.FoodOutFlowRateSensor;
 import com.traclabs.biosim.idl.sensor.food.HarvestSensor;
@@ -253,6 +261,16 @@ public class BioHolder {
     public List<CrewGroupProductivitySensor> theCrewGroupProductivitySensors = new Vector<CrewGroupProductivitySensor>();
     
     public List<CrewGroupO2ConsumedSensor> theCrewGroupO2ConsumedSensors = new Vector<CrewGroupO2ConsumedSensor>();
+    
+    public List<CrewGroupCO2ProducedSensor> theCrewGroupCO2ProducedSensors = new Vector<CrewGroupCO2ProducedSensor>();
+    
+    public List<CrewGroupWaterConsumedSensor> theCrewGroupWaterConsumedSensors = new Vector<CrewGroupWaterConsumedSensor>();
+    
+    public List<CrewGroupWaterProducedSensor> theCrewGroupWaterProducedSensors = new Vector<CrewGroupWaterProducedSensor>();
+    
+    public List<CrewGroupWasteProducedSensor> theCrewGroupWasteProducedSensors = new Vector<CrewGroupWasteProducedSensor>();
+    
+    public List<CrewGroupFoodConsumedSensor> theCrewGroupFoodConsumedSensors = new Vector<CrewGroupFoodConsumedSensor>();
 
     public List<CrewGroupAnyDeadSensor> theCrewGroupAnyDeadSensors = new Vector<CrewGroupAnyDeadSensor>();
 
@@ -275,6 +293,14 @@ public class BioHolder {
     public List<BiomassInFlowRateSensor> theBiomassInFlowRateSensors = new Vector<BiomassInFlowRateSensor>();
 
     public List<BiomassOutFlowRateSensor> theBiomassOutFlowRateSensors = new Vector<BiomassOutFlowRateSensor>();
+    
+    public List<BiomassTotalCO2ConsumedSensor> theBiomassTotalCO2ConsumedSensors = new Vector<BiomassTotalCO2ConsumedSensor>();
+    
+    public List<BiomassTotalO2ProducedSensor> theBiomassTotalO2ProducedSensors = new Vector<BiomassTotalO2ProducedSensor>();
+    
+    public List<BiomassTotalWaterConsumedSensor> theBiomassTotalWaterConsumedSensors = new Vector<BiomassTotalWaterConsumedSensor>();
+    
+    public List<BiomassTotalWaterProducedSensor> theBiomassTotalWaterProducedSensors = new Vector<BiomassTotalWaterProducedSensor>();
 
     public List<FoodInFlowRateSensor> theFoodInFlowRateSensors = new Vector<FoodInFlowRateSensor>();
 
@@ -536,6 +562,11 @@ public class BioHolder {
         theSensors.addAll(theCrewGroupDeathSensors);
         theSensors.addAll(theCrewGroupProductivitySensors);
         theSensors.addAll(theCrewGroupO2ConsumedSensors);
+        theSensors.addAll(theCrewGroupCO2ProducedSensors);
+        theSensors.addAll(theCrewGroupWaterConsumedSensors);
+        theSensors.addAll(theCrewGroupWaterProducedSensors);
+        theSensors.addAll(theCrewGroupWasteProducedSensors);
+        theSensors.addAll(theCrewGroupFoodConsumedSensors);
         theSensors.addAll(theCrewGroupAnyDeadSensors);
         //Environment
         theSensors.addAll(theAirInFlowRateSensors);
@@ -548,6 +579,10 @@ public class BioHolder {
         //Food
         theSensors.addAll(theBiomassInFlowRateSensors);
         theSensors.addAll(theBiomassOutFlowRateSensors);
+        theSensors.addAll(theBiomassTotalCO2ConsumedSensors);
+        theSensors.addAll(theBiomassTotalO2ProducedSensors);
+        theSensors.addAll(theBiomassTotalWaterConsumedSensors);
+        theSensors.addAll(theBiomassTotalWaterProducedSensors);
         theSensors.addAll(theFoodInFlowRateSensors);
         theSensors.addAll(theFoodOutFlowRateSensors);
         theSensors.addAll(theHarvestSensors);
@@ -695,6 +730,11 @@ public class BioHolder {
         //Crew
         theCrewGroupDeathSensors.clear();
         theCrewGroupO2ConsumedSensors.clear();
+        theCrewGroupCO2ProducedSensors.clear();
+        theCrewGroupWaterConsumedSensors.clear();
+        theCrewGroupWaterProducedSensors.clear();
+        theCrewGroupWasteProducedSensors.clear();
+        theCrewGroupFoodConsumedSensors.clear();
         theCrewGroupProductivitySensors.clear();
         theCrewGroupAnyDeadSensors.clear();
         //Environment
@@ -706,6 +746,10 @@ public class BioHolder {
         //Food
         theBiomassInFlowRateSensors.clear();
         theBiomassOutFlowRateSensors.clear();
+        theBiomassTotalCO2ConsumedSensors.clear();
+        theBiomassTotalO2ProducedSensors.clear();
+        theBiomassTotalWaterConsumedSensors.clear();
+        theBiomassTotalWaterProducedSensors.clear();
         theFoodInFlowRateSensors.clear();
         theFoodOutFlowRateSensors.clear();
         theHarvestSensors.clear();

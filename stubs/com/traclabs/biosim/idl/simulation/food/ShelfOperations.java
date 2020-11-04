@@ -20,6 +20,10 @@ public interface ShelfOperations
 	void replant(com.traclabs.biosim.idl.simulation.food.PlantType pType, float area);
 	float getCropAreaTotal();
 	float getCropAreaUsed();
+	float getCropO2Produced();
+	float getCropCO2Consumed();
+	float getCropWaterConsumed();
+	float getCropWaterProduced();
 	com.traclabs.biosim.idl.simulation.food.BiomassPS getBiomassPS();
 	void setStartTick(int tick);
 	void kill();

@@ -99,7 +99,7 @@ public class SimController extends AController {
 		collectReferences();
 		setThresholds();
 		continuousState = new StateMap();
-		myActionMap = new ActionMap();
+		//myActionMap = new ActionMap(); Never used
 		myO2AirStoreInInjectorMax = myO2AirStoreInInjectorAcutator.getMax();
 
 		if (myCO2Injector != null) {
@@ -113,7 +113,7 @@ public class SimController extends AController {
 		collectReferences();
 		setThresholds();
 		continuousState = new StateMap();
-		myActionMap = new ActionMap();
+		//myActionMap = new ActionMap(); Never used
 		myO2AirStoreInInjectorMax = myO2AirStoreInInjectorAcutator.getMax();
 
 		if (myCO2Injector != null) {

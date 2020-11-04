@@ -223,5 +223,10 @@ _delegate.setCurrentActivity(newActivity);
 	{
 		return _delegate.getCO2Produced();
 	}
+	
+	public float getDryWasteProduced()
+	{
+		return _delegate.getDryWasteProduced();
+	}
 
 }

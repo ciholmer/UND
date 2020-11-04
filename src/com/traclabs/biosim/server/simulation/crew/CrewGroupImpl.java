@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 
+import org.jfree.util.Log;
+
 import com.traclabs.biosim.idl.framework.LogLevel;
 import com.traclabs.biosim.idl.framework.Malfunction;
 import com.traclabs.biosim.idl.framework.MalfunctionIntensity;
@@ -368,20 +370,39 @@ public class CrewGroupImpl extends SimBioModuleImpl implements
     public int getCrewSize() {
         return crewPeople.size();
     }
-
+    
+/*
+ * CIH 200601
+ * Added for aggregating values at crew group level.
+ * @return total amount of grey water produced by all of the crew during this tick (in ltr)
+ * 
+ */
     public float getGreyWaterProduced() {
         float totalGreyWaterProduced = 0f;
     	for (CrewPerson currentPerson : crewPeople.values())
             totalGreyWaterProduced += currentPerson.getGreyWaterProduced();
         return totalGreyWaterProduced;
     }
+    
+    /*
+     * CIH 200601
+     * Added for aggregating values at crew group level.
+     * @return total amount of dirty water (including grey water) produced by all of the crew during this tick (in ltr)
+     * 
+     */
 
     public float getDirtyWaterProduced() {
         float totalDirtyWaterProduced = 0f;
     	for (CrewPerson currentPerson : crewPeople.values())
-            totalDirtyWaterProduced += currentPerson.getDirtyWaterProduced();
+            totalDirtyWaterProduced += currentPerson.getDirtyWaterProduced() + currentPerson.getGreyWaterProduced();
         return totalDirtyWaterProduced;
     }
+    
+    /*
+     * CIH 200601
+     * Added for aggregating values at crew group level.
+     * @return total amount of potable water consumed by all of the crew during this tick (in ltr)
+     */
 
     public float getPotableWaterConsumed() {
         float totalPotableWaterConsumed = 0f;
@@ -391,6 +412,12 @@ public class CrewGroupImpl extends SimBioModuleImpl implements
         return totalPotableWaterConsumed;
     }
 
+    /*
+     * CIH 200601
+     * Added for aggregating values at crew group level.
+     * @return total amount of food consumed by all of the crew during this tick (in kg)
+     */
+    
     public float getFoodConsumed() {
         float totalFoodConsumed = 0f;
     	for (CrewPerson currentPerson : crewPeople.values())
@@ -398,13 +425,38 @@ public class CrewGroupImpl extends SimBioModuleImpl implements
         return totalFoodConsumed;
     }
 
+    /*
+     * CIH 200601
+     * Added for aggregating values at crew group level.
+     * @return total amount of CO2 produced by all of the crew during this tick (in moles)
+     * 
+     */
+    
     public float getCO2Produced() {
         float totalCO2Produced = 0f;
     	for (CrewPerson currentPerson : crewPeople.values())
             totalCO2Produced += currentPerson.getCO2Produced();
         return totalCO2Produced;
     }
+    
+    /*
+     * CIH 200601
+     * Added for aggregating values at crew group level.
+     * @return total amount of dry waste produced by all of the crew during this tick (in kg)
+     */
+    
+    public float getDryWasteProduced() {
+        float totalDryWasteProduced = 0f;
+    	for (CrewPerson currentPerson : crewPeople.values())
+            totalDryWasteProduced += currentPerson.getDryWasteProduced();
+        return totalDryWasteProduced;
+    }
 
+    /*
+     * CIH 190605
+     * Added for aggregating values at crew group level.
+     * @return total amount of O2 Consumed by all of the crew during this tick (in moles)
+     */
     public float getO2Consumed() {
         float totalO2Consumed = 0f;
     	for (CrewPerson currentPerson : crewPeople.values())

@@ -18,7 +18,7 @@ import javax.swing.WindowConstants;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import com.traclabs.biosim.client.control.ActionMap;
+//import com.traclabs.biosim.client.control.ActionMap;
 import com.traclabs.biosim.client.control.StateMap;
 import com.traclabs.biosim.client.framework.BiosimMain;
 import com.traclabs.biosim.client.util.BioHolder;
@@ -131,7 +131,7 @@ public class BiosimStandaloneLMLSTPController {
 
 	/** 
 	 * Looked at the Phase 1 final report for what injection rate was used in the actual test,
-	 *  unfortunately shows that chambers were kept seperate. Not sure how of figure this in at
+	 *  unfortunately shows that chambers were kept separate. Not sure how of figure this in at
 	 *   this point in time. Crewed side of the system started at 1251 and reached a peak with 
 	 *   Bob Roberts around 7800PPM while the plant chambers self regulated at 1251 +/- 448.. 
 	 *   
@@ -149,7 +149,7 @@ public class BiosimStandaloneLMLSTPController {
 
     private StateMap continuousState;
 
-    private ActionMap myActionMap;
+    //private ActionMap myActionMap;  CIH 200718 never used
 
     private Map classifiedState;
 
@@ -287,7 +287,6 @@ public class BiosimStandaloneLMLSTPController {
 	
 	/** From SimpleController
 	 * If the oxygen in the cabin drifts below 10%, stop the sim.
-	 * TO-DO Remove for thesis
 	 */
 	private boolean endConditionMet() {
 		float oxygenPercentage = myO2ConcentrationSensor.getValue();

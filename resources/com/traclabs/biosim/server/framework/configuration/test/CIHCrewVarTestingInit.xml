@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../style/table.xsl"?>
+<biosim xmlns="http://www.traclabs.com/biosim"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
+	
+	<!-- Modified LMLSTP Phase III config for testing crew aggregation variables
+		Based on CrewO2Consumed modification from 2019
+		Added CrewGroupCO2Produced, rewGroupCO2ProducerSensor, CrewGroupWaterConsumerSensor, CrewGroupWaterProducerSensor, CrewGroupWasteProducerSensor
+		Duration set for 10 days (240 'ticks') for testing purposes.
+	
+	Initial values for Duplication of Lunar–Mars Life Support Test Project (LMLSTP) Phase III Test performed in 1997
+	     at Johnson Space Center (JSC) 
+	     91 Days - 2184 'ticks'
+	     4 human subjects, immediately in environment for Var test, no delayed entry 
+	     Air - regenerative biological and physicochemical
+	     75% Physicochemical Atmospheric Regeneration (4BMS / OGS / VCCR / CRS)(section 2.1.4 users manaual)
+	     25% VPGC (Variable Pressure Growth Chamber) (Barta 2016)
+	     	5.6 m of wheat used for Atmospheric regeneration and crew consumption
+	     	5.6 m of lettuce used for Atmospheric regeneration and crew consumption
+	     900 m3 crew space + 27 m3 plant growth space = 927 m3 of environment volume
+	     Water Recovery System
+	     Waste Management System - Incineration and Biodegradation 
+	 -->
+	<Globals 
+	runTillCrewDeath="true" 
+	runTillN="240" 
+	crewsToWatch="Crew_Group"
+	plantsToWatch="Biomass"
+	startPaused="true">
+
+	</Globals>
+	<SimBioModules>
+		<environment>
+			<SimEnvironment moduleName="Crew_Quarters" initialVolume="273920">
+			<percentageInitialization waterPercentage="0.70"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.21" totalPressure="101.325" co2Percentage="0.0033" />
+		    </SimEnvironment>
+			<SimEnvironment moduleName="VPGC" initialVolume="46400" >
+				<percentageInitialization waterPercentage="0.70"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.215" totalPressure="101.325" co2Percentage="0.0003"/>
+		    </SimEnvironment>
+			<Dehumidifier moduleName="Crew_Dehumidifier">
+				<airConsumer inputs="Crew_Quarters" 
+					desiredFlowRates="1000" maxFlowRates="1000"></airConsumer>
+				<dirtyWaterProducer desiredFlowRates="1000"
+					outputs="Dirty_Water_Store" maxFlowRates="1000" />
+			</Dehumidifier>
+				<Dehumidifier moduleName="VPGC_Dehumidifier">
+				<airConsumer inputs="VPGC"
+					desiredFlowRates="1000" maxFlowRates="1000"></airConsumer>
+				<dirtyWaterProducer desiredFlowRates="1000"
+					outputs="Dirty_Water_Store" maxFlowRates="1000" />
+			</Dehumidifier>
+		</environment> 
+		<air>
+			<MethaneStore capacity="10000" moduleName="Methane_Store" level="1000"/>
+			<NitrogenStore capacity="10000" moduleName="Nitrogen_Store" level="1000"/>
+			<CO2Store capacity="10000" moduleName="CO2_Store" level="8000"/>
+			<H2Store capacity="10000" moduleName="H2_Store" level="1000"/>
+			<O2Store capacity="10000" moduleName="O2_Store" level="1000"/>
+						
+			<VCCR moduleName="Main_VCCR" >
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="2000" maxFlowRates="2000" ></powerConsumer>
+				<airConsumer inputs="Crew_Quarters"
+					desiredFlowRates="10000" maxFlowRates="10000"></airConsumer>
+				<airProducer desiredFlowRates="10000"
+					outputs="Crew_Quarters" maxFlowRates="10000" />
+				<CO2Producer desiredFlowRates="10000" outputs="CO2_Store"
+					maxFlowRates="10000"></CO2Producer>
+			</VCCR>
+			<!--  Oxygen Generator System -->
+			<OGS moduleName="OGS" >
+				<powerConsumer inputs="Power_Store" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<potableWaterConsumer inputs="Potable_Water_Store" desiredFlowRates="10" maxFlowRates="10"/>
+				<O2Producer desiredFlowRates="1000" outputs="O2_Store" maxFlowRates="1000"/>
+				<H2Producer desiredFlowRates="1000" outputs="H2_Store" maxFlowRates="1000"/>
+			</OGS>
+									
+			<!--  Carbon Reduction System produced Water and Methane (vented in actual exp) -->
+			<CRS moduleName="CRS" >
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="100" maxFlowRates="100" />
+				<CO2Consumer inputs="CO2_Store" desiredFlowRates="100"
+					maxFlowRates="100" />
+				<H2Consumer inputs="H2_Store" desiredFlowRates="100"
+					maxFlowRates="100" />
+				<potableWaterProducer desiredFlowRates="100"
+					outputs="Potable_Water_Store" maxFlowRates="100" />
+				<methaneProducer desiredFlowRates="100"
+					outputs="Methane_Store" maxFlowRates="100"></methaneProducer>
+			</CRS>
+			<Pyrolizer moduleName="Pyrolizer">
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="100" maxFlowRates="100" />
+				<methaneConsumer inputs="Methane_Store"
+					desiredFlowRates="100" maxFlowRates="100" />
+				<H2Producer desiredFlowRates="100" outputs="H2_Store"
+					maxFlowRates="100" />
+				<dryWasteProducer desiredFlowRates="100"
+					outputs="Dry_Waste_Store" maxFlowRates="100" />
+			</Pyrolizer>
+		</air>
+		<food>
+			<BiomassPS moduleName="Biomass" autoHarvestAndReplant="true">
+			<!-- <shelf cropArea="11.2" cropType="WHEAT"/> -->
+<!-- 				<shelf cropArea="5.6" cropType="WHEAT"/> -->
+				<shelf cropArea="11.2" cropType="WHEAT"/>
+				<shelf cropArea="11.2" cropType="WHEAT"/>
+				<shelf cropArea="11.2" cropType="WHEAT"/>
+				<shelf cropArea="11.2" cropType="WHEAT"/>
+     <!--  ISOLATION book pg 48 LMLSTP Phase III, only wheat in VPGC, lettuce was done in the GARDEN experiment  -->				
+<!-- 				<shelf cropArea="5.6" cropType="LETTUCE"/> -->
+<!-- 				<shelf cropArea="22.4" cropType="LETTUCE"/> -->
+				<powerConsumer maxFlowRates="20000" desiredFlowRates="18000" inputs="Power_Store"/>
+				<potableWaterConsumer maxFlowRates="250" desiredFlowRates="150" inputs="Potable_Water_Store"/>
+				<greyWaterConsumer maxFlowRates="250" desiredFlowRates="150" inputs="Grey_Water_Store"/>
+				<airConsumer maxFlowRates="1000" desiredFlowRates="500" inputs="VPGC"/>
+				<dirtyWaterProducer maxFlowRates="1000" desiredFlowRates="150" outputs="Dirty_Water_Store"/>
+				<biomassProducer maxFlowRates="1000" desiredFlowRates="100" outputs="Biomass_Store"/>
+				<airProducer maxFlowRates="1000" desiredFlowRates="500" outputs="VPGC"/>
+			</BiomassPS>
+			<BiomassPS moduleName="GARDEN" autoHarvestAndReplant="true">
+				<shelf cropArea="1" cropType="LETTUCE"/>
+				<powerConsumer maxFlowRates="1000" desiredFlowRates="1000" inputs="Power_Store"/>
+				<potableWaterConsumer maxFlowRates="50" desiredFlowRates="50" inputs="Potable_Water_Store"/>
+				<greyWaterConsumer maxFlowRates="50" desiredFlowRates="50" inputs="Grey_Water_Store"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="Crew_Quarters"/>
+				<dirtyWaterProducer maxFlowRates="50" desiredFlowRates="50" outputs="Dirty_Water_Store"/>
+				<biomassProducer maxFlowRates="100" desiredFlowRates="100" outputs="Biomass_Store"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="Crew_Quarters"/>
+			</BiomassPS>
+			<BiomassStore moduleName="Biomass_Store" capacity="1000" level="300"/>
+			<FoodStore moduleName="FoodStore" capacity="100000" level="100000"/>
+		</food>
+		<framework>
+		
+			<Injector moduleName="Crew_O2_Injector">
+				<O2Consumer inputs="O2_Store" desiredFlowRates="10" maxFlowRates="100"/>
+				<O2Producer desiredFlowRates="10" outputs="Crew_Quarters" maxFlowRates="100" />
+			</Injector>
+			<Injector moduleName="Crew_CO2_Injector">
+				<CO2Consumer inputs="CO2_Store"	desiredFlowRates="1.2" maxFlowRates="100" />
+				<CO2Producer desiredFlowRates="1.2" outputs="Crew_Quarters" maxFlowRates="100"/>
+			</Injector>
+			<Accumulator moduleName="Crew_O2_Concentrator">
+			     <O2Consumer inputs="Crew_Quarters" desiredFlowRates="15" maxFlowRates="100"/>
+			     <O2Producer desiredFlowRates="0" outputs="O2_Store" maxFlowRates="100"/>
+			</Accumulator>
+			<Injector moduleName="VPGC_CO2_Injector">
+				<CO2Consumer inputs="CO2_Store"	desiredFlowRates="0" maxFlowRates="100" />
+				<CO2Producer desiredFlowRates="0" outputs="VPGC" maxFlowRates="100"/>
+			</Injector>
+			<Injector moduleName="VPGC_O2_Injector">
+				<O2Consumer inputs="O2_Store" desiredFlowRates="0" maxFlowRates="100"/>
+				<O2Producer desiredFlowRates="0" outputs="VPGC" maxFlowRates="100" />
+			</Injector>
+			<Accumulator moduleName="VPGC_O2_Concentrator">
+			     <O2Consumer inputs="VPGC" desiredFlowRates="0" maxFlowRates="100"/>
+			     <O2Producer desiredFlowRates="0" outputs="O2_Store" maxFlowRates="100"/>
+			</Accumulator>
+			
+		</framework>
+		<power>
+			<PowerStore moduleName="Power_Store" capacity="100000000000" level="100000000000"/>	   			
+		</power>
+			
+		<water>
+			<WaterRS moduleName="Water_Distiller" implementation="LINEAR">
+				<powerConsumer inputs="Power_Store" desiredFlowRates="1000" maxFlowRates="1000" />
+				<dirtyWaterConsumer inputs="Dirty_Water_Store" desiredFlowRates="10" maxFlowRates="1000"/>
+				<greyWaterConsumer inputs="Grey_Water_Store" desiredFlowRates="10" maxFlowRates="1000" />
+				<potableWaterProducer desiredFlowRates="1000" outputs="Potable_Water_Store" maxFlowRates="1000" />
+			</WaterRS>
+			<PotableWaterStore moduleName="Potable_Water_Store" capacity="500000" level="500000"/>
+			<GreyWaterStore moduleName="Grey_Water_Store" capacity="500" level="0"/>
+			<DirtyWaterStore moduleName="Dirty_Water_Store" capacity="500" level="0"/>
+			
+		</water>
+		<waste>
+			<DryWasteStore moduleName="Dry_Waste_Store" capacity="1000" level="0"/>
+			<Incinerator moduleName="Waste_Incinerator" logLevel="DEBUG">
+				<powerConsumer inputs="Power_Store" desiredFlowRates="0" maxFlowRates="1000"/>
+				<O2Consumer inputs="VPGC" desiredFlowRates="100" maxFlowRates="1000"/>
+				<dryWasteConsumer maxFlowRates="1000" desiredFlowRates="1000" inputs="Dry_Waste_Store"/>
+				<CO2Producer desiredFlowRates="100" outputs="VPGC" maxFlowRates="10000"/>
+			</Incinerator>
+
+		</waste>
+		<crew>
+		
+			<CrewGroup moduleName="Crew_Group">
+				<potableWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="Potable_Water_Store"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="Crew_Quarters"/>
+				<foodConsumer maxFlowRates="100" desiredFlowRates="100" inputs="FoodStore"/>
+				<dirtyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="Dirty_Water_Store"/>
+				<greyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="Grey_Water_Store"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="Crew_Quarters"/>
+				<dryWasteProducer maxFlowRates="100" desiredFlowRates="100" outputs="Dry_Waste_Store"/>
+				<crewPerson name="Nigel Packham" age="47" weight="77" sex="MALE" arrivalDate="0" departureDate="3600" >
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson name="John Lewis" age="35" weight="75" sex="MALE" arrivalDate="1" departureDate="3600">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson name="Laura Supra" age="30" weight="60" sex="FEMALE" arrivalDate="2" departureDate="3600">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson name="Vickie Kloenis" age="35" weight="60" sex="FEMALE" arrivalDate="3" departureDate="3600">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+			</CrewGroup>
+		</crew>
+	</SimBioModules>
+	<Sensors>
+	    <crew>
+	    	<CrewGroupO2ConsumedSensor input="Crew_Group" moduleName="Crew_O2Consumed" logLevel="DEBUG" />
+	    	<CrewGroupCO2ProducedSensor input="Crew_Group" moduleName="Crew_CO2Produced" logLevel="DEBUG" />
+	    	<CrewGroupWaterConsumedSensor input="Crew_Group" moduleName="Crew_WaterConsumed" logLevel="DEBUG" />
+	    	<CrewGroupWaterProducedSensor input="Crew_Group" moduleName="Crew_WaterProduced" logLevel="DEBUG" />
+	    	<CrewGroupWasteProducedSensor input="Crew_Group" moduleName="Crew_WasteProduced" logLevel="DEBUG" />
+	    	<CrewGroupFoodConsumedSensor input="Crew_Group" moduleName="Crew_FoodConsumed" logLevel="DEBUG" />
+	    </crew>
+	    <framework>
+	        <StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="CO2_Store" moduleName="CO2_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="H2_Store" moduleName="H2_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="Methane_Store" moduleName="Methane_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="Nitrogen_Store" moduleName="Nitrogen_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="Dirty_Water_Store" moduleName="Dirty_Water_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="Grey_Water_Store" moduleName="Grey_Water_Store_Level" logLevel="DEBUG"/>
+	        <StoreLevelSensor input="Potable_Water_Store" moduleName="Potable_Water_store_Level" logLevel="DEBUG"/>
+	    </framework>
+		<air>
+			<CO2OutFlowRateSensor input="Main_VCCR" moduleName="Main_Vccr_Co2_Out_Sensor" index="0" isBionetEnabled="false"/>
+			<O2OutFlowRateSensor input="OGS" moduleName="Main_OGS_O2_Out_Sensor" index="0" logLevel="DEBUG" isBionetEnabled="false" />
+			<O2InFlowRateSensor input="Crew_O2_Injector" moduleName="Crew_O2_Injector_Sensor" index="0" logLevel="DEBUG"/>
+		    <CO2InFlowRateSensor input="Crew_CO2_Injector" moduleName="Crew_CO2_Injector_Sensor" index="0" logLevel="DEBUG"/>
+		    <O2OutFlowRateSensor input="Crew_O2_Concentrator" moduleName="Crew_O2_Concentrator_Sensor" index="0" logLevel="DEBUG"/>
+			<O2InFlowRateSensor input="VPGC_O2_Injector" moduleName="VPGC_O2_Injector_Sensor" index="0" logLevel="DEBUG"/>
+		    <CO2InFlowRateSensor input="VPGC_CO2_Injector" moduleName="VPGC_CO2_Injector_Sensor" index="0" logLevel="DEBUG"/>
+		    <O2OutFlowRateSensor input="VPGC_O2_Concentrator" moduleName="VPGC_O2_Concentrator_Sensor" index="0" logLevel="DEBUG"/>
+		</air>
+		<environment>
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Moles" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_CO2_Moles" gasType="CO2" logLevel="DEBUG"/>
+			<GasMoleSensor input="VPGC" moduleName="VPGC_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="VPGC" moduleName="VPGC_CO2_Mole" gasType="CO2" logLevel="DEBUG"/>
+	
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_O2_Concentraton_Sensor" gasType="O2" logLevel="DEBUG"/>
+		    <GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_CO2_Concentraton_Sensor" gasType="CO2" logLevel="DEBUG"/>
+		    <GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_N_Concentraton_Sensor" gasType="NITROGEN" logLevel="DEBUG"/>
+		    <GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Other_Concentraton_Sensor" gasType="OTHER" logLevel="DEBUG"/>
+		    
+		    <GasConcentrationSensor input="VPGC" moduleName="VPGC_O2_Concentraton_Sensor" gasType="O2" logLevel="DEBUG"/>
+		    <GasConcentrationSensor input="VPGC" moduleName="VPGC_CO2_Concentraton_Sensor" gasType="CO2" logLevel="DEBUG"/>
+		    <GasConcentrationSensor input="VPGC" moduleName="VPGC_N_Concentraton_Sensor" gasType="NITROGEN" logLevel="DEBUG"/>
+		    <GasConcentrationSensor input="VPGC" moduleName="VPGC_Other_Concentraton_Sensor" gasType="OTHER" logLevel="DEBUG"/>
+		    
+			<AirInFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirInSensor" index="0" isBionetEnabled="false"></AirInFlowRateSensor>
+			<AirOutFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirOutSensor" index="0" isBionetEnabled="false"></AirOutFlowRateSensor>
+			
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_Co2GasConcentrationSensor" gasType="CO2" />
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Humidity_ConcentratonS_ensor" gasType="VAPOR"></GasConcentrationSensor>
+			<GasConcentrationSensor input="VPGC" moduleName="VPGC_Humidity_Concentration_Sensor" gasType="VAPOR"></GasConcentrationSensor>
+			
+		</environment>
+		<water>
+		</water>
+		<power>
+			<PowerInFlowRateSensor input="Main_VCCR"
+				moduleName="MainVccrPowerSensor" index="0" logLevel="INFO"
+				isBionetEnabled="false">
+			</PowerInFlowRateSensor>
+		</power>
+	</Sensors>
+	<Actuators>
+		<power>
+			<PowerInFlowRateActuator output="Main_VCCR"
+				moduleName="MainVccrPower" index="0" logLevel="INFO"
+				isBionetEnabled="false">
+			</PowerInFlowRateActuator>
+		</power>
+		<air>
+		  <CO2OutFlowRateActuator output="Crew_CO2_Injector" moduleName="Crew_CO2_Storage_Actuator" index="0" /> 
+		  <CO2InFlowRateActuator output="Crew_CO2_Injector" moduleName="Crew_CO2_Injector_Actuator" index="0"/>
+		  <O2InFlowRateActuator output="Crew_O2_Injector" moduleName="Crew_O2_Injector_Actuator" index="0"/>
+          <O2OutFlowRateActuator output="Crew_O2_Injector" moduleName="Crew_O2_Storage_Actuator" index="0"/> 
+          <O2InFlowRateActuator output="Crew_O2_Concentrator" moduleName="Crew_O2_ConcentratorStore_Actuator" index="0"/>
+          <O2OutFlowRateActuator output="Crew_O2_Concentrator" moduleName="Crew_O2_Concentrator_Actuator" index="0"/>
+          
+   		  <CO2OutFlowRateActuator output="VPGC_CO2_Injector" moduleName="VPGC_CO2_Storage_Actuator" index="0" /> 
+		  <CO2InFlowRateActuator output="VPGC_CO2_Injector" moduleName="VPGC_CO2_Injector_Actuator" index="0"/>
+		  <O2InFlowRateActuator output="VPGC_O2_Injector" moduleName="VPGC_O2_Injector_Actuator" index="0"/>
+          <O2OutFlowRateActuator output="VPGC_O2_Injector" moduleName="VPGC_O2_Storage_Actuator" index="0"/> 
+          <O2InFlowRateActuator output="VPGC_O2_Concentrator" moduleName="VPGC_O2_ConcentratorStore_Actuator" index="0"/>
+          <O2OutFlowRateActuator output="VPGC_O2_Concentrator" moduleName="VPGC_O2_Concentrator_Actuator" index="0"/>  
+          
+		</air>
+	</Actuators>
+</biosim>

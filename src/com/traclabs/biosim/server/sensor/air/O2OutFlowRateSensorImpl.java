@@ -19,7 +19,8 @@ public class O2OutFlowRateSensorImpl extends GenericSensorImpl implements
         float preFilteredValue = getInput().getO2ProducerDefinition()
                 .getActualFlowRate(myIndex);
         myValue = getStochasticFilter().randomFilter(preFilteredValue);
-		myLogger.debug("sensor value = "+myValue);
+        //CIH 201025 causing duplicate logging
+        //myLogger.debug("sensor value = "+myValue);
     }
 
     public void setInput(O2Producer pProducer, int pIndex) {

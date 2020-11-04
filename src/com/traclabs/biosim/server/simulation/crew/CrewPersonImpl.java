@@ -191,21 +191,19 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Returns the grey water produced (in liters) by this crew member during
-	 * the current tick
-	 * 
+	 * CIH 200504
 	 * @return the grey water produced (in liters) by this crew member during
 	 *         the current tick
+	 *         
 	 */
 	public float getGreyWaterProduced() {
 		return greyWaterProduced;
 	}
 
 	/**
-	 * Returns the dirty water produced (in liters) by this crew member during
-	 * the current tick
+	 *CIH 200504
 	 * 
-	 * @return the dirty water produced (in liters) by this crew member during
+	 * @return the dirty and gray water produced (in liters) by this crew member during
 	 *         the current tick
 	 */
 	public float getDirtyWaterProduced() {
@@ -213,19 +211,16 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Returns the dry waste produced (in liters) by this crew member during the
-	 * current tick
 	 * 
 	 * @return the dry waste produced (in liters) by this crew member during the
 	 *         current tick
 	 */
 	public float getDryWasteProduced() {
-		return dirtyWaterProduced;
+		return dryWasteProduced;
 	}
 
 	/**
-	 * Returns the potable water consumed (in liters) by this crew member during
-	 * the current tick
+	 * CIH 200504
 	 * 
 	 * @return the potable water consumed (in liters) by this crew member during
 	 *         the current tick
@@ -235,8 +230,7 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Returns the food consumed (in liters) by this crew member during the
-	 * current tick
+	 * CIH 200504
 	 * 
 	 * @return the food consumed (in liters) by this crew member during the
 	 *         current tick
@@ -246,8 +240,7 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Returns the produced (in moles) by this crew member during the
-	 * current tick
+	 * CIH 200504
 	 * 
 	 * @return the CO2 produced (in moles) by this crew member during the
 	 *         current tick
@@ -257,8 +250,7 @@ public class CrewPersonImpl extends BaseCrewPersonImpl {
 	}
 
 	/**
-	 * Returns the O2 consumed (in moles) by this crew member during the current
-	 * tick
+	 * CIH 190501
 	 * 
 	 * @return the O2 consumed (in moles) by this crew member during the current
 	 *         tick

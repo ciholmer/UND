@@ -32,6 +32,41 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="CrewGroupCO2ProducedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="CrewGroupWaterConsumedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="CrewGroupWaterProducedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="CrewGroupWasteProducedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="CrewGroupFoodConsumedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
 	<xsd:complexType name="CrewSensorsType">
 		<xsd:sequence>
 			<xsd:choice minOccurs="0" maxOccurs="unbounded">
@@ -40,7 +75,17 @@
 				<xsd:element name="CrewGroupProductivitySensor"
 					type="CrewGroupProductivitySensorType"/>
 				<xsd:element name="CrewGroupO2ConsumedSensor"
-					type="CrewGroupProductivitySensorType"/>
+					type="CrewGroupO2ConsumedSensorType"/>
+				<xsd:element name="CrewGroupCO2ProducedSensor"
+					type="CrewGroupCO2ProducedSensorType"/>
+				<xsd:element name="CrewGroupWaterConsumedSensor"
+					type="CrewGroupWaterConsumedSensorType"/>
+				<xsd:element name="CrewGroupWaterProducedSensor"
+					type="CrewGroupWaterProducedSensorType"/>
+				<xsd:element name="CrewGroupWasteProducedSensor"
+					type="CrewGroupWasteProducedSensorType"/>
+				<xsd:element name="CrewGroupFoodConsumedSensor"
+					type="CrewGroupWasteProducedSensorType"/>
 				<xsd:element name="CrewGroupAnyDeadSensor"
 					type="CrewGroupAnyDeadSensorType"/>
 			</xsd:choice>

@@ -41,6 +41,20 @@ public class ShelfImpl extends ShelfPOA {
     private static final float POWER_PER_SQUARE_METER = 1520f;
 
     private int myStartTick;
+    
+    //CIH 200705 - Add for plant variable agrigates
+    private float myO2Produced = 0f;
+    
+    private float myCO2Consumed = 0f;
+    
+    private float myWaterProduced = 0f;
+    
+    private float myWaterConsumed = 0f;
+    
+    private float myPotableWaterConsumed = 0f;
+    
+    private float myGrayWaterConsumed = 0f;
+    //
 
     public ShelfImpl(PlantType pType, float pCropAreaTotal,
             BiomassPSImpl pBiomassImpl) {
@@ -70,6 +84,12 @@ public class ShelfImpl extends ShelfPOA {
     public void reset() {
         waterLevel = 0f;
         powerLevel = 0f;
+        myO2Produced = 0f;
+        myCO2Consumed = 0f;
+        myWaterConsumed = 0f;
+        myWaterProduced = 0f;
+        myPotableWaterConsumed = 0f;
+        myGrayWaterConsumed = 0f;
         myCrop.reset();
     }
     
@@ -104,6 +124,56 @@ public class ShelfImpl extends ShelfPOA {
     public void setStartTick(int tick) {
         myStartTick = tick;
     }
+    
+    /*
+     * CIH 200704
+     * @Return CO2 Consumed by shelf in moles
+     */
+    public float getCropCO2Consumed () {
+    	return myCrop.getMolesOfCO2Consumed();
+    }
+    
+    /*
+     * CIH200704
+     * @Return O2 produced by shelf in moles
+     */
+    public float getCropO2Produced() {
+    	return myCrop.getMolesofO2Produced();
+    }
+    
+    /*
+     * CIH200920
+     * @return Water Consumed by plants on the shelf in ltrs 
+     */
+    public float getCropWaterConsumed() {
+        return myCrop.getLtrWaterConsumed();
+    }
+    
+    /*
+     * CIH200920
+     * @return potable water consumed by shelf in ltrs (amount of water used to fill the water level on the shelf)
+     * NOT the amount of Potable Water consumed by the plant on the shelf
+     */
+    public float getShelfPotableWaterConsumed(){
+    	return myPotableWaterConsumed;
+    }
+    
+    /*
+     * CIH200920
+     * @return gray water consumed by shelf in ltrs(amount of water used to fill the water level on the shelf)
+     * NOT the amount of Gray Water consumed by the plant on the shelf
+     */
+    public float getShelfGrayWaterConsumed(){
+    	return myGrayWaterConsumed;
+    }
+    
+    /*
+     * CIH200711
+     * @return water produced by shelf in ltrs (transpired as vapor)
+     */
+    public float getCropWaterProduced(){
+    	return myCrop.getLtrWaterProduced();
+    }
 
     private void gatherWater() {
         float extraWaterNeeded = waterNeeded - waterLevel;
@@ -120,9 +190,17 @@ public class ShelfImpl extends ShelfPOA {
                         extraWaterNeeded - gatheredGreyWater,
                         1f / myBiomassPSImpl.getNumberOfShelves());
         waterLevel += gatheredGreyWater + gatheredPotableWater;
-        myLogger.debug("ShelfImpl: PotableWaterUsed: " + gatheredPotableWater);
-        myLogger.debug("ShelfImpl: GrayWaterUsed: " + gatheredGreyWater);
-        
+        //set the amount of water consumed (Note water level != water consumed
+        //myWaterConsumed += waterLevel;
+        myWaterConsumed += myCrop.getLtrWaterConsumed();
+        //Note tells how much was put into the shelf water level, not how much was consumed by the plants
+        myPotableWaterConsumed = gatheredPotableWater;
+        myGrayWaterConsumed = gatheredGreyWater;
+        myLogger.debug("ShelfImpl: gatherWater - myWaterConsumed: " + myWaterConsumed);
+        myLogger.debug("ShelfImpl: gatherWater - PotableWaterUsed: " + gatheredPotableWater);
+        myLogger.debug("ShelfImpl: gatherWater - myPotableWaterConsumed: " + myPotableWaterConsumed);
+        myLogger.debug("ShelfImpl: gatherWater - GrayWaterUsed: " + gatheredGreyWater);
+        myLogger.debug("ShelfImpl: gatherWater - myGrayWaterConsumed: " + myGrayWaterConsumed);
     }
 
     private void gatherPower() {
@@ -167,14 +245,22 @@ public class ShelfImpl extends ShelfPOA {
     private float getPSEfficiency() {
         return 4.68f; //for high pressure sodium bulbs
     }
+    
+    //CIH 201014 Add logging
 
     public void harvest() {
+    	float age = myCrop.getDaysOfGrowth();
         BioMatter biomassProduced = myCrop.harvest();
+    	float inedible = biomassProduced.inedibleFraction;
+    	if (Float.isNaN(inedible))
+    		inedible = 0;
+        myLogger.info("ShelfImpl: Harvested " + biomassProduced.mass
+                + "kg of " + myCrop.getPlantTypeString() + " ("+ inedible * 100 +"% inedible) after " +age+ " days of growth on tick " + myBiomassPSImpl.getMyTicks());
         myBiomassPSImpl.getBiomassProducerDefinitionImpl()
                 .pushFractionalResourceToBiomassStore(biomassProduced,
                         1f / myBiomassPSImpl.getNumberOfShelves());
     }
-
+   
     public boolean isReadyForHavest() {
         return myCrop.readyForHarvest();
     }
@@ -186,12 +272,12 @@ public class ShelfImpl extends ShelfPOA {
     public float getHarvestInterval() {
         return myCrop.getTimeAtCropMaturity();
     }
-
+    
     private void tryHarvesting() {
-        if (myBiomassPSImpl.autoHarvestAndReplantEnabled()) {
+    	float age = myCrop.getDaysOfGrowth();
+    	if (myBiomassPSImpl.autoHarvestAndReplantEnabled()) {
             if (myCrop.readyForHarvest() || myCrop.isDead()) {
-            	float age = myCrop.getDaysOfGrowth();
-                BioMatter biomassProduced = myCrop.harvest();
+            	BioMatter biomassProduced = myCrop.harvest();
             	float inedible = biomassProduced.inedibleFraction;
             	if (Float.isNaN(inedible))
             		inedible = 0;
@@ -203,7 +289,7 @@ public class ShelfImpl extends ShelfPOA {
                                 1f / myBiomassPSImpl.getNumberOfShelves());
                 myCrop.reset();
             }
-        }
+        } 
     }
 
     public void tick() {

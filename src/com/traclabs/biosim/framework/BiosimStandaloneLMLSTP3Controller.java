@@ -19,7 +19,9 @@ import javax.swing.WindowConstants;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import com.traclabs.biosim.client.control.ActionMap;
+
+
+//import com.traclabs.biosim.client.control.ActionMap;
 import com.traclabs.biosim.client.control.StateMap;
 import com.traclabs.biosim.client.framework.BiosimMain;
 import com.traclabs.biosim.client.util.BioHolder;
@@ -56,6 +58,19 @@ import com.traclabs.biosim.idl.simulation.water.DirtyWaterStore;
 import com.traclabs.biosim.idl.simulation.water.GreyWaterStore;
 import com.traclabs.biosim.idl.simulation.water.PotableWaterStore;
 import com.traclabs.biosim.server.framework.BiosimServer;
+import com.traclabs.biosim.server.simulation.food.PlantImpl;
+import com.traclabs.biosim.idl.simulation.food.BioMatter;
+//import com.traclabs.biosim.server.simulation.food.BiomassPSServer;
+import com.traclabs.biosim.idl.simulation.food.BiomassPS;
+import com.traclabs.biosim.idl.simulation.food.Shelf;
+import com.traclabs.biosim.idl.simulation.food.Plant;
+import com.traclabs.biosim.idl.simulation.food.PlantHelper;
+import com.traclabs.biosim.idl.simulation.food.PlantType;
+import com.traclabs.biosim.idl.simulation.food.ShelfPOA;
+import com.traclabs.biosim.idl.simulation.food.BiomassProducerDefinition;
+import com.traclabs.biosim.idl.simulation.food.FoodProcessor;
+import com.traclabs.biosim.idl.simulation.food.BiomassStore;
+import com.traclabs.biosim.idl.simulation.food.FoodStore;
 import com.traclabs.biosim.util.OrbUtils;
 
 /**
@@ -73,7 +88,7 @@ import com.traclabs.biosim.util.OrbUtils;
  * Doc. Number JSC-39144 Date 2-23-2000
  * JSC# 39144
  * 
- * Test dration from wheat growth results (pg 58)
+ * Test duration from wheat growth results (pg 58)
  * Human occupation from day 60 to day 150 (pg 58)
  *  - Air - regenerative biological and physicochemical
 	        75% Physicochemical Atmosphereic Regeneration (OGS / VCCR / CRS)(section 2.1.4 users manaual)
@@ -173,12 +188,16 @@ public class BiosimStandaloneLMLSTP3Controller {
 	private double envCrewO2LOW = 0.205;
 	private float envCrewO2Inject = 100; //the amount to increase the injector by when adding O2 from stores
 
-	private float envCO2TargetPPM = 1251;  //From Phase 1
-	private float envCO2HIGH = 9000; //From Phase 1
-	private float envCO2LOW = 1200; //rom Phase 1
-	private double envCrewCO2TargetPer = 0.003;
-	private double envCrewCO2HIGH = 0.0065;
-	private double envCrewCO2LOW = 0.002;
+	//*ARGH* No % data for VPGC, so have to convert to PPM for 
+	//% data that is available for crew chamber
+	// https://www.rapidtables.com/convert/number/Percent_to_PPM.html
+	//1% = 10000ppm
+	private float envCO2TargetPPM = 4300;  // 0.43% converted
+	//private float envCO2HIGH = 6500; //From Phase 1
+	//private float envCO2LOW = 2000; //From Phase 1
+	private double envCrewCO2TargetPer = 0.0043;
+	private double envCrewCO2HIGH = 6500; // use PPM 0.65% converted
+	private double envCrewCO2LOW = 2000; // use PPM 0.2% converted
 	private float envVPGCCO2Inject = 20; // Amount to increment the injector by when adding CO2 to the VPGC env
 	private float envCrewCO2Inject = 20; // Amount to increment the injector by when adding CO2 to the Crew env
 	
@@ -204,9 +223,24 @@ public class BiosimStandaloneLMLSTP3Controller {
 	private double envVPGCHumidHIGH = 0.71;
 	private double envVPGCHumidLOW = 0.69;
 	
+	private BiomassPS myBiomassPS;
+	//Array of shelves
+	private Shelf myShelves;
+	//Probalby not needed with the array
+	private Shelf myShelf;
+	
+	//CIH 201011
+	//Timer to allow for crop rotations every 20 days (480 ticks).
+	//index values in the array equate to shelf index values.
+	//defined in ticks (80 days * 24 ticks = 1920)
+	private int envShelfHarvestTimer[] = {0, 480, 960, 1440};
+	private int envHarvestTime = 1920;
+    private PlantImpl myCrop;
+	
 	//States and Storage
+	
     private StateMap continuousState;
-    private ActionMap myActionMap;
+    //private ActionMap myActionMap; CIH 200718 never used
     private Map classifiedState;
     private Map<String, Map> thresholdMap = new TreeMap<String, Map>();
 
@@ -228,12 +262,15 @@ public class BiosimStandaloneLMLSTP3Controller {
     private MethaneStore myCH4Store;
     private NitrogenStore myN2Store;
     private DryWasteStore myDryWasteStore;
+    private BiomassStore myBiomassStore;
+    private FoodStore myFoodStore;
 
     //Support equipment
     private VCCR myVCCR;
     private OGS myOGS;
     private CRS myCRS;
     private WaterRS myWSCR;
+    private FoodProcessor myFoodProcessor;
     private Pyrolizer myPyrolizer;
     private Incinerator myIncinerator;
     
@@ -327,7 +364,7 @@ public class BiosimStandaloneLMLSTP3Controller {
 		OrbUtils.sleepAwhile(4000);
 		OrbUtils.initializeClientForStandalone();
 		myLogger = Logger.getLogger(this.getClass());
-		myLogger.setLevel(Level.DEBUG);
+		myLogger.setLevel(Level.INFO);
 		// HandController Code
 		//Add collectReferences line to initialize BioDriver variable (was in main of handcontroller)
 		collectReferences();
@@ -335,9 +372,10 @@ public class BiosimStandaloneLMLSTP3Controller {
 		myBioDriver.startSimulation();
 		myLogger.info("Controller starting run - setting up enviroment ");
 
-		
 		stepSim();
+		
 		myLogger.info("Envorment setup complete - starting sim loop");
+		
 		//BioDriver contains check for max number of ticks set in config file
 		while (!myBioDriver.isDone())
 			stepSim();
@@ -356,7 +394,7 @@ public class BiosimStandaloneLMLSTP3Controller {
 	/**
 	 * Hand Controller Code
 	 * Executed every tick.  Looks at a sensor, looks at an actuator,
-	 * then increments the actuator.
+	 * then increments the actuator as needed based on set ranges.
 	 */
 	public void stepSim() {
 		
@@ -373,137 +411,200 @@ public class BiosimStandaloneLMLSTP3Controller {
 		float vpgcHumiditySensorValue = (vpgcEnvironment.getRelativeHumidity())/100;
 		myLogger.info("Enviroment Gas readings for VPGC Compartment: O2: " + vpgcO2sensorValue +" CO2: "+ vpgcCO2sensorValue + " VAPOR:" + vpgcHumiditySensorValue);
 		
-		//Check crew O2 Concentration Level
-		adjustModuleO2Levels ("Crew Quarters", crewO2sensorValue, crewO2InjectorActuator, crewO2StorageActuator, crewO2ConcentratorActuator,
-				crewO2ConcentratorStoreActuator, envCrewO2TargetPer,envCrewO2HIGH, envCrewO2LOW, envCrewO2Inject );
-		
-		//End Crew O2 Control
-		
-		//VPGC O2 Control
-		adjustModuleO2Levels ("VPGC", vpgcO2sensorValue, vpgcO2InjectorActuator, vpgcO2StorageActuator, vpgcO2ConcentratorActuator,
-				vpgcO2ConcentratorStoreActuator, envVPGCO2TargetPer,envVPGCO2HIGH, envVPGCO2LOW, envVPGCCO2Inject );
-		//End VPGC O2 Control
-		
-		//Crew CO2 Control
-		adjustModuleCO2Levels ("Crew Quarters", crewCO2sensorValue, crewCO2InjectorActuator, crewCO2StorageActuator, 
-				envCrewCO2TargetPer,envCrewCO2HIGH, envCrewCO2LOW, envCrewCO2Inject );
-		//END Crew CO2 Control
-		
-		//VPGC CO2 Control
-		adjustModuleCO2Levels ("VPGC", vpgcCO2sensorValue, vpgcCO2InjectorActuator, vpgcCO2StorageActuator, 
-				envVPGCCO2TargetPer,envVPGCCO2HIGH, envVPGCCO2LOW, envVPGCCO2Inject );
-		//END VPGC CO2 Control
-		
-		//Crew Humidity Control
-		adjustModuleHumidityLevels ("Crew Quarters", crewHumiditySensorValue, crewDehumidifier, envCrewHumidTargetPer, envCrewHumidHIGH, envCrewHumidLOW );
-		
-		//VPGC Humidity Control
-		adjustModuleHumidityLevels ("VPGC", vpgcHumiditySensorValue, vpgcDehumidifier, envVPGCHumidTargetPer, envVPGCHumidHIGH, envVPGCHumidLOW );
-		
-		//OGS Control
-		myLogger.debug("Begin OGS Check");
-		//OGS creates O2 and H2 from portable water, puts into stores. Check O2 and H2 stores. If full, shut down, if less than half full, run at max, if over half full run at half
-		float fMaxWater = myOGS.getPotableWaterConsumerDefinition().getMaxFlowRate(0);
-		float fMaxPower = myOGS.getPowerConsumerDefinition().getMaxFlowRate(0);
-		
-		if (isStoreFull(myO2Store)&& isStoreFull(myH2Store)){
-			//Stores are full, shutdown
-			myOGS.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
-			myOGS.getPotableWaterConsumerDefinition().setDesiredFlowRate(0, 0);
-			myLogger.debug("O2 and H2 Stores are full, shutting down OGS");
-		} else {
-			//Check levels
-			if(myO2Store.getPercentageFilled()<=.50 || myH2Store.getPercentageFilled()<=.50){
-				//run at max
-				myLogger.debug("Turn on OGS, O2Store is "+ myO2Store.getPercentageFilled()+ "% and H2Store is "+ myH2Store.getPercentageFilled() +"%");
-				myOGS.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
-				myOGS.getPotableWaterConsumerDefinition().setDesiredFlowRate(fMaxWater, 0);
-				myLogger.debug("OGS Set to run at Max");
-			} else{
-				//Check run at 50% 
-					myLogger.debug("Turn on OGS at half, O2Store is "+ myO2Store.getPercentageFilled()+ "% and H2Store is "+ myH2Store.getPercentageFilled() +"%");
-					myOGS.getPowerConsumerDefinition().setDesiredFlowRate((fMaxPower/2), 0);
-					myOGS.getPotableWaterConsumerDefinition().setDesiredFlowRate((fMaxWater/2), 0);
-					myLogger.debug("OGS Set to run at Half");
-			}	
-		}
-		myLogger.debug("Finish OGS Check");
-		
-		//CRS Control
-		myLogger.debug("Begin CRS Control Checks");
-		//Takes in CO2 and H2 from Stores and Makes Potable Water and Methane (CH4). Run if CO2 levels in store are above 50%
-		fMaxPower = myCRS.getPowerConsumerDefinition().getMaxFlowRate(0);
-		float fMaxCO2Flow = myCRS.getCO2ConsumerDefinition().getMaxFlowRate(0);
-		float fMaxH2Flow = myCRS.getH2ConsumerDefinition().getMaxFlowRate(0);
-		myLogger.debug("My CO2Store is "+myCO2Store.getPercentageFilled()+"% full");
-		if(myCO2Store.getPercentageFilled()>=.50){
-			//Run CRS
-			myCRS.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
-			myCRS.getCO2ConsumerDefinition().setDesiredFlowRate(fMaxCO2Flow, 0);
-			myCRS.getH2ConsumerDefinition().setDesiredFlowRate(fMaxH2Flow, 0);
-			myLogger.debug("CRS running (max level)");
-		} else {
-			//Turn Off CRS
-			myCRS.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
-			myCRS.getCO2ConsumerDefinition().setDesiredFlowRate(0, 0);
-			myCRS.getH2ConsumerDefinition().setDesiredFlowRate(0, 0);
-			myLogger.debug("Shutting down CRS");
-		}
-		myLogger.debug("Finish CRS Check");
-		
-		//Pyrolizer Control
-		//Pyrolizer run to eliminate trace gases from crew atmosphere. Run every 24 hrs.
-		myLogger.debug("Begin Pyrolizer Check");
-		fMaxPower = myPyrolizer.getPowerConsumerDefinition().getMaxFlowRate(0);
-		if ( myBioDriver.getTicks()%24 == 0){
-			myLogger.debug("Running Pyrolizer on shedule tick number: "+ myBioDriver.getTicks());
-			myPyrolizer.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
-			myLogger.debug("Pyrolizer power set to: "+ myPyrolizer.getPowerConsumerDefinition().getDesiredFlowRate(0));
+		if (myBioDriver.getTicks()<= 0) {
+			myLogger.debug("Envorment setup tick, not checking target ranges");
 		}else{
-			myLogger.debug("Pyrolizer not scheduled to run");
-			myPyrolizer.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
-			myLogger.debug("Pyrolizer power set to: "+ myPyrolizer.getPowerConsumerDefinition().getDesiredFlowRate(0));
+			//Make environment changes as needed to keep within target ranges
+			
+			//Check crew O2 Concentration Level
+			adjustModuleO2Levels ("Crew Quarters", crewO2sensorValue, crewO2InjectorActuator, crewO2StorageActuator, crewO2ConcentratorActuator,
+					crewO2ConcentratorStoreActuator, envCrewO2TargetPer,envCrewO2HIGH, envCrewO2LOW, envCrewO2Inject );
+			
+			//End Crew O2 Control
+			
+			//VPGC O2 Control
+			adjustModuleO2Levels ("VPGC", vpgcO2sensorValue, vpgcO2InjectorActuator, vpgcO2StorageActuator, vpgcO2ConcentratorActuator,
+					vpgcO2ConcentratorStoreActuator, envVPGCO2TargetPer,envVPGCO2HIGH, envVPGCO2LOW, envVPGCCO2Inject );
+			//End VPGC O2 Control
+			
+			//Crew CO2 Control
+			adjustModuleCO2Levels ("Crew Quarters", crewCO2sensorValue, crewCO2InjectorActuator, crewCO2StorageActuator, 
+					envCrewCO2TargetPer,envCrewCO2HIGH, envCrewCO2LOW, envCrewCO2Inject );
+			//END Crew CO2 Control
+			
+			//VPGC CO2 Control
+			adjustModuleCO2Levels ("VPGC", vpgcCO2sensorValue, vpgcCO2InjectorActuator, vpgcCO2StorageActuator, 
+					envVPGCCO2TargetPer,envVPGCCO2HIGH, envVPGCCO2LOW, envVPGCCO2Inject );
+			//END VPGC CO2 Control
+			
+			//Crew Humidity Control
+			adjustModuleHumidityLevels ("Crew Quarters", crewHumiditySensorValue, crewDehumidifier, envCrewHumidTargetPer, envCrewHumidHIGH, envCrewHumidLOW );
+			
+			//VPGC Humidity Control
+			adjustModuleHumidityLevels ("VPGC", vpgcHumiditySensorValue, vpgcDehumidifier, envVPGCHumidTargetPer, envVPGCHumidHIGH, envVPGCHumidLOW );
+			
+			//OGS Control
+			myLogger.debug("Begin OGS Check");
+			//OGS creates O2 and H2 from portable water, puts into stores. Check O2 and H2 stores. If full, shut down, if less than half full, run at max, if over half full run at half
+			float fMaxWater = myOGS.getPotableWaterConsumerDefinition().getMaxFlowRate(0);
+			float fMaxPower = myOGS.getPowerConsumerDefinition().getMaxFlowRate(0);
+			
+			if ((isStoreFull(myO2Store))& (isStoreFull(myH2Store))){
+				//Stores are full, shutdown
+				myOGS.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
+				myOGS.getPotableWaterConsumerDefinition().setDesiredFlowRate(0, 0);
+				myLogger.debug("O2 and H2 Stores are full, shutting down OGS");
+			} else {
+				//Check levels
+				if(myO2Store.getPercentageFilled()<=.50 || myH2Store.getPercentageFilled()<=.50){
+					//run at max
+					myLogger.debug("Turn on OGS, O2Store is "+ myO2Store.getPercentageFilled()+ "% and H2Store is "+ myH2Store.getPercentageFilled() +"%");
+					myOGS.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
+					myOGS.getPotableWaterConsumerDefinition().setDesiredFlowRate(fMaxWater, 0);
+					myLogger.debug("OGS Set to run at Max");
+				} else{
+					//Check run at 50% 
+						myLogger.debug("Turn on OGS at half, O2Store is "+ myO2Store.getPercentageFilled()+ "% and H2Store is "+ myH2Store.getPercentageFilled() +"%");
+						myOGS.getPowerConsumerDefinition().setDesiredFlowRate((fMaxPower/2), 0);
+						myOGS.getPotableWaterConsumerDefinition().setDesiredFlowRate((fMaxWater/2), 0);
+						myLogger.debug("OGS Set to run at Half");
+				}	
+			}
+			myLogger.debug("Finish OGS Check");
+			
+			//CRS Control
+			myLogger.debug("Begin CRS Control Checks");
+			//Takes in CO2 and H2 from Stores and Makes Portable Water and Methane (CH4). Run if CO2 levels in store are above 50%
+			fMaxPower = myCRS.getPowerConsumerDefinition().getMaxFlowRate(0);
+			float fMaxCO2Flow = myCRS.getCO2ConsumerDefinition().getMaxFlowRate(0);
+			float fMaxH2Flow = myCRS.getH2ConsumerDefinition().getMaxFlowRate(0);
+			myLogger.debug("My CO2Store is "+myCO2Store.getPercentageFilled()+"% full");
+			if(myCO2Store.getPercentageFilled()>=.50){
+				//Run CRS
+				myCRS.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
+				myCRS.getCO2ConsumerDefinition().setDesiredFlowRate(fMaxCO2Flow, 0);
+				myCRS.getH2ConsumerDefinition().setDesiredFlowRate(fMaxH2Flow, 0);
+				myLogger.debug("CRS running (max level)");
+			} else {
+				//Turn Off CRS
+				myCRS.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
+				myCRS.getCO2ConsumerDefinition().setDesiredFlowRate(0, 0);
+				myCRS.getH2ConsumerDefinition().setDesiredFlowRate(0, 0);
+				myLogger.debug("Shutting down CRS");
+			}
+			myLogger.debug("Finish CRS Check");
+			
+			//Pyrolizer Control
+			//Pyrolizer run to eliminate trace gases from crew atmosphere. Run every 24 hrs.
+			myLogger.debug("Begin Pyrolizer Check");
+			fMaxPower = myPyrolizer.getPowerConsumerDefinition().getMaxFlowRate(0);
+			if ( myBioDriver.getTicks()%24 == 0){
+				myLogger.info("Running Pyrolizer on shedule tick number: "+ myBioDriver.getTicks());
+				myPyrolizer.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
+				myLogger.info("Pyrolizer power set to: "+ myPyrolizer.getPowerConsumerDefinition().getDesiredFlowRate(0));
+			}else{
+				myLogger.debug("Pyrolizer not scheduled to run");
+				myPyrolizer.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
+				myLogger.debug("Pyrolizer power set to: "+ myPyrolizer.getPowerConsumerDefinition().getDesiredFlowRate(0));
+			}
+			myLogger.debug("Finish Pyrolizer Check");
+			
+			//WSCR Control
+			// WSCR ran day 39-40 and day 47-57 LMLSTP III Final, pg 94
+			//Set WSCR to run when Potable Water is low or Gray/Dirty Water tank is getting full (above 75%)
+			myLogger.debug("Begin WSCR Check");
+			fMaxPower = myWSCR.getPowerConsumerDefinition().getMaxFlowRate(0);
+			float fPotWaterLvl = myPotableWaterStore.getPercentageFilled();
+			float fGreyWaterLvl = myGreyWaterStore.getPercentageFilled();
+			float fDirtyWaterLvl = myDirtyWaterStore.getPercentageFilled();
+			if (fPotWaterLvl<=.25||fGreyWaterLvl>=.75|fDirtyWaterLvl>=.75){
+				myLogger.info("Running WSCR - PotableWater Store is "+fPotWaterLvl +" GreyWater Store is "+ fGreyWaterLvl + " DirtyWater Store is "+fDirtyWaterLvl );
+				myWSCR.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
+				myLogger.debug("WSCR power set to "+ myWSCR.getPowerConsumerDefinition().getActualFlowRate(0));
+			} else {
+				myLogger.info("WSCR is not needed, shutting down - PotableWater Store is "+fPotWaterLvl +" GreyWater Store is "+ fGreyWaterLvl + " DirtyWater Store is "+fDirtyWaterLvl );
+				myWSCR.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
+				myLogger.debug("WSCR power set to "+ myWSCR.getPowerConsumerDefinition().getActualFlowRate(0));
+			}
+			myLogger.debug("Finish WSCR Check");
+			
+			//CIH 201024 - Food processor is not automatic, adding food processor check
+			//Run FoodProcessor if we have enough to work with (above 30%)
+			myLogger.debug("Begin Food Processor Check");
+			fMaxPower = myFoodProcessor.getPowerConsumerDefinition().getMaxFlowRate(0);
+			float fBiomassLvl = myBiomassStore.getPercentageFilled();
+			float fDryWasteLvl = myDryWasteStore.getCurrentLevel();
+			float fFoodStoreLvl = myFoodStore.getCurrentLevel();
+			if (fBiomassLvl>=.3){
+				myLogger.info("Running FoodProcessor - Biomass Store is "+fBiomassLvl +" Food Store Level is: "+ fFoodStoreLvl +" Dry Waste Store is: "+ fDryWasteLvl);
+				myFoodProcessor.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
+				myLogger.debug("FoodProcessor power set to "+ myFoodProcessor.getPowerConsumerDefinition().getActualFlowRate(0));
+			}else {
+				myLogger.info("FoodProcessor is not needed - Biomass Store is "+fBiomassLvl);
+				myFoodProcessor.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
+				myLogger.debug("FoodProcessor power set to "+ myFoodProcessor.getPowerConsumerDefinition().getActualFlowRate(0));
+			}
+			myLogger.debug("Finish FoodProcessor Check");
+			
+			
+			//incinerator Control
+			// CIH 201024 change to Run incinerator when the DryWaste store is getting full (above 50%)
+			//  to running every 1000 hours (ticks)
+			myLogger.debug("Begin Incerator Check");
+			fMaxPower = myIncinerator.getPowerConsumerDefinition().getMaxFlowRate(0);
+			fDryWasteLvl = myDryWasteStore.getPercentageFilled();
+			//if (fDryWasteLvl>=.5){
+			if (myBioDriver.getTicks()%1000==0){
+				myLogger.info("Running Incinerator - DryWaste Store is "+fDryWasteLvl + "% full");
+				myIncinerator.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
+				myLogger.debug("Incinerator power set to "+ myIncinerator.getPowerConsumerDefinition().getActualFlowRate(0));
+			}else {
+				myLogger.info("Incinerator is not needed - DryWaste Store is "+fDryWasteLvl);
+				myIncinerator.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
+				myLogger.debug("Incinerator power set to "+ myIncinerator.getPowerConsumerDefinition().getActualFlowRate(0));
+			}
+			myLogger.debug("Finish Incerator Check");
+			
+			//harvest control
+			// 25% harvest rotation starting on day 20 (LMLSTP III Final, pg 58)
+			// one shelf should be harvested every 20 days (480 ticks).
+			// index values in the timer array equate to shelf index values.
+			// full wheat cycle is 80 days (* 24 ticks = 1920)
+			myLogger.debug("Begin Harvest Check");
+			//Get the shelves
+			
+			int newValue;
+			int intIndex = 0;
+			for (Shelf myShelf : myBiomassPS.getShelves()) {
+				//Check to see if the shelf needs to be harvested
+				myLogger.debug("Shelf "+ intIndex + " contains: " + myShelf.getCropTypeString() +" harvest timer is : " +envShelfHarvestTimer[intIndex]);
+				if (envShelfHarvestTimer[intIndex]>= envHarvestTime){
+				//harvest and replant the shelf
+					PlantType myPlantType = myShelf.getCropType();
+					myShelf.harvest();
+					myShelf.replant(myPlantType, myShelf.getCropAreaTotal());
+					myLogger.debug("Shelf "+ intIndex + " replanted: " + myShelf.toString());
+				//reset timer
+					myLogger.debug("Reseting shelf timer");
+					envShelfHarvestTimer[intIndex] = 0;
+				}else{
+				//tick timer
+					envShelfHarvestTimer[intIndex]= envShelfHarvestTimer[intIndex]+1;
+					myLogger.debug("Incrementing Timer to " + envShelfHarvestTimer[intIndex]);
+				}
+				//increment index
+				myLogger.debug("Next shelf");
+				intIndex ++;
+			}
+					
+			myLogger.debug("Finish Harvest Check");
+			
 		}
-		myLogger.debug("Finish Pyrolizer Check");
 		
-		//WSCR Control
-		// WSCR ran day 39-40 and day 47-57 LMLSTP III Final, pg 94
-		//Set WSCR to run when Potable Water is low or Gray/Dirty Water tank is getting full (above 75%)
-		myLogger.debug("Begin WSCR Check");
-		fMaxPower = myWSCR.getPowerConsumerDefinition().getMaxFlowRate(0);
-		float fPotWaterLvl = myPotableWaterStore.getPercentageFilled();
-		float fGreyWaterLvl = myGreyWaterStore.getPercentageFilled();
-		float fDirtyWaterLvl = myDirtyWaterStore.getPercentageFilled();
-		if (fPotWaterLvl<=.25||fGreyWaterLvl>=.75|fDirtyWaterLvl>=.75){
-			myLogger.debug("Running WSCR - PotableWater Store is "+fPotWaterLvl +" GreyWater Store is "+ fGreyWaterLvl + " DirtyWater Store is "+fDirtyWaterLvl );
-			myWSCR.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
-			myLogger.debug("WSCR power set to "+ myWSCR.getPowerConsumerDefinition().getActualFlowRate(0));
-		} else {
-			myLogger.debug("WSCR is not needed, shutting down - PotableWater Store is "+fPotWaterLvl +" GreyWater Store is "+ fGreyWaterLvl + " DirtyWater Store is "+fDirtyWaterLvl );
-			myWSCR.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
-			myLogger.debug("WSCR power set to "+ myWSCR.getPowerConsumerDefinition().getActualFlowRate(0));
-		}
-		myLogger.debug("Finish WSCR Check");
-		
-		//Incinerator Control
-		// Run Incenerator when the DryWaste store is getting full (above 75%)
-		myLogger.debug("Begin Incerator Check");
-		fMaxPower = myIncinerator.getPowerConsumerDefinition().getMaxFlowRate(0);
-		float fDryWasteLvl = myDryWasteStore.getPercentageFilled();
-		if (fDryWasteLvl>=.75){
-			myLogger.debug("Running Incinerator - DryWaste Store is "+fDryWasteLvl);
-			myIncinerator.getPowerConsumerDefinition().setDesiredFlowRate(fMaxPower, 0);
-			myLogger.debug("Incinerator power set to "+ myIncinerator.getPowerConsumerDefinition().getActualFlowRate(0));
-		}else {
-			myLogger.debug("Incinerator is not needed, shutting down");
-			myIncinerator.getPowerConsumerDefinition().setDesiredFlowRate(0, 0);
-			myLogger.debug("Incinerator power set to "+ myIncinerator.getPowerConsumerDefinition().getActualFlowRate(0));
-		}
-		myLogger.debug("Finish Incerator Check");
-		
+		myLogger.info("Storage Levels are: 02:"+myO2Store.getCurrentLevel()+" CO2:"+myCO2Store.getCurrentLevel()+" H2: "+myH2Store.getCurrentLevel());    
 		// advancing the sim 1 tick
 		myBioDriver.advanceOneTick();
-		myLogger.info("Storage Levels are: 02:"+myO2Store.getCurrentLevel()+" CO2:"+myCO2Store.getCurrentLevel()+" H2: "+myH2Store.getCurrentLevel());    
+		
 	}
 
 	private void adjustModuleCO2Levels(String strModuleName, float myCO2sensorValue,
@@ -514,7 +615,7 @@ public class BiosimStandaloneLMLSTP3Controller {
 		
 				//Turn on O2 Concentrator if CO2 level is high
 				//CO2 (PPM) 1251 +/- 448
-				//Using 1 volume percent = 10,000 ppmv 
+				//Using 1 volume percent = 10,000 ppmv (https://www.rapidtables.com/convert/number/Percent_to_PPM.html)
 				myCO2PPMV = myCO2sensorValue * 1000000; //( 10000*100 )
 				myLogger.info("CO2 Level (%): "+ myCO2sensorValue * 100 +" PPMV: "+ myCO2PPMV );
 			
@@ -809,7 +910,7 @@ public class BiosimStandaloneLMLSTP3Controller {
 		
 		//Injector myO2Injector = myBioHolder.theInjectors.get(1); Replace with loop
 		//loop for determing which injector were dealing with in the index.
-		//CIH 200415 - okay, this is ugly but it appears that switch can only check string names in 1.7 or above. Not sure what forcing compailing to 1.7
+		//CIH 200415 - okay, this is ugly but it appears that switch can only check string names in 1.7 or above. Not sure what forcing compiling to 1.7
 		//would do to the older code, doing the integer workround.
 		int intIndex = 0;
 		for(Iterator<Injector> i =  myBioHolder.theInjectors.iterator(); i.hasNext();){
@@ -967,6 +1068,18 @@ public class BiosimStandaloneLMLSTP3Controller {
 		myWSCR = myBioHolder.theWaterRSModules.get(0);
 		myLogger.debug("myWSCR is set to: "+ myWSCR.getModuleName());
 		
+		//set FoodProcessor, only one in use;
+		myFoodProcessor = myBioHolder.theFoodProcessors.get(0);
+		myLogger.debug("myFoodProcessor is set to: "+ myFoodProcessor.getModuleName());
+		
+		//Set the Biomass Store, only one in use;
+		myBiomassStore = myBioHolder.theBiomassStores.get(0);
+		myLogger.debug("myBiomassStore is set to: "+ myBiomassStore.getModuleName());
+		
+		//Set the Food Store, only one in use;
+		myFoodStore = myBioHolder.theFoodStores.get(0);
+		myLogger.debug("myFoodStore is set to: "+ myFoodStore.getModuleName());
+				
 		//Set Incinerator, only one in ues;
 		myIncinerator = myBioHolder.theIncinerators.get(0);
 		myLogger.debug("myIncinerator is set to: "+ myIncinerator.getModuleName());
@@ -1002,6 +1115,10 @@ public class BiosimStandaloneLMLSTP3Controller {
 	    //Set thePotableWaterStore for the sim, only one in use
 	    myPotableWaterStore = myBioHolder.thePotableWaterStores.get(0);
 	    myLogger.debug("PotableWaterStore is : " +myPotableWaterStore.getCurrentLevel() +" IsFull: "+ isStoreFull(myPotableWaterStore));
+	    
+	    //Get the Biomass chamber
+	    myBiomassPS = myBioHolder.theBiomassPSModules.get(0);
+	    myLogger.debug("The Biomass Module is mapped to : "+ myBiomassPS.getModuleName() );
 		
 	}
 	

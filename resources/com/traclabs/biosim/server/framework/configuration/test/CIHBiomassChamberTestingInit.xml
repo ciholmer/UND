@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../style/table.xsl"?>
+<biosim xmlns="http://www.traclabs.com/biosim"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
+	
+	<!-- Duplication of Lunar–Mars Life Support Test Project (LMLSTP) Phase III Test performed in 1997
+	     at Johnson Space Center (JSC) 
+	     91 Days - 2184 'ticks'
+	     4 human subjects
+	     Air - regenerative biological and physicochemical
+	     75% Physicochemical Atmospheric Regeneration (4BMS / OGS / VCCR / CRS)(section 2.1.4 users manaual)
+	     25% VPGC (Variable Pressure Growth Chamber) (Barta 2016)
+	     	5.6 m of wheat used for Atmospheric regeneration and crew consumption
+	     	5.6 m of lettuce used for Atmospheric regeneration and crew consumption
+	     900 m3 crew space + 27 m3 plant growth space = 927 m3 of environment volume
+	     Water Recovery System
+	     Waste Management System - Incineration and Biodegradation 
+	 -->
+	<Globals 
+	runTillCrewDeath="true" 
+	runTillN="2185" 
+	crewsToWatch="Crew_Group" 
+	plantsToWatch="VPGC"
+	startPaused="true">
+
+	</Globals>
+	<SimBioModules>
+		<environment>
+			<SimEnvironment moduleName="Crew_Quarters" initialVolume="927000">
+			
+				<percentageInitialization waterPercentage="0.01"
+					nitrogenPercentage="0.659" otherPercentage="0.001"
+					o2Percentage="0.33" totalPressure="101.325" co2Percentage="0.0033"/>
+			 </SimEnvironment>
+			<!-- 
+			<Fan moduleName="VPGC_to_Crew_Fan">
+				<airConsumer inputs="VPGC"
+					desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="Fan_Battery" desiredFlowRates="50"
+					maxFlowRates="50"></powerConsumer>
+				<airProducer desiredFlowRates="1000"
+					outputs="Crew_Quarters" maxFlowRates="1000" ></airProducer>
+			</Fan>
+			<Fan moduleName="Crew_to_VPGC_Fan">
+				<airConsumer inputs="Crew_Quarters"
+					desiredFlowRates="1000" maxFlowRates="1000" />
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="50" maxFlowRates="50" ></powerConsumer>
+				<airProducer desiredFlowRates="1000"
+					outputs="Crew_Quarters" maxFlowRates="1000" ></airProducer>
+			</Fan>
+			 -->
+
+			<Dehumidifier moduleName="Main_Dehumidifier">
+				<airConsumer inputs="Crew_Quarters"
+					desiredFlowRates="1000" maxFlowRates="1000"></airConsumer>
+				<dirtyWaterProducer desiredFlowRates="1000"
+					outputs="Dirty_Water_Store" maxFlowRates="1000" />
+			</Dehumidifier>
+		</environment> 
+		<air>
+			<MethaneStore capacity="10000" moduleName="Methane_Store" level="0"/>
+			<NitrogenStore capacity="10000" moduleName="Nitrogen_Store" level="10000"/>
+			<CO2Store capacity="1000" moduleName="CO2_Store" level="1000"/>
+			<H2Store capacity="10000" moduleName="H2_Store" level="1000"/>
+			<O2Store capacity="10000" moduleName="O2_Store" level="4000"/>
+			
+			<!--  Carbon Dioxide removal System CDRS, Not used in LMLSTP, only VCCR and CDS 
+			<CDRS moduleName="CDRS">
+				<normalStochasticFilter deviation="0.005"/>
+				<powerConsumer inputs="CDRS_Air_Inlet_Power_Store CDRS_Air_Return_Power_Store CDRS_CO2_Isolation_Power_Store CDRS_CO2_Vent_Power_Store CDRS_Primary_Heater_Power_Store CDRS_Secondary_Heater_Power_Store CDRS_Power_Store Power_Store Power_Store" desiredFlowRates="100 100 100 100 100 100 100 100 100" maxFlowRates="100 100 100 100 100 100 100 100 100"/>
+				<greyWaterConsumer inputs="Grey_Water_Store" desiredFlowRates="10" maxFlowRates="10"/>
+				<greyWaterProducer outputs="Grey_Water_Store" desiredFlowRates="10" maxFlowRates="10"/>
+				<airConsumer inputs="Crew_Quarters" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<airProducer outputs="Crew_Quarters" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<CO2Producer outputs="CO2_Store" desiredFlowRates="1000" maxFlowRates="1000"/>
+			</CDRS>
+			-->
+			<VCCR moduleName="Main_VCCR">
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="2000" maxFlowRates="2000" ></powerConsumer>
+				<airConsumer inputs="Crew_Quarters"
+					desiredFlowRates="10000" maxFlowRates="10000"></airConsumer>
+				<airProducer desiredFlowRates="10000"
+					outputs="Crew_Quarters" maxFlowRates="10000" />
+				<CO2Producer desiredFlowRates="10000" outputs="CO2_Store"
+					maxFlowRates="10000"></CO2Producer>
+			</VCCR>
+			<!--  Oxygen Generator System -->
+			<OGS moduleName="OGS">
+				<powerConsumer inputs="Power_Store" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<potableWaterConsumer inputs="Potable_Water_Store" desiredFlowRates="10" maxFlowRates="10"/>
+				<O2Producer desiredFlowRates="1000" outputs="O2_Store" maxFlowRates="1000"/>
+				<H2Producer desiredFlowRates="1000" outputs="H2_Store" maxFlowRates="1000"/>
+			</OGS>
+			
+			
+			
+			<!--  Carbon Reduction System produced Water and Methane (vented in actual exp) -->
+			<CRS moduleName="CRS">
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="100" maxFlowRates="100" />
+				<CO2Consumer inputs="CO2_Store" desiredFlowRates="100"
+					maxFlowRates="100" />
+				<H2Consumer inputs="H2_Store" desiredFlowRates="100"
+					maxFlowRates="100" />
+				<potableWaterProducer desiredFlowRates="100"
+					outputs="Potable_Water_Store" maxFlowRates="100" />
+				<methaneProducer desiredFlowRates="100"
+					outputs="Methane_Store" maxFlowRates="100"></methaneProducer>
+			</CRS>
+			<Pyrolizer moduleName="Pyrolizer">
+				<powerConsumer inputs="Power_Store"
+					desiredFlowRates="100" maxFlowRates="100" />
+				<methaneConsumer inputs="Methane_Store"
+					desiredFlowRates="100" maxFlowRates="100" />
+				<H2Producer desiredFlowRates="100" outputs="H2_Store"
+					maxFlowRates="100" />
+				<dryWasteProducer desiredFlowRates="100"
+					outputs="Dry_Waste_Store" maxFlowRates="100" />
+			</Pyrolizer>
+			
+		</air>
+		<food>
+			<BiomassPS moduleName="VPGC" autoHarvestAndReplant="true">
+			<!-- <shelf cropArea="11.2" cropType="WHEAT"/> -->
+				<shelf cropArea="5.6" cropType="WHEAT"/>
+				<shelf cropArea="5.6" cropType="LETTUCE"/>
+				<powerConsumer maxFlowRates="400" desiredFlowRates="400" inputs="Power_Store"/>
+				<potableWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="Potable_Water_Store"/>
+				<greyWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="Grey_Water_Store"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="Crew_Quarters"/>
+				<dirtyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="Dirty_Water_Store"/>
+				<biomassProducer maxFlowRates="100" desiredFlowRates="100" outputs="Biomass_Store"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="Crew_Quarters"/>
+			</BiomassPS>
+			<BiomassStore moduleName="Biomass_Store" capacity="500" level="300"/>
+			<FoodStore moduleName="FoodStore" capacity="100000" level="100000"/>
+		</food>
+		<framework>
+		    <Injector moduleName="Crew_Quarters_Nitrogen_Injector">
+				<nitrogenConsumer inputs="Nitrogen_Store" desiredFlowRates="0" maxFlowRates="100" />
+				<nitrogenProducer outputs="Crew_Quarters" desiredFlowRates="0" maxFlowRates="100" />
+			</Injector>
+			
+			<Injector moduleName="Crew_Quarters_Oxygen_Injector">
+				<O2Consumer inputs="O2_Store" desiredFlowRates="14.5" maxFlowRates="100"/>
+				<O2Producer desiredFlowRates="14.5" outputs="Crew_Quarters" maxFlowRates="100" />
+			</Injector>
+			<Injector moduleName="Crew_Quarters_CO2_Injector">
+				<CO2Consumer inputs="CO2_Store"	desiredFlowRates="0" maxFlowRates="100" />
+				<CO2Producer desiredFlowRates="0" outputs="Crew_Quarters" maxFlowRates="100"/>
+			</Injector>
+			<!-- VPGC throws an error when trying to put in Injectors - ERROR com.traclabs.biosim.server.framework.BiosimInitializer - error: Parse error occurred - Narrow failed
+			      Apparently it or the gas stores do not recognize the BiomassPS as a seperate module 
+			 <Injector moduleName="VPGC_Nitrogen_Injector">
+				<nitrogenConsumer inputs="Nitrogen_Store" desiredFlowRates="0" maxFlowRates="100" />
+				<nitrogenProducer outputs="VPGC" desiredFlowRates="0" maxFlowRates="100"/>
+			</Injector>
+			<Injector moduleName="VPGC_CO2_Injector">
+				<CO2Consumer inputs="CO2_Store"	desiredFlowRates="0" maxFlowRates="100" />
+				<CO2Producer desiredFlowRates="0" outputs="VPGC" maxFlowRates="100"/>
+			</Injector> -->
+		</framework>
+		<power>
+			<PowerStore moduleName="Power_Store" capacity="100000000000" level="100000000000"/>	   			
+		</power>
+			
+		<water>
+			<WaterRS moduleName="Water_Distiller" implementation="LINEAR">
+				<powerConsumer inputs="Power_Store" desiredFlowRates="1000" maxFlowRates="1000" />
+				<dirtyWaterConsumer inputs="Dirty_Water_Store" desiredFlowRates="10" maxFlowRates="10"/>
+				<greyWaterConsumer inputs="Grey_Water_Store" desiredFlowRates="10" maxFlowRates="10" />
+				<potableWaterProducer desiredFlowRates="1000" outputs="Potable_Water_Store" maxFlowRates="1000" />
+			</WaterRS>
+			<PotableWaterStore moduleName="Potable_Water_Store" capacity="500000" level="500000"/>
+			<GreyWaterStore moduleName="Grey_Water_Store" capacity="500" level="0"/>
+			<DirtyWaterStore moduleName="Dirty_Water_Store" capacity="500" level="0"/>
+			
+		</water>
+		<waste>
+			<DryWasteStore moduleName="Dry_Waste_Store" capacity="500" level="0"/>
+			<Incinerator moduleName="Waste_Incinerator" logLevel="DEBUG">
+				<powerConsumer inputs="Power_Store" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<O2Consumer inputs="Crew_Quarters" desiredFlowRates="1000" maxFlowRates="1000"/>
+				<dryWasteConsumer maxFlowRates="1000" desiredFlowRates="100" inputs="Dry_Waste_Store"/>
+				<CO2Producer desiredFlowRates="10000" outputs="Crew_Quarters" maxFlowRates="10000"/>
+			</Incinerator>
+		</waste>
+		<crew>
+		
+			<CrewGroup moduleName="Crew_Group">
+				<potableWaterConsumer maxFlowRates="100" desiredFlowRates="100" inputs="Potable_Water_Store"/>
+				<airConsumer maxFlowRates="0" desiredFlowRates="0" inputs="Crew_Quarters"/>
+				<foodConsumer maxFlowRates="100" desiredFlowRates="100" inputs="FoodStore"/>
+				<dirtyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="Dirty_Water_Store"/>
+				<greyWaterProducer maxFlowRates="100" desiredFlowRates="100" outputs="Grey_Water_Store"/>
+				<airProducer maxFlowRates="0" desiredFlowRates="0" outputs="Crew_Quarters"/>
+				<dryWasteProducer maxFlowRates="100" desiredFlowRates="100" outputs="Dry_Waste_Store"/>
+				<crewPerson name="Bob Roberts" age="47" weight="77" sex="MALE">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson name="John Lewis" age="35" weight="75" sex="MALE">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson name="Laura Supra" age="30" weight="60" sex="FEMALE">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+				<crewPerson name="Vickie Kloenis" age="35" weight="60" sex="FEMALE">
+					<schedule>
+						<activity name="sleep" length="8" intensity="1"/>
+						<activity name="hygiene" length="1" intensity="2"/>
+						<activity name="exercise" length="1" intensity="5"/>
+						<activity name="eating" length="1" intensity="2"/>
+						<activity name="mission" length="9" intensity="3"/>
+						<activity name="health" length="1" intensity="2"/>
+						<activity name="maintenance" length="1" intensity="2"/>
+						<activity name="leisure" length="2" intensity="2"/>
+					</schedule>
+				</crewPerson>
+			</CrewGroup>
+		</crew>
+
+		
+
+	</SimBioModules>
+	<Sensors>
+	    <crew>
+	    	<CrewGroupO2ConsumedSensor input="Crew_Group" moduleName="Crew_O2Consumed" logLevel="DEBUG" />
+	    	<CrewGroupCO2ProducedSensor input="CrewGroup" moduleName="Crew_CO2Produced"logLevel="DEBUG" />
+	    	<CrewGroupWaterConsumedSensor input="Crew_Group" moduleName="Crew_WaterConsumed" logLevel="DEBUG" />
+	    	<CrewGroupWaterProducedSensor input="Crew_Group" moduleName="Crew_WaterConsumed" logLevel="DEBUG" /> 
+    	</crew>
+    	<food>
+    	<
+    	
+    	</food>
+	    <framework>
+	        <StoreLevelSensor input="O2_Store" moduleName="O2_Store_Level" logLevel="WARN"/>
+	        <StoreLevelSensor input="CO2_Store" moduleName="CO2_Store_Level" logLevel="WARN"/>
+	    </framework>
+		<air>
+		    <!-- CDRS not used in LMLSTP
+			<CO2OutFlowRateSensor input="CDRS" moduleName="CDRS_CO2_Effluent_Sensor" index="0" logLevel="DEBUG"/>
+			-->
+				
+			<CO2OutFlowRateSensor input="Main_VCCR" moduleName="Main_Vccr_Co2_Out_Sensor" index="0" isBionetEnabled="false"/>
+			<O2InFlowRateSensor input="Crew_Quarters_Oxygen_Injector" moduleName="Crew_Quarters_Oxygen_Sensor" index="0" logLevel="DEBUG" />
+			<O2OutFlowRateSensor input="OGS" moduleName="Main_OGS_O2_Out_Sensor" index="0" logLevel="DEBUG" isBionetEnabled="false" />
+
+		</air>
+		<environment>
+		   <!-- CDRS not used in LMLSTP
+			<AirInFlowRateSensor input="CDRS" moduleName="CDRS_Air_Influent_Sensor" index="0"/>
+			<AirOutFlowRateSensor input="CDRS" moduleName="CDRS_Air_Effluent_Sensor" index="0"/>
+			-->
+			
+			<!--  VPGC module not being recognized as seperate
+			<GasConcentrationSensor input="VPGC" moduleName="VPGC_Co2GasConcentrationSensor" gasType="CO2"/>
+			<GasMoleSensor input="VPCG" moduleName="VPCG_O2_Mole" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="VPCG" moduleName="VPCG_CO2_Mole" gasType="CO2" logLevel="DEBUG"/>
+			 -->
+			<AirInFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirInSensor" index="0" isBionetEnabled="false"></AirInFlowRateSensor>
+			<AirOutFlowRateSensor input="Main_VCCR" moduleName="MainVccrAirOutSensor" index="0" isBionetEnabled="false"></AirOutFlowRateSensor>
+			
+			<GasConcentrationSensor input="Crew_Quarters" moduleName="Crew_Quarters_Co2GasConcentrationSensor" gasType="CO2"/>
+			
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_O2_Moles" gasType="O2" logLevel="DEBUG"/>
+			<GasMoleSensor input="Crew_Quarters" moduleName="Crew_Quarters_CO2_Moles" gasType="CO2" logLevel="DEBUG"/>
+			
+		</environment>
+		<water>
+		   <!-- CDRS not used in LMLSTP	-
+			<GreyWaterInFlowRateSensor input="CDRS" moduleName="CDRS_Grey_Water_Influent_Sensor" index="0"/>
+			<GreyWaterOutFlowRateSensor input="CDRS" moduleName="CDRS_Grey_Water_Effluent_Sensor" index="0"/>
+			-->
+		</water>
+		<power>
+			<PowerInFlowRateSensor input="Main_VCCR"
+				moduleName="MainVccrPowerSensor" index="0" logLevel="INFO"
+				isBionetEnabled="false">
+			</PowerInFlowRateSensor>
+		</power>
+	</Sensors>
+	<Actuators>
+		<power>
+			<PowerInFlowRateActuator output="Main_VCCR"
+				moduleName="MainVccrPower" index="0" logLevel="INFO"
+				isBionetEnabled="false">
+			</PowerInFlowRateActuator>
+		</power>
+	</Actuators>
+</biosim>

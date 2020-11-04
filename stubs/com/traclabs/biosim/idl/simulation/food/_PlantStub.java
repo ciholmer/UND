@@ -17,7 +17,7 @@ public class _PlantStub
 	}
 
 	public final static java.lang.Class _opsClass = com.traclabs.biosim.idl.simulation.food.PlantOperations.class;
-	public float getMolesOfCO2Inhaled()
+	public float getMolesOfCO2Consumed()
 	{
 		while(true)
 		{
@@ -26,7 +26,7 @@ public class _PlantStub
 			org.omg.CORBA.portable.InputStream _is = null;
 			try
 			{
-				org.omg.CORBA.portable.OutputStream _os = _request( "getMolesOfCO2Inhaled", true);
+				org.omg.CORBA.portable.OutputStream _os = _request( "getMolesOfCO2Consumed", true);
 				_is = _invoke(_os);
 				float _result = _is.read_float();
 				return _result;
@@ -44,13 +44,13 @@ public class _PlantStub
 		}
 		else
 		{
-			org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke( "getMolesOfCO2Inhaled", _opsClass );
+			org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke( "getMolesOfCO2Consumed", _opsClass );
 			if( _so == null )
 				throw new org.omg.CORBA.UNKNOWN("local invocations not supported!");
 			PlantOperations _localServant = (PlantOperations)_so.servant;
 			float _result;			try
 			{
-			_result = _localServant.getMolesOfCO2Inhaled();
+			_result = _localServant.getMolesOfCO2Consumed();
 			}
 			finally
 			{

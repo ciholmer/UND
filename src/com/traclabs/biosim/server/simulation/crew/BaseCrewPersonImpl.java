@@ -22,6 +22,7 @@ import com.traclabs.biosim.util.OrbUtils;
  * according to a set schedule.
  * 
  * @author Scott Bell
+ * 
  */
 
 public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
@@ -497,34 +498,61 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
     }
 
 	/**
+	 * CIH 200601
 	 * @return The amount of CO2 exhaled (in moles) by the crew member
+	 * 
+	 * @author CIH
 	 */
 	public float getCO2Produced() {
 		return -1;
 	}
 	
 	/**
+	 * CIH 200705
 	 * @return The amount of dirty water produced (in liters) by the crew member
+	 * 
+	 * @author CIH
 	 */
 	public float getDirtyWaterProduced() {
 		return -1;
 	}
 
 	/**
+	 * CIH 200601
+	 * 
 	 * @return The amount of food consumed (in kilograms) by the crew member
+	 * 
+	 * @author CIH
 	 */
 	public float getFoodConsumed() {
 		return -1;
 	}
 
 	/**
+	 * CIH 200601
+	 * 
 	 * @return The amount of grey water produced (in liters) by the crew member
+	 * 
+	 * @author CIH
 	 */
 	public float getGreyWaterProduced() {
 		return -1;
 	}
+	
+	/**
+	 * CIH 200601
+	 * 
+	 * @return The amount of dry waste produced (in kilograms) by the crew member
+	 * 
+	 * @author CIH
+	 */
+	public float getDryWasteProduced() {
+		return -1;
+	}
 
 	/**
+	 * CIH 190506
+	 * 
 	 * @return The amount of oxygen consumed (in moles) by the crew member
 	 */
 	public float getO2Consumed() {
@@ -532,7 +560,11 @@ public abstract class BaseCrewPersonImpl extends CrewPersonPOA {
 	}
 
 	/**
+	 * CIH 200601
+	 * 
 	 * @return The amount of potable water consumed (in liters) by the crew member
+	 * 
+	 * @author CIH
 	 */
 	public float getPotableWaterConsumed() {
 		return -1;

@@ -10,5 +10,5 @@ public interface PlantOperations
 {
 	/* constants */
 	/* operations  */
-	float getMolesOfCO2Inhaled();
+	float getMolesOfCO2Consumed();
 }

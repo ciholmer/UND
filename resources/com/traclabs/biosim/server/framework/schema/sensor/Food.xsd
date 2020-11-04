@@ -26,6 +26,41 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="BiomassTotalCO2ConsumedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="BiomassShelfCO2ConsumedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="ShelfSensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="BiomassTotalO2ProducedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+		<xsd:complexType name="BiomassTotalWaterConsumedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="BiomassTotalWaterProducedSensorType">
+		<xsd:complexContent>
+			<xsd:extension base="SensorType">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
 	<xsd:complexType name="FoodInFlowRateSensorType">
 		<xsd:complexContent>
 			<xsd:extension base="FlowRateSensorType">
@@ -75,6 +110,14 @@
 					type="BiomassInFlowRateSensorType"/>
 				<xsd:element name="BiomassOutFlowRateSensor"
 					type="BiomassOutFlowRateSensorType"/>
+				<xsd:element name="BiomassTotalCO2ConsumedSensor"
+					type="BiomassTotalCO2ConsumedSensorType"/>
+				<xsd:element name="BiomassTotalO2ProducedSensor"
+					type="BiomassTotalO2ProducedSensorType"/>
+				<xsd:element name="BiomassTotalWaterConsumedSensor"
+					type="BiomassTotalWaterConsumedSensorType"/>
+				<xsd:element name="BiomassTotalWaterProducedSensor"
+					type="BiomassTotalWaterProducedSensorType"/>
 				<xsd:element name="FoodInFlowRateSensor"
 					type="FoodInFlowRateSensorType"/>
 				<xsd:element name="FoodOutFlowRateSensor"

@@ -13,7 +13,7 @@ public abstract class PlantPOA
 	static private final java.util.Hashtable m_opsHash = new java.util.Hashtable();
 	static
 	{
-		m_opsHash.put ( "getMolesOfCO2Inhaled", new java.lang.Integer(0));
+		m_opsHash.put ( "getMolesOfCO2Consumed", new java.lang.Integer(0));
 	}
 	private String[] ids = {"IDL:com/traclabs/biosim/idl/simulation/food/Plant:1.0"};
 	public com.traclabs.biosim.idl.simulation.food.Plant _this()
@@ -38,7 +38,7 @@ public abstract class PlantPOA
 			case 0: // getMolesOfCO2Inhaled
 			{
 				_out = handler.createReply();
-				_out.write_float(getMolesOfCO2Inhaled());
+				_out.write_float(getMolesOfCO2Consumed());
 				break;
 			}
 		}

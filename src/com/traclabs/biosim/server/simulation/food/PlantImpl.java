@@ -80,6 +80,10 @@ public abstract class PlantImpl extends PlantPOA {
     private float totalCO2GramsConsumed = 0f;
 
     private float totalWaterLitersTranspired = 0f;
+    
+    private float molesOfWaterProduced = 0f;
+    
+    private float molesOfWaterAdded = 0f;
 
     private float myTimeTillCanopyClosure = 0f;
 
@@ -133,6 +137,13 @@ public abstract class PlantImpl extends PlantPOA {
     
     private float myMolesOfCO2Inhaled = 0f;
     
+    //CIH 200705 Move to class level to expose externally
+    private float dailyO2MolesProduced = 0f;
+    
+    private float myO2Produced = 0f;
+    
+    private float O2Exhaled;
+    //
     public PlantImpl(ShelfImpl pShelfImpl) {
         myShelfImpl = pShelfImpl;
         Arrays.fill(canopyClosureConstants, 0f);
@@ -154,6 +165,7 @@ public abstract class PlantImpl extends PlantPOA {
 
         myCanopyClosurePPFValues = new Vector<Float>(getTAInitialValue());
         myCanopyClosureCO2Values = new Vector<Float>(getTAInitialValue());
+        
     }
 
     protected abstract float getBCF();
@@ -251,6 +263,7 @@ public abstract class PlantImpl extends PlantPOA {
     }
 
     public void tick() {
+    	
         myAge++;
         if (!hasDied) {
         	myLogger.debug("*** Crop "+ getPlantTypeString() +" on "  + getDaysOfGrowth() + " days of growth ***");
@@ -260,6 +273,7 @@ public abstract class PlantImpl extends PlantPOA {
                 healthCheck();
                 recoverPlants();
             }
+            myLogger.debug("MyTotalWaterNeeded = "+ myTotalWaterNeeded +" And myWaterNeeded = "+ myWaterNeeded);
             myTotalWaterNeeded += myWaterNeeded;
             myAverageWaterNeeded = myTotalWaterNeeded / myAge;
             myLogger.debug(getPlantTypeString() + " ticked , total water needed: " + myTotalWaterNeeded);
@@ -365,6 +379,7 @@ public abstract class PlantImpl extends PlantPOA {
         myLogger.debug("consumedCO2LowBuffer.getAmountMissing() = "+consumedCO2LowBuffer.getAmountMissing());
         myLogger.debug("consumedCO2LowBuffer.getCapacity() = "+consumedCO2LowBuffer.getCapacity());
         myLogger.debug("CO2RiskLowReturn = "+CO2RiskLowReturn);
+        myLogger.debug("water needed = " + myWaterNeeded);
         if (CO2RiskLowReturn > randomNumber) {
         	kill();
             myLogger.info(getPlantTypeString()
@@ -596,7 +611,7 @@ public abstract class PlantImpl extends PlantPOA {
         myLogger.debug("CO2MolesConsumed:" + myMolesOfCO2Inhaled);
 
         //Exhale Air
-        float dailyO2MolesProduced = 0f;
+        //float dailyO2MolesProduced = 0f; CIH 200705 - Move to class level for creating exposing Moles produced.
         if (waterFraction < 1f)
             dailyO2MolesProduced = waterFraction * getOPF()
                     * dailyCarbonGain * myShelfImpl.getCropAreaUsed();
@@ -608,15 +623,14 @@ public abstract class PlantImpl extends PlantPOA {
         //myLogger.debug("dailyO2GramsProduced:" + dailyO2GramsProduced);
         totalO2GramsProduced += (dailyO2GramsProduced / 24f);
         //myLogger.debug("totalO2GramsProduced:" + totalO2GramsProduced);
-        float O2Produced = dailyO2MolesProduced / 24f; //in mol of oxygen per
-        // hour
-        myLogger.debug("O2MolesProduced:" + O2Produced);
-        float O2Exhaled = myShelfImpl.getBiomassPSImpl()
+        myO2Produced = dailyO2MolesProduced / 24f; //in mol of oxygen per hour/tick
+        myLogger.debug("O2MolesProduced:" + myO2Produced);
+        O2Exhaled = myShelfImpl.getBiomassPSImpl()
                 .getAirProducerDefinition().getEnvironments()[0]
-                .getO2Store().add(O2Produced);
+                .getO2Store().add(myO2Produced);
         myShelfImpl.getBiomassPSImpl()
                 .addAirOutputActualFlowRates(0, O2Exhaled);
-        myLogger.debug("O2Produced: " + O2Produced);
+        //myLogger.debug("O2Produced: " + myO2Produced);
 
         //Water Vapor Produced
         if (waterFraction < 1f)
@@ -630,8 +644,8 @@ public abstract class PlantImpl extends PlantPOA {
         //myLogger.debug("totalWaterLitersTranspired:" + totalWaterLitersTranspired);
         //consumedWaterBuffer.take(litersOfWaterProduced);
         // 1/1000 liters per milliter, 1 gram per millilter, 18.015 grams per mole
-        float molesOfWaterProduced = waterLitersToMoles(litersOfWaterProduced);
-        float molesOfWaterAdded = myShelfImpl.getBiomassPSImpl()
+        molesOfWaterProduced = waterLitersToMoles(litersOfWaterProduced);
+        molesOfWaterAdded = myShelfImpl.getBiomassPSImpl()
                 .getAirProducerDefinition().getEnvironments()[0]
                 .getVaporStore().add(molesOfWaterProduced);
         myShelfImpl.getBiomassPSImpl().addAirOutputActualFlowRates(0,
@@ -738,7 +752,8 @@ public abstract class PlantImpl extends PlantPOA {
     }
 
     //returns the age in days
-    protected float getDaysOfGrowth() {
+    //CIH 201014 changing from protected to public
+    public float getDaysOfGrowth() {
         float daysOfGrowth = myAge / 24f;
         //myLogger.debug("daysOfGrowth: " + daysOfGrowth);
         //myLogger.debug("myAge: " + myAge);
@@ -938,9 +953,48 @@ public abstract class PlantImpl extends PlantPOA {
         this.myProductionRate = myProductionRate;
     }
 
-	public float getMolesOfCO2Inhaled() {
+	/*
+	 * CIH 200705
+	 * @return moles of CO2 Consumed
+	 */
+	public float getMolesOfCO2Consumed() {
 		return myMolesOfCO2Inhaled;
 	}
+	
+	/*
+	 * CIH 200705
+	 * @return moles of O2 produced
+	 */
+	public float getMolesofO2Produced(){
+		return myO2Produced;
+	}
+	
+	/*
+	 * CIH 200705
+	 * @return ltrs of water used (both gray and potable)
+	 */
+	public float getLtrWaterConsumed(){
+		return myWaterLevel;
+	}
+	
+	/*
+	 * CIH 200705
+	 * @return ltrs of water produced (transpired)
+	 */
+	
+	public float getLtrWaterProduced(){
+		return totalWaterLitersTranspired;
+	}
+	
+	/*
+	 * CIH 200705
+	 * @return moles of water produced (transpired)
+	 */
+		
+	public float getMolesWaterProduced(){
+		return molesOfWaterProduced;
+	}
+	
 	
 	public static String getPlantTypeString(PlantType pType){
 		if (pType == PlantType.DRY_BEAN)
