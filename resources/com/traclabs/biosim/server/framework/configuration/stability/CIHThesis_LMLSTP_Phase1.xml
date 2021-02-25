@@ -12,13 +12,13 @@
 	     
 	     1 human subject enter on day 17 (tick 408) and stays for the duration
 	     11.2 m (double from original 5.6m to get proper CO2 processing) of wheat used for Atmospheric regeneration growth begins on day 0, plants are set to auto harvest and
-	     replant, harvest is not used for food stores in keeping witht the intial experiment where all food stores were provided
+	     replant (every 80 days), harvest is not used for food stores in keeping witht the intial experiment where all food stores were provided
 	     VPGC (Variable Pressure Growth Chamber)
 	     {phase 1 parameters) 19.5 m3 crew space + 27 m3 plant growth space = 36.5 m3 of environment volume
 	     (Phase 1 Sim parameters) - 36.5 m3 of environment volume, VPGC set to 44.8 m3 of plan growth space due to wheat under-performing in CO2/O2 comparisons with actual test results
 	     Inital Starting parameters (From LMLSTP Phase 1 Final Report, pg 15, Average Environmental Conditions over the 68-Day Test)
 	     Relative Humidity (%) - 70.9 +/- 0.9
-	     Carbon Dioxide (ppm) - 1251 +/- 448 (in plant chamber) - reserve set at 5000
+	     Carbon Dioxide (ppm) - 1251 +/- 448 (in plant chamber) - reserve set at 8000
 	     Oxygen (%) - 21.9 +/- 0.7 - reserve set at 1000
 	     SWAD - 4BMS - 4 Bed Molecular Sieve used for O2 concentration
 	     C02 pulsed to maintain a constant level for plants, 

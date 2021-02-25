@@ -4,21 +4,26 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.traclabs.com/biosim ../../schema/BiosimInitSchema.xsd">
 	
-	<!-- Duplication of Lunar–Mars Life Support Test Project (LMLSTP) Phase III Test performed in 1997
-	     at Johnson Space Center (JSC) 
+	<!-- Modification of Lunar–Mars Life Support Test Project (LMLSTP) Phase III Test performed in 1997
+	     at Johnson Space Center (JSC). This uses the basic configuration of the LMLSTP Phase III and extends the experiment until system failure
 	     Sources:
 	     - Lunar-Mars Life Support Test Project: Phase III Final Report, NASA JSC CTSD-ADV-341 Engineering Directorate, Feb 23, 2000 (Report JSC-49144)
 	     - Isolation, NASA Experiments in closed living, H. Lane; R. Sauser; D. Feeback (eds),2002, American Astronautical Society
 	     - The Lunar Mars Life Support Test Project, Daniel J. Barta 2016 (Presentation)
+	     
+	      Goals for this configuration:
+	     - Determine length of stability of this configuration
+	     - Examine failure modes for possible early warning signs of impending fold events
+	     
 	     Simulation/Experiment Parmeters
-	     - 170 Days - 4080 'ticks' 
-	     - 4 human subjects, enter on day 58 (tick 1392) and leave on day 149 (tick 3576) (LMLSTP III Final, pg 58)
+	     - 1250 Days - 30,000 'ticks' 
+	     - 4 human subjects, enter on day 58 (tick 1392) and stay for the duration
 	     - Air - regenerative biological and physicochemical
 	        75% Physicochemical Atmosphereic Regeneration (OGS / VCCR(4BMS) / CRS)(section 2.1.4 users manaual)
 	           GARDEN experiment in Crew Quarters
-	           .22 m2 growing area (Barta 2016, pg 20, Isolation pg 264, LMLSTP III Final, pg 14 )
-	           * set to 1 m of growth space, based on Phase I experience 
-	           harvested every 20 days (Barta 2016, pg 14, Isolation, pg 264, LMLSTP III Final, pg 79)
+	           11.2 m2 growing area (Barta 2016, pg 20, Isolation pg 264, LMLSTP III Final, pg 14 )
+	           * set to 44.8 m of growth space, based on Phase I experience 
+	           One shelf harvested every 20 days (Barta 2016, pg 14, Isolation, pg 264, LMLSTP III Final, pg 79)
 	           Atmospheric parameter for Crew Quarters 
 	             CO2 0.2% to 0.65% with an average of 0.43% LMLSTP III Final, pg 93-94
 	             O2 20.5% to 21.6% LMLSTP III Final, pg 101-102
@@ -36,6 +41,9 @@
 	     	     CO2 1200 PPM
                  O2 21.5 to 21.6%
                  70% Humidty assumed
+	    CO2 store increased from 10000 to 40000(4x Phase 1 continuous setting)
+	    O2 store inceased from 1000 to 4000 (4x Phase 1 continuous setting)
+	    Potable Water set at 20000 (2x Phase 1 Continuous setting)
 	    VPGC Volume - 27.2 m3 growth area  + 19.2m3 (total 46.4 m3) airlock - 2% leak reate (LMLSTP III Final, pg 3)
 	    ILSSTF Crew chamber - 229 m3 + 23.4 m3 outer lock + 21.52 m2 inner lock (total 273.92 m3) - 4% leak rate (LMLSTP III Final, pg 3)
 	     Water Recovery System 

@@ -32,14 +32,7 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-	
-	<xsd:complexType name="BiomassShelfCO2ConsumedSensorType">
-		<xsd:complexContent>
-			<xsd:extension base="ShelfSensorType">
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
-	
+		
 	<xsd:complexType name="BiomassTotalO2ProducedSensorType">
 		<xsd:complexContent>
 			<xsd:extension base="SensorType">

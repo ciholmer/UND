@@ -218,7 +218,6 @@
 				<dryWasteConsumer maxFlowRates="1000" desiredFlowRates="1000" inputs="Dry_Waste_Store"/>
 				<CO2Producer desiredFlowRates="100" outputs="VPGC" maxFlowRates="10000"/>
 			</Incinerator>
-
 		</waste>
 		<crew>
 		
